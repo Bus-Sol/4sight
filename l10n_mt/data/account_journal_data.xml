@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+
+    <record model="account.journal" id="account_journal_customer_invoice">
+        <field name="name">Customer Invoices</field>
+        <field name="type">sale</field>
+        <field name="code">INV</field>
+<!--        <field name="default_debit_account_id" ref="4000"/>-->
+<!--        <field name="default_credit_account_id" ref="4000"/>-->
+    </record>
+
+    <record model="account.journal" id="account_journal_vendor_bills">
+        <field name="name">Vendor Bills</field>
+        <field name="type">purchase</field>
+        <field name="code">BILL</field>
+<!--        <field name="default_debit_account_id" ref="6900"/>-->
+<!--        <field name="default_credit_account_id" ref="6900"/>-->
+    </record>
+
+    <record model="account.journal" id="account_journal_miscellaneous">
+        <field name="name">Miscellaneous Operations</field>
+        <field name="type">general</field>
+        <field name="code">MISC</field>
+    </record>
+
+    <record model="account.journal" id="account_journal_exchange">
+        <field name="name">Exchange Difference</field>
+        <field name="type">general</field>
+        <field name="code">EXCH</field>
+    </record>
+
+    <record model="account.journal" id="account_journal_bank">
+        <field name="name">Bank</field>
+        <field name="type">bank</field>
+        <field name="code">BNK1</field>
+<!--        <field name="default_debit_account_id" ref="1200"/>-->
+<!--        <field name="default_credit_account_id" ref="1200"/>-->
+        <field name="bank_statements_source">file_import</field>
+    </record>
+
+        <record model="account.journal" id="account_journal_petty_cash">
+        <field name="name">Petty Cash</field>
+        <field name="type">cash</field>
+        <field name="code">CSH1</field>
+<!--        <field name="default_debit_account_id" ref="1230"/>-->
+<!--        <field name="default_credit_account_id" ref="1230"/>-->
+    </record>
+
+</odoo>

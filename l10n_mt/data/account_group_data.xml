@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+    <record model="account.group" id="account_group_property">
+        <field name="name">Property</field>
+        <field name="code_prefix">001</field>
+    </record>
+    <record model="account.group" id="account_group_equipment">
+        <field name="name">Equipment</field>
+        <field name="code_prefix">002</field>
+    </record>
+    <record model="account.group" id="account_group_vehicles">
+        <field name="name">Vehicles</field>
+        <field name="code_prefix">003</field>
+    </record>
+    <record model="account.group" id="account_group_inventory">
+        <field name="name">Inventory</field>
+        <field name="code_prefix">004</field>
+    </record>
+    <record model="account.group" id="account_group_internal">
+        <field name="name">Internal</field>
+        <field name="code_prefix">005</field>
+    </record>
+    <record model="account.group" id="account_group_receivables">
+        <field name="name">Receivables</field>
+        <field name="code_prefix">006</field>
+    </record>
+    <record model="account.group" id="account_group_taxation">
+        <field name="name">Taxation</field>
+        <field name="code_prefix">007</field>
+    </record>
+    <record model="account.group" id="account_group_bank_cash">
+        <field name="name">Bank &amp; Cash</field>
+        <field name="code_prefix">008</field>
+    </record>
+    <record model="account.group" id="account_group_payables">
+        <field name="name">Payables</field>
+        <field name="code_prefix">009</field>
+    </record>
+    <record model="account.group" id="account_group_operating_cost">
+        <field name="name">Operating Costs</field>
+        <field name="code_prefix">010</field>
+    </record>
+    <record model="account.group" id="account_group_financing">
+        <field name="name">Financing</field>
+        <field name="code_prefix">011</field>
+    </record>
+    <record model="account.group" id="account_group_equity">
+        <field name="name">Equity</field>
+        <field name="code_prefix">012</field>
+    </record>
+    <record model="account.group" id="account_group_sales">
+        <field name="name">Sales</field>
+        <field name="code_prefix">013</field>
+    </record>
+    <record model="account.group" id="account_group_other_incomes">
+        <field name="name">Other Income</field>
+        <field name="code_prefix">014</field>
+    </record>
+    <record model="account.group" id="account_group_cost_of_sales">
+        <field name="name">Cost of Sales</field>
+        <field name="code_prefix">015</field>
+    </record>
+    <record model="account.group" id="account_group_sales_expenses">
+        <field name="name">Sales Expenses</field>
+        <field name="code_prefix">016</field>
+    </record>
+    <record model="account.group" id="account_group_operating_expenses">
+        <field name="name">Operating Expenses</field>
+        <field name="code_prefix">017</field>
+    </record>
+    <record model="account.group" id="account_group_staff_expenses">
+        <field name="name">Staff Expenses</field>
+        <field name="code_prefix">018</field>
+    </record>
+    <record model="account.group" id="account_group_vehicule_expenses">
+        <field name="name">Vehicle Expenses</field>
+        <field name="code_prefix">019</field>
+    </record>
+</odoo>

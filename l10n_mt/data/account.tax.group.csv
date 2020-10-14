@@ -1,0 +1,2 @@
+id,name,sequence,property_tax_payable_account_id:id,property_tax_receivable_account_id:id
+tax_group_0,TVA,10,2202,1104
