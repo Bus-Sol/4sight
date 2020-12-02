@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_account_report_transaction" model="ir.actions.client">
+            <field name="name">VAT Transaction Report</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'account.generic.tax.report'}"/>
+        </record>
+
+        <menuitem id="menu_action_account_report_transaction" name="VAT Transaction Report" action="action_account_report_transaction"
+                  parent="account_reports.account_reports_audit_reports_menu" sequence="11"/>
+
+    </data>
+</odoo>

@@ -2,10 +2,10 @@
 <odoo>
     <data>
         <record id="S18" model="account.tax.template">
-            <field name="description">S18</field>
+            <field name="description">Local Sales - 18%</field>
             <field name="chart_template_id" ref="l10n_mt"/>
             <field name="type_tax_use">sale</field>
-            <field name="name">Local Sales - 18%</field>
+            <field name="name">S18</field>
             <field name="amount_type">percent</field>
             <field name="amount">18</field>
             <field name="tax_group_id" ref="tax_group_0"/>
@@ -31,16 +31,17 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
+                'account_id': ref('2200'),
                 'minus_report_line_ids': [ref('account_tax_report_line_s18v')],
             }),
         ]"/>
         </record>
 
         <record id="P18" model="account.tax.template">
-            <field name="description">P18</field>
+            <field name="description">Local Purchases - 18%</field>
             <field name="chart_template_id" ref="l10n_mt"/>
             <field name="type_tax_use">purchase</field>
-            <field name="name">Local Purchases - 18%</field>
+            <field name="name">P18</field>
             <field name="amount_type">percent</field>
             <field name="amount">18</field>
             <field name="tax_group_id" ref="tax_group_0"/>
@@ -73,10 +74,10 @@
         </record>
 
         <record id="S07" model="account.tax.template">
-            <field name="description">S07</field>
+            <field name="description">Local Sales - 7%</field>
             <field name="chart_template_id" ref="l10n_mt"/>
             <field name="type_tax_use">sale</field>
-            <field name="name">Local Sales - 7%</field>
+            <field name="name">S07</field>
             <field name="amount_type">percent</field>
             <field name="amount">7</field>
             <field name="tax_group_id" ref="tax_group_0"/>
@@ -109,10 +110,10 @@
         </record>
 
         <record id="S05" model="account.tax.template">
-            <field name="description">S05</field>
+            <field name="description">Local Sales - 5%</field>
             <field name="chart_template_id" ref="l10n_mt"/>
             <field name="type_tax_use">sale</field>
-            <field name="name">Local Sales - 5%</field>
+            <field name="name">S05</field>
             <field name="amount_type">percent</field>
             <field name="amount">5</field>
             <field name="tax_group_id" ref="tax_group_0"/>
@@ -145,10 +146,10 @@
         </record>
 
         <record id="P05" model="account.tax.template">
-            <field name="description">P05</field>
+            <field name="description">Local Purchases - 5%</field>
             <field name="chart_template_id" ref="l10n_mt"/>
             <field name="type_tax_use">purchase</field>
-            <field name="name">Local Purchases - 5%</field>
+            <field name="name">P05</field>
             <field name="amount_type">percent</field>
             <field name="amount">5</field>
             <field name="tax_group_id" ref="tax_group_0"/>
@@ -181,10 +182,10 @@
         </record>
 
         <record id="S00" model="account.tax.template">
-            <field name="description">S00</field>
+            <field name="description">Exempt Sales/Exports</field>
             <field name="chart_template_id" ref="l10n_mt"/>
             <field name="type_tax_use">sale</field>
-            <field name="name">Exempt Sales/Exports</field>
+            <field name="name">S00</field>
             <field name="amount_type">percent</field>
             <field name="amount">0</field>
             <field name="tax_group_id" ref="tax_group_0"/>
@@ -218,10 +219,10 @@
 
 
         <record id="P00" model="account.tax.template">
-            <field name="description">P00</field>
+            <field name="description">Exempt Purchases/Exports</field>
             <field name="chart_template_id" ref="l10n_mt"/>
             <field name="type_tax_use">purchase</field>
-            <field name="name">Exempt Purchases/Exports</field>
+            <field name="name">P00</field>
             <field name="amount_type">percent</field>
             <field name="amount">0</field>
             <field name="tax_group_id" ref="tax_group_0"/>

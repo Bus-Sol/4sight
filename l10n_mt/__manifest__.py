@@ -7,7 +7,9 @@
     'description': """
 This is an MT Odoo localisation necessary to run Odoo accounting for MT SME's with:
 =================================================================================================
-
+    - a CT600-ready chart of accounts
+    - VAT100-ready tax structure
+    - InfoLogic MT counties listing
     - a few other adaptations""",
     'author': '4Sight Group',
     'website': 'https://www.odoo.com/page/accounting',
@@ -15,6 +17,7 @@ This is an MT Odoo localisation necessary to run Odoo accounting for MT SME's wi
         'account',
         'base_iban',
         'base_vat',
+        'account_reports',
     ],
     'data': [
         'data/l10n_mt_chart_data.xml',
@@ -28,9 +31,10 @@ This is an MT Odoo localisation necessary to run Odoo accounting for MT SME's wi
         'data/account_chart_template_data.xml',
         'data/account_reconcile_data.xml',
         'data/account_payment_term_data.xml',
+        'data/account_financial_report_data.xml',
+        'views/account_move_line.xml'
     ],
     'demo' : [
-        #'demo/l10n_uk_demo.xml'
     ],
     'pre_init_hook' :  'pre_init_check',
 }
