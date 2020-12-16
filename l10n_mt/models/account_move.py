@@ -1,26 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, _, api
-from odoo.addons.web.controllers.main import clean_action
-
-class AccountReport(models.AbstractModel):
-    _inherit = 'account.report'
-
-    def open_action(self, options, domain):
-        assert isinstance(domain, (list, tuple))
-        domain += [('date', '>=', options.get('date').get('date_from')),
-                   ('date', '<=', options.get('date').get('date_to'))]
-        domain += [('account_group','=', '007')]
-        if not options.get('all_entries'):
-            domain += [('move_id.state', '=', 'posted')]
-
-        ctx = self.env.context.copy()
-        ctx.update({'search_default_account': 1, 'search_default_groupby_date': 1})
-
-        action = self.env.ref('account.action_move_line_select_tax_audit').read()[0]
-        action = clean_action(action)
-        action['domain'] = domain
-        action['context'] = ctx
-        return action
 
 
 class AccountMoveLine(models.Model):

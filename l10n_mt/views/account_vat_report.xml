@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="account.view_account_move_line_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//group/filter[@name='journal']" position="after">
-                <filter string="Tax name" name="group_by_name" context="{'group_by':'name'}"/>
+                <filter string="Tax" name="tax_line_group" context="{'group_by':'tax_line_id'}"/>
             </xpath>
         </field>
     </record>
@@ -49,9 +49,8 @@
     <record id="action_account_vat_report" model="ir.actions.act_window">
         <field name="name">VAT Transaction Report</field>
         <field name="res_model">account.move.line</field>
-        <field name="context">{'search_default_group_by_name': 1, 'expand': 1}
-        </field>
-        <field name="domain">[('account_group', '=', '007')]</field>
+        <field name="context">{'search_default_tax_line_group': 1,'search_default_posted':1, 'expand': 1}</field>
+        <field name="domain">[('tax_line_id', '!=', False)]</field>
         <field name="view_id" ref="view_move_line_tax_audit_tree_inherit"/>
         <field name="view_mode">tree</field>
     </record>
