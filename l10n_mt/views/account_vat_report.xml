@@ -8,12 +8,12 @@
         <field name="inherit_id" ref="account.view_account_move_line_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//group/filter[@name='journal']" position="after">
-                <filter string="Tax" name="tax_line_group" context="{'group_by':'tax_line_id'}"/>
+                <filter string="VAT" name="tax_line_group" context="{'group_by':'vat_line_id'}"/>
             </xpath>
         </field>
     </record>
 
-        <record id="view_move_line_tax_audit_tree_inherit" model="ir.ui.view">
+    <record id="view_move_line_tax_audit_tree_inherit" model="ir.ui.view">
         <field name="name">account.move.line.tax.audit.tree.inherit</field>
         <field name="model">account.move.line</field>
         <field name="inherit_id" ref="account.view_move_line_tax_audit_tree"/>
@@ -45,12 +45,11 @@
     </record>
 
 
-
     <record id="action_account_vat_report" model="ir.actions.act_window">
         <field name="name">VAT Transaction Report</field>
         <field name="res_model">account.move.line</field>
         <field name="context">{'search_default_tax_line_group': 1,'search_default_posted':1, 'expand': 1}</field>
-        <field name="domain">[('tax_line_id', '!=', False)]</field>
+        <field name="domain">[('vat_line_id', '!=', False)]</field>
         <field name="view_id" ref="view_move_line_tax_audit_tree_inherit"/>
         <field name="view_mode">tree</field>
     </record>
@@ -58,4 +57,16 @@
     <menuitem id="menu_action_account_vat_report" name="VAT Transaction Report"
               action="action_account_vat_report"
               parent="account_reports.account_reports_audit_reports_menu" sequence="12"/>
+
+
+    <record id="view_move_account_add_vat_form" model="ir.ui.view">
+        <field name="name">move.account.add.vat.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_ids']//field[@name='tag_ids']" position="after">
+                <field name="vat_line_id" readonly="1" force_save="1" />
+            </xpath>
+        </field>
+    </record>
 </odoo>
