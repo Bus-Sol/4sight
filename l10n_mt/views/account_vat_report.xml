@@ -13,23 +13,32 @@
         </field>
     </record>
 
-    <record id="view_move_line_tax_audit_tree_inherit" model="ir.ui.view">
-        <field name="name">account.move.line.tax.audit.tree.inherit</field>
+    <record id="view_move_line_tax_audit_tree" model="ir.ui.view">
+        <field name="name">account.move.line.tax.tree</field>
         <field name="model">account.move.line</field>
-        <field name="inherit_id" ref="account.view_move_line_tax_audit_tree"/>
+
         <field name="arch" type="xml">
-            <field name="tax_base_amount" position="replace">
+            <tree string="VAT Report" create="false" edit="false">
+                <field name="date" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="journal_id" options='{"no_open":True}'/>
+                <field name="move_id" optional="show"/>
+                <field name="account_id" options="{'no_open': True}" groups="account.group_account_user"/>
+                <field name="partner_id" optional="show"/>
+                <field name="statement_id" invisible="1"/>
+                <field name="ref" optional="show"/>
+                <field name="name" optional="show"/>
+                <field name="tax_ids" widget="many2many_tags" width="0.5" optional="show"/>
                 <field name="net_value" sum="Total Net Value"/>
                 <field name="tax_value" sum="Total  Tax Value"/>
                 <field name="gross_value" sum="Total Gross Value"/>
                 <field name="account_group" invisible="1"/>
-            </field>
-            <field name="tax_audit" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </field>
-            <field name="move_id" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </field>
+                <field name="amount_currency" groups="base.group_multi_currency" optional="hide"/>
+                <field name="tag_ids" widget="many2many_tags" width="0.5" optional="hide"/>
+                <field name="currency_id" readonly="1" invisible="1"/>
+                <field name="company_currency_id" invisible="1"/>
+                <field name="parent_state" invisible="1"/>
+            </tree>
         </field>
     </record>
 
@@ -50,7 +59,7 @@
         <field name="res_model">account.move.line</field>
         <field name="context">{'search_default_tax_line_group': 1,'search_default_posted':1, 'expand': 1}</field>
         <field name="domain">[('vat_line_id', '!=', False)]</field>
-        <field name="view_id" ref="view_move_line_tax_audit_tree_inherit"/>
+        <field name="view_id" ref="view_move_line_tax_audit_tree"/>
         <field name="view_mode">tree</field>
     </record>
 
@@ -58,8 +67,7 @@
               action="action_account_vat_report"
               parent="account_reports.account_reports_audit_reports_menu" sequence="12"/>
 
-
-    <record id="view_move_account_add_vat_form" model="ir.ui.view">
+        <record id="view_move_account_add_vat_form" model="ir.ui.view">
         <field name="name">move.account.add.vat.form</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
