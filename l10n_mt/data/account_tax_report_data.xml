@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="tax_report" model="account.tax.report">
+        <field name="name">Tax Report</field>
+        <field name="country_id" ref="base.mt"/>
+    </record>
+
     <record id="account_tax_report_line_s18n" model="account.tax.report.line">
         <field name="name">[018] S18 Value</field>
         <field name="tag_name">S18N</field>
         <field name="code">S18N</field>
         <field name="sequence" eval="5"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_s18v" model="account.tax.report.line">
@@ -14,7 +19,7 @@
         <field name="tag_name">S18V</field>
         <field name="code">S18V</field>
         <field name="sequence" eval="5"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_s07n" model="account.tax.report.line">
@@ -22,7 +27,7 @@
         <field name="tag_name">S07N</field>
         <field name="code">S07N</field>
         <field name="sequence" eval="6"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_s07v" model="account.tax.report.line">
@@ -30,7 +35,7 @@
         <field name="tag_name">S07V</field>
         <field name="code">S07V</field>
         <field name="sequence" eval="6"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_s05n" model="account.tax.report.line">
@@ -38,7 +43,7 @@
         <field name="tag_name">S05N</field>
         <field name="code">S05N</field>
         <field name="sequence" eval="7"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_s05v" model="account.tax.report.line">
@@ -46,7 +51,7 @@
         <field name="tag_name">S05V</field>
         <field name="code">S05V</field>
         <field name="sequence" eval="7"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_s00n" model="account.tax.report.line">
@@ -54,7 +59,7 @@
         <field name="tag_name">S00N</field>
         <field name="code">S00N</field>
         <field name="sequence" eval="8"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_s00v" model="account.tax.report.line">
@@ -62,7 +67,7 @@
         <field name="tag_name">S00V</field>
         <field name="code">S00V</field>
         <field name="sequence" eval="8"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_s99n" model="account.tax.report.line">
@@ -70,7 +75,7 @@
         <field name="tag_name">S99N</field>
         <field name="code">S99N</field>
         <field name="sequence" eval="9"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_s99v" model="account.tax.report.line">
@@ -78,7 +83,7 @@
         <field name="tag_name">S99V</field>
         <field name="code">S99V</field>
         <field name="sequence" eval="9"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_seun" model="account.tax.report.line">
@@ -86,7 +91,7 @@
         <field name="tag_name">SEUN</field>
         <field name="code">SEUN</field>
         <field name="sequence" eval="1"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_seuv" model="account.tax.report.line">
@@ -94,7 +99,7 @@
         <field name="tag_name">SEUV</field>
         <field name="code">SEUV</field>
         <field name="sequence" eval="1"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_p18n" model="account.tax.report.line">
@@ -102,7 +107,7 @@
         <field name="tag_name">P18N</field>
         <field name="code">P18N</field>
         <field name="sequence" eval="10"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_p18v" model="account.tax.report.line">
@@ -110,7 +115,7 @@
         <field name="tag_name">P18V</field>
         <field name="code">P18V</field>
         <field name="sequence" eval="10"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_p05n" model="account.tax.report.line">
@@ -118,7 +123,7 @@
         <field name="tag_name">P05N</field>
         <field name="code">P05N</field>
         <field name="sequence" eval="11"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_p05v" model="account.tax.report.line">
@@ -126,7 +131,7 @@
         <field name="tag_name">P05V</field>
         <field name="code">P05V</field>
         <field name="sequence" eval="11"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_p00n" model="account.tax.report.line">
@@ -134,7 +139,7 @@
         <field name="tag_name">P00N</field>
         <field name="code">P00N</field>
         <field name="sequence" eval="12"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_p00v" model="account.tax.report.line">
@@ -142,7 +147,7 @@
         <field name="tag_name">P00V</field>
         <field name="code">P00V</field>
         <field name="sequence" eval="12"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_peun" model="account.tax.report.line">
@@ -150,7 +155,7 @@
         <field name="tag_name">PEUN</field>
         <field name="code">PEUN</field>
         <field name="sequence" eval="2"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_peuv" model="account.tax.report.line">
@@ -158,7 +163,7 @@
         <field name="tag_name">PEUV</field>
         <field name="code">PEUV</field>
         <field name="sequence" eval="2"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_oeun" model="account.tax.report.line">
@@ -166,7 +171,7 @@
         <field name="tag_name">OEUN</field>
         <field name="code">OEUN</field>
         <field name="sequence" eval="3"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_oeuv" model="account.tax.report.line">
@@ -174,7 +179,7 @@
         <field name="tag_name">OEUV</field>
         <field name="code">OEUV</field>
         <field name="sequence" eval="3"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_feun" model="account.tax.report.line">
@@ -182,7 +187,7 @@
         <field name="tag_name">FEUN</field>
         <field name="code">FEUN</field>
         <field name="sequence" eval="4"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_feuv" model="account.tax.report.line">
@@ -190,7 +195,7 @@
         <field name="tag_name">FEUV</field>
         <field name="code">FEUV</field>
         <field name="sequence" eval="4"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_f18n" model="account.tax.report.line">
@@ -198,7 +203,7 @@
         <field name="tag_name">F18N</field>
         <field name="code">F18N</field>
         <field name="sequence" eval="13"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_f18v" model="account.tax.report.line">
@@ -206,7 +211,7 @@
         <field name="tag_name">F18V</field>
         <field name="code">F18V</field>
         <field name="sequence" eval="13"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_f07n" model="account.tax.report.line">
@@ -214,7 +219,7 @@
         <field name="tag_name">F07N</field>
         <field name="code">F07N</field>
         <field name="sequence" eval="14"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_f07v" model="account.tax.report.line">
@@ -222,7 +227,7 @@
         <field name="tag_name">F07V</field>
         <field name="code">F07V</field>
         <field name="sequence" eval="14"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_f05n" model="account.tax.report.line">
@@ -230,7 +235,7 @@
         <field name="tag_name">F05N</field>
         <field name="code">F05N</field>
         <field name="sequence" eval="15"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_f05v" model="account.tax.report.line">
@@ -238,7 +243,7 @@
         <field name="tag_name">F05V</field>
         <field name="code">F05V</field>
         <field name="sequence" eval="15"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_f00n" model="account.tax.report.line">
@@ -246,7 +251,7 @@
         <field name="tag_name">F00N</field>
         <field name="code">F00N</field>
         <field name="sequence" eval="16"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_f00v" model="account.tax.report.line">
@@ -254,7 +259,7 @@
         <field name="tag_name">F00V</field>
         <field name="code">F00V</field>
         <field name="sequence" eval="16"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_O18n" model="account.tax.report.line">
@@ -262,7 +267,7 @@
         <field name="tag_name">O18N</field>
         <field name="code">O18N</field>
         <field name="sequence" eval="17"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_O18v" model="account.tax.report.line">
@@ -270,7 +275,7 @@
         <field name="tag_name">O18V</field>
         <field name="code">O18V</field>
         <field name="sequence" eval="17"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_o07n" model="account.tax.report.line">
@@ -278,7 +283,7 @@
         <field name="tag_name">O07N</field>
         <field name="code">O07N</field>
         <field name="sequence" eval="18"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_o07v" model="account.tax.report.line">
@@ -286,7 +291,7 @@
         <field name="tag_name">O07V</field>
         <field name="code">O07V</field>
         <field name="sequence" eval="18"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_o00n" model="account.tax.report.line">
@@ -294,7 +299,7 @@
         <field name="tag_name">O00N</field>
         <field name="code">O00N</field>
         <field name="sequence" eval="19"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_o00v" model="account.tax.report.line">
@@ -302,7 +307,7 @@
         <field name="tag_name">O00V</field>
         <field name="code">O00V</field>
         <field name="sequence" eval="19"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_o05n" model="account.tax.report.line">
@@ -310,7 +315,7 @@
         <field name="tag_name">O05N</field>
         <field name="code">O05N</field>
         <field name="sequence" eval="20"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_o05v" model="account.tax.report.line">
@@ -318,7 +323,7 @@
         <field name="tag_name">O05V</field>
         <field name="code">O05V</field>
         <field name="sequence" eval="20"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
     #######################################FORMULA#####################################################
 
@@ -327,7 +332,7 @@
         <field name="code">ICSUBN</field>
         <field name="formula">SEUN + PEUN + OEUN + FEUN</field>
         <field name="sequence" eval="41"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_icsubv" model="account.tax.report.line">
@@ -335,7 +340,7 @@
         <field name="code">ICSUBV</field>
         <field name="formula">SEUV+PEUV+OEUV+FEUV</field>
         <field name="sequence" eval="42"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_locssubn" model="account.tax.report.line">
@@ -343,7 +348,7 @@
         <field name="code">LOCSSUBN</field>
         <field name="formula">S18N+S07N+S05N+S00N+S99N</field>
         <field name="sequence" eval="43"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_locssubv" model="account.tax.report.line">
@@ -351,7 +356,7 @@
         <field name="code">LOCSSUBV</field>
         <field name="formula">S18V+S07V+S05V+S00V+S99V</field>
         <field name="sequence" eval="44"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_locpsubn" model="account.tax.report.line">
@@ -359,7 +364,7 @@
         <field name="code">LOCPSUBN</field>
         <field name="formula">P18N+P05N+P00N</field>
         <field name="sequence" eval="45"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_locpsubv" model="account.tax.report.line">
@@ -367,7 +372,7 @@
         <field name="code">LOCPSUBV</field>
         <field name="formula">P18V+P05V+P00V</field>
         <field name="sequence" eval="46"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_ovhsubn" model="account.tax.report.line">
@@ -375,7 +380,7 @@
         <field name="code">OVHSUBN</field>
         <field name="formula">O18N+O07N+O05N+O00N</field>
         <field name="sequence" eval="47"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_ovhsubv" model="account.tax.report.line">
@@ -383,7 +388,7 @@
         <field name="code">OVHSUBV</field>
         <field name="formula">O18V+O07V+O05V+O00V</field>
         <field name="sequence" eval="48"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_fasubn" model="account.tax.report.line">
@@ -391,7 +396,7 @@
         <field name="code">FASUBN</field>
         <field name="formula">F18N+F07N+F05N+F00N</field>
         <field name="sequence" eval="49"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_fasubv" model="account.tax.report.line">
@@ -399,7 +404,7 @@
         <field name="code">FASUBV</field>
         <field name="formula">F18V+F07V+F05V+F00V</field>
         <field name="sequence" eval="50"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_tsalv" model="account.tax.report.line">
@@ -407,7 +412,7 @@
         <field name="code">TSALV</field>
         <field name="formula">S18V+S07V+S05V+S00V+S99V+SEUV</field>
         <field name="sequence" eval="51"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_tpurv" model="account.tax.report.line">
@@ -415,7 +420,7 @@
         <field name="code">TPURV</field>
         <field name="formula">P18V+P05V+P00V+PEUV+OEUV+FEUV+F18V+F07V+F05V+F00V+O18V+O07V+O05V+O00V</field>
         <field name="sequence" eval="52"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
     <record id="account_tax_report_line_tliav" model="account.tax.report.line">
@@ -425,10 +430,11 @@
             (S18V+S07V+S05V+S00V+S99V+SEUV)-(P18V+P05V+P00V+PEUV+OEUV+FEUV+F18V+F07V+F05V+F00V+O18V+O07V+O05V+O00V)
         </field>
         <field name="sequence" eval="53"/>
-        <field name="country_id" ref="base.mt"/>
+        <field name="report_id" ref="tax_report"/>
     </record>
 
-    ###################################################### PARENT LINE ##################################################
+    ###################################################### PARENT LINE
+    ##################################################
     <record id="account_tax_report_line_f18v" model="account.tax.report.line">
         <field name="parent_id" ref="account_tax_report_line_fasubv"/>
     </record>

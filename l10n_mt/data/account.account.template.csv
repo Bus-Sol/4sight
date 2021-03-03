@@ -1,4 +1,4 @@
-"id","code","name","user_type_id:id","reconcile","chart_template_id:id","group_id:id"
+"id","code","name","user_type_id:id","reconcile","chart_template_id:id","mt_group_id:id"
 "0010","0010","Freehold Property","account.data_account_type_fixed_assets","FALSE","l10n_mt","l10n_mt.account_group_property"
 "0011","0011","Leasehold Property","account.data_account_type_fixed_assets","FALSE","l10n_mt","l10n_mt.account_group_property"
 "0020","0020","Plant and Machinery","account.data_account_type_fixed_assets","FALSE","l10n_mt","l10n_mt.account_group_equipment"

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, _, api
+from odoo import models, _, api, fields
 
 
 class AccountChartTemplate(models.Model):
@@ -12,7 +12,7 @@ class AccountChartTemplate(models.Model):
             self.ensure_one()
             bank_journals = self.env['account.journal']
             # Create the journals that will trigger the account.account creation
-            for acc in self._get_default_bank_journals_data():
+            for acc in self._get_payment_bank_journals_data():
                 bank_journals += self.env['account.journal'].create({
                     'name': acc['acc_name'],
                     'type': acc['account_type'],
@@ -42,32 +42,32 @@ class AccountChartTemplate(models.Model):
             'name': 'Customer Invoices',
             'code': 'INV',
             'company_id': company.id,
-            'default_credit_account_id': account_4000,
-            'default_debit_account_id': account_4000,
+            'payment_credit_account_id': account_4000,
+            'payment_debit_account_id': account_4000,
         },
             {
                 'type': 'purchase',
                 'name': 'Vendor Bills',
                 'code': 'BILL',
                 'company_id': company.id,
-                'default_credit_account_id': account_6900,
-                'default_debit_account_id': account_6900,
+                'payment_credit_account_id': account_6900,
+                'payment_debit_account_id': account_6900,
             },
             {
                 'type': 'general',
                 'name': 'Miscellaneous Operations',
                 'code': 'MISC',
                 'company_id': company.id,
-                'default_credit_account_id': account_7906,
-                'default_debit_account_id': account_7906,
+                'payment_credit_account_id': account_7906,
+                'payment_debit_account_id': account_7906,
             },
             {
             'type': 'general',
             'name': 'Exchange Difference',
             'code': 'EXCH',
             'company_id': company.id,
-            'default_credit_account_id': account_7906,
-            'default_debit_account_id': account_7906,
+            'payment_credit_account_id': account_7906,
+            'payment_debit_account_id': account_7906,
         },
             {
                 'type': 'bank',
@@ -75,16 +75,21 @@ class AccountChartTemplate(models.Model):
                 'code': 'BNK1',
                 'company_id': company.id,
                 'bank_statements_source': 'file_import',
-                'default_credit_account_id': account_1200,
-                'default_debit_account_id': account_1200,
+                'payment_credit_account_id': account_1200,
+                'payment_debit_account_id': account_1200,
             },
             {
                 'type': 'cash',
                 'name': 'Petty Cash',
                 'code': 'CSH1',
                 'company_id': company.id,
-                'default_credit_account_id': account_1230,
-                'default_debit_account_id': account_1230,
+                'payment_credit_account_id': account_1230,
+                'payment_debit_account_id': account_1230,
             }
         ]
         return res
+
+class AccountAccountTemplate(models.Model):
+    _inherit = "account.account.template"
+
+    mt_group_id = fields.Many2one('account.group')

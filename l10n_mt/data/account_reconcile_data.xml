@@ -3,10 +3,14 @@
 
     <record model="account.reconcile.model.template" id="account_reconcile_bank_fees">
         <field name="name">Bank Fees</field>
-        <field name="account_id" ref="7901"/>
-        <field name="amount_type">percentage</field>
-        <field name="label">Bank Charges</field>
         <field name="match_total_amount">100</field>
         <field name="chart_template_id" ref="l10n_mt"/>
+        <field name="line_ids" eval="[(5,0,0),
+            (0,0, {
+                'account_id': ref('7901'),
+                'amount_type': 'percentage',
+                'label': 'Bank Charges',
+            }),
+        ]"/>
     </record>
 </odoo>

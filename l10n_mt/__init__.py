@@ -15,7 +15,10 @@ def pre_init_check(cr):
 
     payment_terms = env['account.payment.term'].search([])
     for payment_term in payment_terms:
-        payment_term.unlink()
+        try:
+            payment_term.unlink()
+        except ValueError:
+            pass
 
     reconciles = env['account.reconcile.model'].search([])
     for reconcile in reconciles:

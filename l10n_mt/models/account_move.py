@@ -4,6 +4,11 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+class AccountAccount(models.Model):
+    _inherit = "account.account"
+
+    mt_group_id = fields.Many2one('account.group',string='Mt Group')
+
 class AccountMove(models.Model):
     _inherit='account.move'
 
@@ -43,7 +48,7 @@ class AccountMoveLine(models.Model):
         for record in self:
             record.net_value = 0
             if record.tax_base_amount:
-                if record.move_id.type in ['out_refund','in_refund']:
+                if record.move_id.move_type in ['out_refund','in_refund']:
                     record.net_value = record.tax_base_amount * -1
                 else:
                     record.net_value = record.tax_base_amount
@@ -53,9 +58,7 @@ class AccountMoveLine(models.Model):
     @api.depends('net_value','tax_value')
     def get_gross_value(self):
         for record in self:
-            record.gross_value = 0
-            if record.tax_value and record.net_value:
-                record.gross_value = record.net_value + record.tax_value
+            record.gross_value = record.net_value + record.tax_value
 
     @api.depends('account_id')
     def get_account_group_name(self):
@@ -63,4 +66,4 @@ class AccountMoveLine(models.Model):
         for record in self:
             record.account_group = ''
             if record.account_id:
-                record.account_group = record.account_id.group_id.code_prefix
+                record.account_group = record.account_id.group_id.code_prefix_start

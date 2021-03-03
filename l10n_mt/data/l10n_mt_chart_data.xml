@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="account_reports_uk_statements_menu" name="Malta" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+    <menuitem id="account_reports_mt_statements_menu" name="Malta" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
 
         <!-- Chart template -->
         <record id="l10n_mt" model="account.chart.template">
