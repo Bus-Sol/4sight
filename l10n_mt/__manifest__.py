@@ -3,7 +3,7 @@
 {
     'name': 'MT - Accounting',
     'version': '1.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is an MT Odoo localisation necessary to run Odoo accounting for MT SME's with:
 =================================================================================================

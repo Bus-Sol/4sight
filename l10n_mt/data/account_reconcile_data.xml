@@ -10,6 +10,7 @@
                 'account_id': ref('7901'),
                 'amount_type': 'percentage',
                 'label': 'Bank Charges',
+                'amount_string': '100'
             }),
         ]"/>
     </record>
