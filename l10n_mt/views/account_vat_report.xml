@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="computed_field" model="ir.cron">
+        <field name="name">Compute field</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_compute_field()</field>
+        <field name="interval_number">4</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="active" eval="True"/>
+    </record>
 
     <record id="view_account_move_line_filter_group_by" model="ir.ui.view">
         <field name="name">account.move.line.search</field>
@@ -18,7 +29,7 @@
         <field name="model">account.move.line</field>
 
         <field name="arch" type="xml">
-            <tree string="VAT Report" create="false" edit="false">
+            <tree string="VAT Report" create="false" edit="false" js_class="vat_report">
                 <field name="date" optional="show"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="journal_id" options='{"no_open":True}'/>

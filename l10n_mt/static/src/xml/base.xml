@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+
+<t t-extend="ListView.buttons" t-name="VatReport.buttons">
+    <t t-jquery="button.o_list_export_xlsx" t-operation="before">
+        <button type="button" action="print_pdf" class="btn btn-primary o_button_print_report">
+            Print report
+        </button>
+    </t>
+</t>
+
+</templates>

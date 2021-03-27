@@ -30,8 +30,13 @@ This is an MT Odoo localisation necessary to run Odoo accounting for MT SME's wi
         'data/account_chart_template_data.xml',
         'data/account_reconcile_data.xml',
         'data/account_payment_term_data.xml',
+        'report/vat_report_template.xml',
+        'views/assets.xml',
         'views/account_vat_report.xml',
     ],
+    'qweb': [
+        'static/src/xml/base.xml',
+        ],
     'demo' : [
     ],
     'pre_init_hook' :  'pre_init_check',

@@ -2,6 +2,7 @@
 
 from odoo import api, SUPERUSER_ID
 from . import models
+from . import controllers
 
 
 def pre_init_check(cr):
@@ -14,11 +15,12 @@ def pre_init_check(cr):
         user.write({'tz': 'Europe/Malta','lang':'en_GB'})
 
     payment_terms = env['account.payment.term'].search([])
-    for payment_term in payment_terms:
-        try:
-            payment_term.unlink()
-        except ValueError:
-            pass
+    if not env['account.move'].search([('invoice_payment_term_id', 'in', payment_terms.ids)]):
+        for payment_term in payment_terms:
+            try:
+                payment_term.unlink()
+            except ValueError:
+                pass
 
     reconciles = env['account.reconcile.model'].search([])
     for reconcile in reconciles:
