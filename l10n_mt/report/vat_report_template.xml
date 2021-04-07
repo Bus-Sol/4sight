@@ -79,11 +79,13 @@
                                     <t t-foreach="lines['lines']" t-as="line">
                                         <tr class=""
                                             t-att-style="'color:black;font-weight: bold;' if (line[0]) else ''">
+                                            <t t-set="i" t-value="0"/>
                                             <t t-foreach="line" t-as="l">
-                                                <td class="text-center"
-                                                    t-att-style="'padding-left: 25px;border-bottom: 2px solid black;' if (line[0]) else 'padding-left: 25px;border-bottom: 1px solid black;'">
+                                                <td t-att-class="'text-left' if i==4 else 'text-center'"
+                                                    t-att-style="'padding-left: 25px;border-bottom: 2px solid black;' if (line[0]) else 'padding-left: 25px;border-bottom: 1px solid black;font-size:12px;'">
                                                     <t t-esc="l"/>
                                                 </td>
+                                                <t t-set="i" t-value="i+1"/>
                                             </t>
                                         </tr>
                                     </t>
