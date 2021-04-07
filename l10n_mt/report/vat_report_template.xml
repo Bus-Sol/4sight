@@ -40,16 +40,21 @@
                                             </t>
                                             <t t-else="">With Draft Entries</t>
                                         </li>
-                                        <li>
-                                            <t t-if="info['date_start']">Date from
-                                                <t t-esc="info['date_start']"/>
-                                            </t>
-                                        </li>
-                                        <li>
-                                            <t t-if="info['date_end']">Until
-                                                <t t-esc="info['date_end']"/>
-                                            </t>
-                                        </li>
+                                        <t t-if="info.get('date_start')">
+                                            <li>
+                                                <t t-if="info['date_start']">Date from
+                                                    <t t-esc="info['date_start']"/>
+                                                </t>
+                                            </li>
+                                        </t>
+                                        <t t-if="info.get('date_end')">
+                                            <li>
+                                                <t t-if="info['date_end']">Until
+                                                    <t t-esc="info['date_end']"/>
+                                                </t>
+
+                                            </li>
+                                        </t>
                                     </ul>
                                 </t>
                             </div>
@@ -72,10 +77,11 @@
                             <tbody>
                                 <t t-if="lines.get('lines')">
                                     <t t-foreach="lines['lines']" t-as="line">
-                                        <tr class="">
+                                        <tr class=""
+                                            t-att-style="'color:black;font-weight: bold;' if (line[0]) else ''">
                                             <t t-foreach="line" t-as="l">
                                                 <td class="text-center"
-                                                    style="padding-left: 25px;border-bottom: 1px solid black;">
+                                                    t-att-style="'padding-left: 25px;border-bottom: 2px solid black;' if (line[0]) else 'padding-left: 25px;border-bottom: 1px solid black;'">
                                                     <t t-esc="l"/>
                                                 </td>
                                             </t>

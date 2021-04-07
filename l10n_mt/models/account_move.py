@@ -114,12 +114,37 @@ class AccountMoveLine(models.Model):
         line_ids = self.env['account.move.line'].search(options,
                                                         order="vat_line_id asc, date desc, move_id asc")
         actual_vat_code = False
-        for line_id in line_ids:
-            line.append(
-                [line_id.vat_line_id.name if line_id.vat_line_id.name != actual_vat_code else '', line_id.date,
-                 line_id.move_id.name, line_id.net_value, line_id.tax_value, line_id.gross_value])
+        dict_total_value_per_tax = {}
+        dict_total_value = {'net_value':0, 'tax_value':0, 'gross_value': 0}
 
-            actual_vat_code = line_id.vat_line_id.name
+        for line_id in line_ids:
+            dict_total_value['net_value'] += line_id.net_value
+            dict_total_value['tax_value'] += line_id.tax_value
+            dict_total_value['gross_value'] += line_id.gross_value
+
+        line.append(['TOTAL', '', '', '%.2f' % dict_total_value['net_value'], '%.2f' % dict_total_value['tax_value'], '%.2f' % dict_total_value['gross_value']])
+
+        for line_id in line_ids:
+            if (str(str(line_id.vat_line_id.id)) + '_net' and str(line_id.vat_line_id.id) + '_tax' and str(line_id.vat_line_id.id) + '_gross') in dict_total_value_per_tax:
+                dict_total_value_per_tax[str(line_id.vat_line_id.id) + '_net'] +=  line_id.net_value
+                dict_total_value_per_tax[str(line_id.vat_line_id.id) + '_tax'] +=  line_id.tax_value
+                dict_total_value_per_tax[str(line_id.vat_line_id.id) + '_gross'] +=  line_id.gross_value
+            else:
+                dict_total_value_per_tax[str(line_id.vat_line_id.id) + '_net'] = line_id.net_value
+                dict_total_value_per_tax[str(line_id.vat_line_id.id) + '_tax'] = line_id.tax_value
+                dict_total_value_per_tax[str(line_id.vat_line_id.id) + '_gross'] = line_id.gross_value
+
+        for line_id in line_ids:
+            if line_id.vat_line_id.id != actual_vat_code:
+                line.append(
+                    [line_id.vat_line_id.name,'',
+                     '', '%.2f' % dict_total_value_per_tax[str(line_id.vat_line_id.id) + '_net'], '%.2f' % dict_total_value_per_tax[str(line_id.vat_line_id.id) + '_tax'], '%.2f' % dict_total_value_per_tax[str(line_id.vat_line_id.id) + '_gross']])
+
+            actual_vat_code = line_id.vat_line_id.id
+
+            line.append(
+                [line_id.vat_line_id.name if line_id.vat_line_id.id != actual_vat_code else '', line_id.date,
+                 line_id.move_id.name, line_id.net_value, line_id.tax_value, line_id.gross_value])
 
         info_domain = {}
         date_start = False
