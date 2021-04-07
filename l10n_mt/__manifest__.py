@@ -18,6 +18,7 @@ This is an MT Odoo localisation necessary to run Odoo accounting for MT SME's wi
         'base_iban',
         'base_vat',
         'account_reports',
+        'account_followup',
     ],
     'data': [
         'data/l10n_mt_chart_data.xml',
@@ -33,6 +34,7 @@ This is an MT Odoo localisation necessary to run Odoo accounting for MT SME's wi
         'report/vat_report_template.xml',
         'views/assets.xml',
         'views/account_vat_report.xml',
+        'views/account_followups.xml',
     ],
     'qweb': [
         'static/src/xml/base.xml',
