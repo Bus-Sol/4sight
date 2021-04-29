@@ -101,7 +101,7 @@ class AccountMoveLine(models.Model):
                       }}
 
         body = self.env['ir.ui.view']._render_template(
-            "l10n_mt.vat_template",
+            "vat_report_mt.vat_template",
             values=dict(rcontext),
         )
 
