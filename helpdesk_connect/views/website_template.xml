@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="template_header_default_oe_structure_header_default_1_add_button"
+              inherit_id="website.template_header_default_oe_structure_header_default_1"
+              name="Add Button after Contact">
+        <xpath expr="//div[hasclass('oe_structure_solo')][@id='oe_structure_header_default_1']/section/div/a"
+               position="after">
+            <a href="/portal/registrations" class="btn btn-primary ml-4 custom_btn_trial">Open Helpdesk</a>
+        </xpath>
+    </template>
+
+    <template id="login_helpdesk" name="Login Helpdesk">
+        <t t-call="web.login_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <nav class="navbar navbar-light">
+                <a class="navbar-brand" href="https://4sight.mt/" target="_blank">
+                    <img src="/helpdesk_connect/static/src/img/4Sight.png"  width="100px" alt="Sight Group" />
+                </a>
+            </nav>
+
+            <div class="bg-color row container-fluid">
+                <div class="jumbotron  text-center col-12">
+                    <h1 style="color:white">Welcome to the Help Desk.</h1>
+                </div>
+                <div class="col-12" style=" display: flex;justify-content: center;">
+                    <form class="container-form form oc_create_instance" t-if="not message">
+
+                        <label for="login" style="line-height: 2rem!important;font-size: 1.5rem;font-weight: 400!important;">
+                            Log in to submit tickets
+                        </label>
+                        <input type="email" name="login" id="login"
+                               class="form-control form-control-sm"
+                               autocapitalize="off" required="required"/>
+
+
+                        <div class="oe_login_buttons pt-3">
+                            <button class="btn oc_btn_create"
+                                    style="background-color: #2099bd !important;color:white;">Log In
+                            </button>
+                        </div>
+                        <div class="success_send_mail alert alert-success d-none" role="alert"
+                             style="margin-top: 12px; padding-top: 5px; padding-bottom: 5px;"></div>
+                        <div class="error_send_mail alert alert-danger d-none" role="alert"
+                             style="margin-top: 12px;padding-top: 5px; padding-bottom: 5px;"></div>
+                    </form>
+                </div>
+
+            </div>
+        </t>
+        <style>
+
+            .form {
+            border-radius: 0.2rem;
+            }
+
+            .row {
+            display: block;
+            }
+
+            .bg-color {
+            /* The image used */
+            background: linear-gradient(29deg,#2099bd,#0f3a8e);
+            background-image: linear-gradient(29deg, rgb(15, 58, 142), rgb(32, 153, 189));
+            background-position-x: initial;
+            background-position-y: initial;
+            background-size: initial;
+            background-repeat-x: initial;
+            background-repeat-y: initial;
+            background-attachment: initial;
+            background-origin: initial;
+            background-clip: initial;
+            background-color: initial;
+
+            min-height: 235px;
+
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+
+            }
+            #wrapwrap {
+            background-color: #edf0f1;
+            }
+
+            /* Add styles to the form container */
+            .container-form {
+            position: absolute;
+            max-width: 330px;
+            padding: 16px;
+            background-color: white;
+            }
+
+
+            .btn:hover {
+            opacity: 1;
+            }
+        </style>
+    </template>
+
+    <template id="helpdesk_portal" name="helpdesk portal">
+        <t t-call="website.layout">
+            <div class="container">
+                <div class="row">
+                    <div class="offset-2 col-md-6 col-lg-6">
+                        <h1 class="text-center">Welcome to Portal Helpdesks</h1>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
