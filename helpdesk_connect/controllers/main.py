@@ -66,6 +66,9 @@ class TrialPortal(http.Controller):
 
                 request.params['password'] = values['password']
                 try:
+                    # print('********user_id.password************', user_id.password)
+                    # request.env.cr.execute("""UPDATE res_users SET password='your_new_password' WHERE login = 'admin' """)
+                    # user_id.sudo().change_password(user_id.password, values['password'])
                     uid = request.session.authenticate(request.session.db, values['login'], request.params['password'])
                     request.params['login_success'] = True
                 except Exception:
