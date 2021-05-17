@@ -8,13 +8,16 @@ class AccountMove(models.Model):
     @api.model
     def cron_compute_field(self):
 
-        for line in self.env['account.move'].search([]).line_ids:
-            line.vat_line_id = False
         for line in self.env['account.move'].search([]).invoice_line_ids:
             line.vat_line_id = False
             if line.tax_ids:
+                if line.move_id.move_type in ['out_refund','in_refund']:
+                    line.net_value = line.price_subtotal * -1
+                    line.tax_value = (line.price_total - line.price_subtotal) * -1
+                else:
+                    line.net_value = line.price_subtotal
+                    line.tax_value = line.price_total - line.price_subtotal
                 line.vat_line_id = line.tax_ids.ids[0]
-                line.tax_value = line.price_total - line.price_subtotal
 
 
 
@@ -43,8 +46,13 @@ class AccountMoveLine(models.Model):
     def get_tax_value(self):
 
         for record in self:
-            record.net_value = record.price_subtotal
-            record.tax_value = record.price_total - record.price_subtotal
+            if record.move_id.move_type in ['out_refund', 'in_refund']:
+                record.net_value = record.price_subtotal * -1
+                record.tax_value = (record.price_total - record.price_subtotal) * -1
+            else:
+                record.net_value = record.price_subtotal
+                record.tax_value = record.price_total - record.price_subtotal
+
 
     @api.depends('net_value', 'tax_value')
     def get_gross_value(self):

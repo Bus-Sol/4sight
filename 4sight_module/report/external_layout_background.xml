@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="inherit_external_layout_background" inherit_id="web.external_layout_background">
+
+        <div class="text-center" position="before">
+            <div class="not-last-page" style="margin-bottom: 15px;">Continued...</div>
+        </div>
+    </template>
+</odoo>

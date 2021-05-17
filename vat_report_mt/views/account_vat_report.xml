@@ -88,6 +88,7 @@
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='tax_ids']" position="after">
                 <field name="vat_line_id" invisible="1"/>
+                <field name="net_value" invisible="1"/>
                 <field name="price_total" invisible="1"/>
             </xpath>
         </field>
