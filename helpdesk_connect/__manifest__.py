@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Open ticket from Log in',
-    'category': 'Website/Website',
+    'category': 'Helpdesk',
     'version': '1.0',
     'summary': '',
     'description':
         """
         """,
     'author': '4Sight Group',
-    'depends': ['base','website'],
+    'depends': ['base','mail','web'],
     'data': [
         'data/connect_to_portal.xml',
         'views/assets.xml',

@@ -1,51 +1,48 @@
-odoo.define('helpdesk_connect.submit_button', function (require) {
-'use strict';
+    console.log( "ready!");
 
-var publicWidget = require('web.public.widget');
-var ajax = require('web.ajax');
-const {_t, qweb} = require('web.core');
-var rpc = require('web.rpc');
+    $(document).ready(function() {
 
-publicWidget.registry.ButtonSubmit = publicWidget.Widget.extend({
-    selector: '.oc_create_instance',
-    events: {
-        'click .oc_btn_create': 'onClickBtn',
-    },
-
-
-    onClickBtn: function (ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
-        var self = this;
-        var email = this.$('input[type="email"]').val();
+        $('.oc_btn_create').on('click', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var email = $('input[type="email"]').val();
+        btn = $(e.target);
         if (email) {
-                var $button = $(ev.currentTarget);
-                return this.inviteUser(email);
+            inviteUser(email);
             }
+        });
 
-    },
 
-    inviteUser: function (email) {
-        var self = this;
-        rpc.query({
-            route: "/portal/check_user",
-            params: {
-                'email': email,
-            },
-        }).then(function (data) {
+        function inviteUser(email) {
 
-            if (data['sent']) {
-                $('.success_send_mail').removeClass('d-none');
-                $('input[type="email"]').val('');
-                $('.success_send_mail').text('A Link was send to your email');
-            }
-            if(data['error']) {
-                $('.error_send_mail').removeClass('d-none');
-                $('.error_send_mail').text('Something went wrong!');
-            }
-            $('.oc_btn_create').removeAttr('disabled');
+        $.ajax({
+            type: 'POST',
+            url: '/portal/check_user',
+            data: JSON.stringify ({"params": {'email': email}}),
+            success: function(data) {
+                if (!('error' in data.result )) {
+                    setTimeout(function() {
+                        $('.success_send_mail').removeClass('d-none');
+                        $('input[type="email"]').val('');
+                        $('.success_send_mail').text('A Link was send to your email');
+                        $('.oc_btn_create').removeAttr('disabled');
+                     },2000);
+                    return;
+                 }
+                 else {
+                    setTimeout(function() {
+                        $('.error_send_mail').removeClass('d-none');
+                        $('input[type="email"]').val('');
+                        $('.error_send_mail').text('Something went wrong!');
+                        $('.oc_btn_create').removeAttr('disabled');
+                        }, 2000);
+                        return;
+                    }
+                 },
+            error: function(data) { console.log( "Error"); },
+            contentType: "application/json",
+            dataType: 'json'
         });
         $('.oc_btn_create').attr('disabled', 'disabled');
-       },
-});
-});
+       }
+})

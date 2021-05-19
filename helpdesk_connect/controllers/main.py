@@ -12,20 +12,19 @@ import hmac
 
 class TrialPortal(http.Controller):
 
-    @http.route('/portal/registrations', type='http', auth="public", website=True)
+    @http.route('/portal/registrations', type='http', auth="public")
     def login_helpdesk(self, **kwargs):
         return request.render("helpdesk_connect.login_helpdesk")
 
 
     @http.route('/portal/check_user', type='json', auth="public")
-    def check_for_users_email(self, **kw):
-        login = kw['email']
-        name = kw['email'].split('@')[0]
+    def check_for_users_email(self, email):
+        login = email
+        name = email.split('@')[0]
         print(name)
         _logger.info(
             "Attempt to send portal invite for <%s> by user <%s> from %s",
             login, request.env.user.login, request.httprequest.remote_addr)
-        kw['login'] = login
         template = request.env.ref('helpdesk_connect.connect_to_portal')
         token = request.env['res.users'].generate_token_for_portal(name, login)
         values = request.params.copy()
