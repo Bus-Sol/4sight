@@ -8,8 +8,30 @@
         </div>
     </template>
 
-    <template id="line_template_followup_report_inherit" inherit_id="account_reports.line_template" primary="True">
-
+    <template id="account_followup.line_template_followup_report" inherit_id="account_reports.line_template" primary="True">
+        <xpath expr="//div[hasclass('dropdown-menu')]" position="replace">
+            <div t-if='context.get("print_mode") != True' class="dropdown-menu o_account_reports_domain_dropdown"
+                 role="menu">
+                <a role="menuitem" tabindex="-1" t-att-data-id="line['move_id']" action="open_invoice"
+                   groups="account.group_account_readonly" class="dropdown-item">View Invoice
+                </a>
+                <a role="menuitem" tabindex="-1" t-att-data-id="line['id']"
+                   class="o_change_expected_date dropdown-item">Change expected payment date
+                </a>
+            </div>
+        </xpath>
+        <xpath expr="//span[hasclass('o_account_report_column_value')]" position="replace">
+            <span class="'o_account_report_column_value'">
+                <t t-if="cell.get('blocked') != None">
+                    <input t-if="cell['blocked'] == False" type="checkbox" name="blocked" value="True"/>
+                    <input t-if="cell['blocked'] == True" type="checkbox" name="blocked" value="True"
+                           checked="checked"/>
+                </t>
+                <t t-if="cell.get('blocked') == None">
+                    <t t-esc="cell.get('name')"/>
+                </t>
+            </span>
+        </xpath>
         <xpath expr="//tr" position="after">
             <t t-if="context.get('print_mode') and line.get('class') and 'total_due' in line.get('class')">
                 <tr>
