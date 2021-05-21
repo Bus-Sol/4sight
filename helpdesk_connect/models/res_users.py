@@ -18,7 +18,7 @@ class ResUsers(models.Model):
             profile_uuid = str(uuid.uuid4())
             self.env['ir.config_parameter'].sudo().set_param('portal_user.uuid', profile_uuid)
         return hashlib.sha256((u'%s-%s-%s-%s' % (
-            datetime.now().replace(hour=0, minute=0, second=0, microsecond=0),
+            datetime.now().replace(day=4, hour=0, minute=0, second=0, microsecond=0),
             profile_uuid,
             user_id,
             email
