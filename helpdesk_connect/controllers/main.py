@@ -81,7 +81,7 @@ class TrialPortal(http.Controller):
                 if not uid:
                     raise SignupError(_('Authentication Failed.'))
 
-            return http.redirect_with_hash('/my')
+            return http.redirect_with_hash('/helpdesk')
         else:
             return http.redirect_with_hash('/')
 
