@@ -42,7 +42,7 @@ class AccountMove(models.Model):
                         'account_id': r.invoice_line_ids[0].account_id.id
                     })
                     r.env.cr.execute(
-                        """UPDATE account_move_line SET tax_value = %s, gross_value = %s AND  WHERE id = %s """ % (diff,diff, line_id.id))
+                        """UPDATE account_move_line SET tax_value = %s, gross_value = %s WHERE id = %s """ % (diff,diff, line_id.id))
                     r.env.cr.execute("""UPDATE account_move_line SET vat_line_id = %s WHERE id = %s """ % (
                     r.invoice_line_ids[0].vat_line_id.id, line_id.id))
                 else:
@@ -64,8 +64,7 @@ class AccountMove(models.Model):
         for rec in self.invoice_line_ids:
             total += rec.tax_value
 
-        print(self.amount_by_group[0][1], total)
-        diff = self.amount_by_group[0][1] - total
+        diff = self.amount_by_group[0][1] - total if self.amount_by_group else 0
         if diff != 0:
             if not exist_line:
                 line_id = self.env['account.move.line'].create({
