@@ -29,7 +29,7 @@
                                     <t t-esc="datetime.datetime.now().strftime('%d/%m/%Y')"/>
                                 </h5>
                             </div>
-                            <div class="col-4">
+                            <div class="offset-1 col-3 text-center">
                                 <h5 class="text-center">Other Info</h5>
                                 <t t-if="lines.get('other_info')">
                                     <t t-set="info" t-value="lines.get('other_info')"/>
@@ -77,12 +77,10 @@
                             <tbody>
                                 <t t-if="lines.get('lines')">
                                     <t t-foreach="lines['lines']" t-as="line">
-                                        <tr class=""
-                                            t-att-style="'color:black;font-weight: bold;' if (line[0]) else ''">
+                                        <tr class="" t-att-style="'color:black;font-weight: bold;' if (line[0]) else ''">
                                             <t t-set="i" t-value="0"/>
                                             <t t-foreach="line" t-as="l">
-                                                <td t-att-class="'text-left' if i==4 else 'text-center'"
-                                                    t-att-style="'padding-left: 25px;border-bottom: 2px solid black;' if (line[0]) else 'padding-left: 25px;border-bottom: 1px solid black;font-size:12px;'">
+                                                <td t-att-class="'text-left' if i==4 else 'text-center'" t-att-style="'padding-left: 25px;border-bottom: 2px solid black;' if (line[0]) else 'padding-left: 25px;border-bottom: 1px solid black;font-size:12px;'">
                                                     <t t-if="l and i==4">
                                                         <t t-esc="l[:120]"/>
                                                     </t>
