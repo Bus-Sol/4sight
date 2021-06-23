@@ -28,7 +28,7 @@ class AccountMove(models.Model):
                     exist_line = True
 
             for rec in r.invoice_line_ids:
-                total += rec.tax_value
+                total += round(rec.tax_value,2)
 
             diff = r.amount_by_group[0][1] - total if r.amount_by_group else 0
             if diff != 0:
@@ -39,20 +39,24 @@ class AccountMove(models.Model):
                         'is_vat_round': True,
                         'tax_value': diff,
                         'gross_value': diff,
-                        'vat_line_id': r.invoice_line_ids[0].vat_line_id.id,
+                        'vat_line_id': r.invoice_line_ids.filtered(lambda line: line.vat_line_id != False).mapped('vat_line_id')[0].id,
                         'name': 'VAT Rounding',
-                        'account_id': r.invoice_line_ids[0].account_id.id
+                        'account_id': r.invoice_line_ids.filtered(lambda line: line.account_id != False).mapped('account_id')[0].id
                     })
                 else:
                     line = r.env['account.move.line'].search(
                         [('move_id', '=', r.id), ('is_vat_round', '=', True)])
                     line.tax_value = line.gross_value = diff
-                    line.vat_line_id = r.invoice_line_ids[0].vat_line_id.id
+                    line.vat_line_id = r.invoice_line_ids.filtered(lambda line: line.vat_line_id != False).mapped('vat_line_id')[0].id
 
     def write(self, vals):
         res = super(AccountMove, self).write(vals)
         if self.invoice_line_ids:
             for record in self.invoice_line_ids:
+                if record.tax_ids:
+                    record.vat_line_id = record.tax_ids.ids[0]
+                else:
+                    record.vat_line_id = False
                 if record.move_id.move_type in ['out_refund', 'in_refund']:
                     record.net_value = record.price_subtotal * -1
                     record.tax_value = (record.price_total - record.price_subtotal) * -1
@@ -68,7 +72,7 @@ class AccountMove(models.Model):
                     exist_line = True
 
             for rec in self.invoice_line_ids:
-                total += rec.tax_value
+                total += round(rec.tax_value,2)
 
             diff = self.amount_by_group[0][1] - total if self.amount_by_group else 0
             if diff != 0:
@@ -79,14 +83,14 @@ class AccountMove(models.Model):
                         'is_vat_round': True,
                         'tax_value': diff,
                         'gross_value': diff,
-                        'vat_line_id': self.invoice_line_ids[0].vat_line_id.id,
+                        'vat_line_id': self.invoice_line_ids.filtered(lambda line: line.vat_line_id != False).mapped('vat_line_id')[0].id,
                         'name': 'VAT Rounding',
-                        'account_id': self.invoice_line_ids[0].account_id.id
+                        'account_id': self.invoice_line_ids.filtered(lambda line: line.account_id != False).mapped('account_id')[0].id
                     })
                 else:
                     line = self.env['account.move.line'].search([('move_id','=',self.id),('is_vat_round','=',True)])
                     line.tax_value = line.gross_value = diff
-                    line.vat_line_id = self.invoice_line_ids[0].vat_line_id.id
+                    line.vat_line_id = self.invoice_line_ids.filtered(lambda line: line.vat_line_id != False).mapped('vat_line_id')[0].id
         return res
 
 
@@ -100,13 +104,6 @@ class AccountMoveLine(models.Model):
     vat_line_id = fields.Many2one('account.tax', string='VAT')
     is_vat_round = fields.Boolean('Is VAT Round', default=False)
 
-    @api.onchange('tax_ids')
-    def onchange_tax_ids(self):
-        for rec in self:
-            if rec.tax_ids:
-                rec.vat_line_id = rec.tax_ids.ids[0]
-            else:
-                rec.vat_line_id = False
 
     @api.depends('account_id')
     def get_account_group_name(self):
