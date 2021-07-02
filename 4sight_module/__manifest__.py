@@ -16,6 +16,7 @@
     ],
     'data': [
         'views/account_followups.xml',
+        'views/sale_view.xml',
         'report/external_layout_background.xml',
     ],
     'demo': [
