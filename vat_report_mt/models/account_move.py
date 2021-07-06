@@ -74,7 +74,11 @@ class AccountMove(models.Model):
             for rec in self.invoice_line_ids:
                 total += round(rec.tax_value,2)
 
-            diff = self.amount_by_group[0][1] - total if self.amount_by_group else 0
+            ## changes should be done here###
+            if self.move_type in ['out_refund', 'in_refund']:
+                diff = (self.amount_by_group[0][1] - abs(total)) * -1 if self.amount_by_group else 0
+            else:
+                diff = self.amount_by_group[0][1] - total if self.amount_by_group else 0
             if diff != 0:
                 if not exist_line:
                     line_id = self.env['account.move.line'].create({
