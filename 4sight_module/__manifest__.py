@@ -13,11 +13,14 @@
         'account_followup',
         'web',
         'report_qweb_element_page_visibility',
+        'helpdesk'
     ],
     'data': [
         'views/account_followups.xml',
         'views/sale_view.xml',
         'report/external_layout_background.xml',
+        'views/view_helpdesk_form.xml',
+        'views/view_helpdesk_team.xml'
     ],
     'demo': [
     ],
