@@ -15,7 +15,7 @@
                         <div class="o_setting_right_pane">
                             <label for="hide_from_portal"/>
                             <div class="text-muted">
-                                If checked, then the parsing functionality will apply to this team.
+                                Hide this team from ticket list on portal.
                             </div>
                         </div>
                     </div>
