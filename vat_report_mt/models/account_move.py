@@ -51,50 +51,51 @@ class AccountMove(models.Model):
 
     def write(self, vals):
         res = super(AccountMove, self).write(vals)
-        if self.invoice_line_ids:
-            for record in self.invoice_line_ids:
-                if record.tax_ids:
-                    record.vat_line_id = record.tax_ids.ids[0]
-                else:
-                    record.vat_line_id = False
-                if record.move_id.move_type in ['out_refund', 'in_refund']:
-                    record.net_value = record.price_subtotal * -1
-                    record.tax_value = (record.price_total - record.price_subtotal) * -1
-                else:
-                    record.net_value = record.price_subtotal
-                    record.tax_value = record.price_total - record.price_subtotal
-                record.gross_value = record.net_value + record.tax_value
+        for lines in self:
+            if lines.invoice_line_ids:
+                for record in lines.invoice_line_ids:
+                    if record.tax_ids:
+                        record.vat_line_id = record.tax_ids.ids[0]
+                    else:
+                        record.vat_line_id = False
+                    if record.move_id.move_type in ['out_refund', 'in_refund']:
+                        record.net_value = record.price_subtotal * -1
+                        record.tax_value = (record.price_total - record.price_subtotal) * -1
+                    else:
+                        record.net_value = record.price_subtotal
+                        record.tax_value = record.price_total - record.price_subtotal
+                    record.gross_value = record.net_value + record.tax_value
 
-            exist_line = False
-            total = 0
-            for rec in self.env['account.move.line'].search([('move_id', '=', self.id)]):
-                if rec.is_vat_round:
-                    exist_line = True
+                exist_line = False
+                total = 0
+                for rec in self.env['account.move.line'].search([('move_id', '=', lines.id)]):
+                    if rec.is_vat_round:
+                        exist_line = True
 
-            for rec in self.invoice_line_ids:
-                total += round(rec.tax_value,2)
+                for rec in lines.invoice_line_ids:
+                    total += round(rec.tax_value,2)
 
-            ## changes should be done here###
-            if self.move_type in ['out_refund', 'in_refund']:
-                diff = (self.amount_by_group[0][1] - abs(total)) * -1 if self.amount_by_group else 0
-            else:
-                diff = self.amount_by_group[0][1] - total if self.amount_by_group else 0
-            if diff != 0:
-                if not exist_line:
-                    line_id = self.env['account.move.line'].create({
-                        'move_id': self.id,
-                        'exclude_from_invoice_tab': True,
-                        'is_vat_round': True,
-                        'tax_value': diff,
-                        'gross_value': diff,
-                        'vat_line_id': self.invoice_line_ids.filtered(lambda line: line.vat_line_id != False).mapped('vat_line_id')[0].id,
-                        'name': 'VAT Rounding',
-                        'account_id': self.invoice_line_ids.filtered(lambda line: line.account_id != False).mapped('account_id')[0].id
-                    })
+                ## changes should be done here###
+                if lines.move_type in ['out_refund', 'in_refund']:
+                    diff = (lines.amount_by_group[0][1] - abs(total)) * -1 if lines.amount_by_group else 0
                 else:
-                    line = self.env['account.move.line'].search([('move_id','=',self.id),('is_vat_round','=',True)])
-                    line.tax_value = line.gross_value = diff
-                    line.vat_line_id = self.invoice_line_ids.filtered(lambda line: line.vat_line_id != False).mapped('vat_line_id')[0].id
+                    diff = lines.amount_by_group[0][1] - total if lines.amount_by_group else 0
+                if diff != 0:
+                    if not exist_line:
+                        line_id = self.env['account.move.line'].create({
+                            'move_id': lines.id,
+                            'exclude_from_invoice_tab': True,
+                            'is_vat_round': True,
+                            'tax_value': diff,
+                            'gross_value': diff,
+                            'vat_line_id': lines.invoice_line_ids.filtered(lambda line: line.vat_line_id != False).mapped('vat_line_id')[0].id,
+                            'name': 'VAT Rounding',
+                            'account_id': lines.invoice_line_ids.filtered(lambda line: line.account_id != False).mapped('account_id')[0].id
+                        })
+                    else:
+                        line = self.env['account.move.line'].search([('move_id','=',lines.id),('is_vat_round','=',True)])
+                        line.tax_value = line.gross_value = diff
+                        line.vat_line_id = lines.invoice_line_ids.filtered(lambda line: line.vat_line_id != False).mapped('vat_line_id')[0].id
         return res
 
 
