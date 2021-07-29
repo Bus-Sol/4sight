@@ -24,7 +24,7 @@
                     setTimeout(function() {
                         $('.success_send_mail').removeClass('d-none');
                         $('input[type="email"]').val('');
-                        $('.success_send_mail').text('A Link was send to your email');
+                        $('.success_send_mail').text('A link was sent to your mailbox');
                         $('.oc_btn_create').removeAttr('disabled');
                      },2000);
                     return;
