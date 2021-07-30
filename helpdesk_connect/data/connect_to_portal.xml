@@ -36,9 +36,12 @@
                 <tr><td valign="top" style="font-size: 13px;">
                     <div>
                         Dear ${ctx['user_mail']},<br /><br />
-                        You've been invited to login into the portal of 4Sight Consultants Help Desk.
-                            <li>Portal: <a href="${'token_url' in ctx and ctx['token_url'] or ''}">Portal Help Desk</a></li>
-                        Never heard of Odoo? It’s an all-in-one business software loved by 3+ million users. It will considerably improve your experience at work and increase your productivity.
+                        You've been invited to login into the portal of 4Sight Consultants Help Desk. <br /><br />
+                        To login to the help desk portal for:
+                            <li>IT Technical Support: <a href="${'token_url' in ctx and ctx['token_url'] or ''}">Click here</a></li>
+                            <li>Solutions Support: <a href="${'token_url_2' in ctx and ctx['token_url_2'] or ''}">Click here</a></li>
+                        <br />
+                        Never heard of Odoo? It’s an all-in-one business software loved by 5+ million users. It will considerably improve your experience at work and increase your productivity.
                         <br /><br />
                         Have a look at the <a href="https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Odoo Tour</a> to discover the tool.
                         <br /><br />
