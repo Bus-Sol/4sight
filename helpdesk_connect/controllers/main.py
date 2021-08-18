@@ -17,11 +17,10 @@ class TrialPortal(http.Controller):
         return request.render("helpdesk_connect.login_helpdesk")
 
 
-    @http.route('/portal/check_user', type='json', auth="public")
+    @http.route('/portal/check_user', type='json', auth="public",csrf=False)
     def check_for_users_email(self, email):
         login = email
         name = email.split('@')[0]
-        print(name)
         _logger.info(
             "Attempt to send portal invite for <%s> by user <%s> from %s",
             login, request.env.user.login, request.httprequest.remote_addr)
@@ -36,10 +35,15 @@ class TrialPortal(http.Controller):
             }
             try:
                 base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
-                post_base_url = base_url + '/portal/helpdesk'
-                token_url = post_base_url + '?%s' % urls.url_encode(params)
+
+                Teams = request.env['helpdesk.team'].sudo().search([('website_published','=',True)])
+                team_dict = {}
+                for team in Teams:
+                    #print(team, team.name)
+                    team_dict['token_url_%s' %team.id] = [team.name , base_url + '/portal' + team.website_url + '?%s' % urls.url_encode(params)]
+                # print(team_dict)
                 with request._cr.savepoint():
-                    template.sudo().with_context(user_mail=login,name=name, token_url=token_url).send_mail(
+                    template.sudo().with_context(user_mail=login,name=name, token_url=team_dict).send_mail(
                         SUPERUSER_ID, force_send=True, raise_exception=True)
                 values['sent'] = True
             except Exception as e:
@@ -47,17 +51,14 @@ class TrialPortal(http.Controller):
         return values
 
 
-    @http.route('/portal/helpdesk', type='http',method='post', auth="public", website=True)
-    def get_portal_user(self, request):
+    @http.route('/portal/helpdesk/<string:team>', type='http',method='post', auth="public", website=True)
+    def get_portal_user(self, request, team = None):
+        # print('team****************', team)
         from urllib.parse import urlparse, parse_qs
         url = request.httprequest.url
         parsed = urlparse(url)
-        print('request.session***',request.session)
         user_name = parse_qs(parsed.query)['user_id'][0]
-        # salt = uuid.uuid4().hex
-        # hashed_password = hmac.new(user_name.encode('utf-8'), salt.encode('utf-8'), hashlib.sha256).hexdigest()
-        # print('*******hashed_password****',hashed_password)
-        values = {'login':parse_qs(parsed.query)['email'][0],'name':parse_qs(parsed.query)['user_id'][0],'email':parse_qs(parsed.query)['email'][0],'password':parse_qs(parsed.query)['user_id'][0]}
+        values = {'login':parse_qs(parsed.query)['email'][0],'name':user_name,'email':parse_qs(parsed.query)['email'][0],'password':user_name}
         token = request.env['res.users'].generate_token_for_portal(values['name'], values['login'])
         user_id = request.env['res.users'].sudo().search([('login','=',values['login'])])
         if token == parse_qs(parsed.query)['token'][0]:
@@ -65,9 +66,6 @@ class TrialPortal(http.Controller):
 
                 request.params['password'] = values['password']
                 try:
-                    # print('********user_id.password************', user_id.password)
-                    # request.env.cr.execute("""UPDATE res_users SET password='your_new_password' WHERE login = 'admin' """)
-                    # user_id.sudo().change_password(user_id.password, values['password'])
                     uid = request.session.authenticate(request.session.db, values['login'], request.params['password'])
                     request.params['login_success'] = True
                 except Exception:
@@ -81,7 +79,7 @@ class TrialPortal(http.Controller):
                 if not uid:
                     raise SignupError(_('Authentication Failed.'))
 
-            return http.redirect_with_hash('/helpdesk')
+            return http.redirect_with_hash('/helpdesk/%s' % team)
         else:
             return http.redirect_with_hash('/')
 

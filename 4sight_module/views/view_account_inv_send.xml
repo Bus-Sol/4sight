@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="account_invoice_send_inherit">
+            <field name="name">account.invoice.send.form.inherited</field>
+            <field name="model">account.invoice.send</field>
+            <field name="inherit_id" ref="account.account_invoice_send_wizard_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@groups='base.group_user']/span[2]" position='replace'>
+                </xpath>
+                <div name="option_email" position="after">
+                    <div name="include_followers">
+                        <field name="include_followers"/>
+                        <b>
+                            <label for="include_followers"/>
+                        </b>
+                    </div>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

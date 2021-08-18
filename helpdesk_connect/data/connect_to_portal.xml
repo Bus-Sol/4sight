@@ -4,8 +4,8 @@
         <record id="connect_to_portal" model="mail.template">
             <field name="name">Portal: Odoo Connection to Portal</field>
             <field name="model_id" ref="base.model_res_users"/>
-            <field name="subject">${object.company_id.name} invites you to connect to Odoo</field>
-            <field name="email_from">"${object.company_id.name | safe}" &lt;${(object.company_id.email or user.email) | safe}&gt;</field>
+            <field name="subject">Open a ticket with 4Sight</field>
+            <field name="email_from">noreply@4sight.mt</field>
             <field name="email_to">${ctx['user_mail'] | safe}</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
@@ -36,11 +36,15 @@
                 <tr><td valign="top" style="font-size: 13px;">
                     <div>
                         Dear ${ctx['user_mail']},<br /><br />
-                        You've been invited to login into the portal of 4Sight Consultants Help Desk.
-                            <li>Portal: <a href="${'token_url' in ctx and ctx['token_url'] or ''}">Portal Help Desk</a></li>
-                        Never heard of Odoo? It’s an all-in-one business software loved by 3+ million users. It will considerably improve your experience at work and increase your productivity.
+                        You've been invited to login into the portal of 4Sight Consultants Help Desk. <br /><br />
+                        To login to the help desk portal for: <br />
+                        % for t in ctx['token_url'].items():
+                            <li>${t[1][0]}<a href="${t[1][1]}">Click here</a></li><br/>
+                        % endfor
+                        <br />
+                        We use Odoo if you never heard of it's an all in one business solution software loved by 5+ million users. It will considerably improve your experience at work and increase your productivity. If you are interested in this product and what the Odoo ERP can offer you, Odoo has more than a hundred different apps that can help your business automate and improve. If you are interested please get in touch with us for a free consultation.
                         <br /><br />
-                        Have a look at the <a href="https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Odoo Tour</a> to discover the tool.
+                        <p><a href="https://4sight.mt/contact-us/" target="_blank">contact us</a> for a demo.</p>
                         <br /><br />
                         Enjoy Odoo!<br />
                         --<br/>The ${object.company_id.name} Team
