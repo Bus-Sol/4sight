@@ -20,7 +20,7 @@
         <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree"/>
         <field name="arch" type="xml">
             <field name="display_name" position="before">
-                <field name="create_date" invisible="1"/>
+                <field name="create_date" widget="date" options="{'format': 'dd/MM/yyyy'}"/>
             </field>
             <xpath expr="//tree" position="attributes">
                 <attribute name="default_order">user_id desc, create_date desc</attribute>
