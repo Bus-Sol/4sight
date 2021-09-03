@@ -39,9 +39,9 @@ class TrialPortal(http.Controller):
                 Teams = request.env['helpdesk.team'].sudo().search([('website_published','=',True)])
                 team_dict = {}
                 for team in Teams:
-                    print(team, team.name)
+                    #print(team, team.name)
                     team_dict['token_url_%s' %team.id] = [team.name , base_url + '/portal' + team.website_url + '?%s' % urls.url_encode(params)]
-                print(team_dict)
+                # print(team_dict)
                 with request._cr.savepoint():
                     template.sudo().with_context(user_mail=login,name=name, token_url=team_dict).send_mail(
                         SUPERUSER_ID, force_send=True, raise_exception=True)
@@ -53,7 +53,7 @@ class TrialPortal(http.Controller):
 
     @http.route('/portal/helpdesk/<string:team>', type='http',method='post', auth="public", website=True)
     def get_portal_user(self, request, team = None):
-        print('team****************', team)
+        # print('team****************', team)
         from urllib.parse import urlparse, parse_qs
         url = request.httprequest.url
         parsed = urlparse(url)
