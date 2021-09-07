@@ -25,6 +25,7 @@
         'views/view_helpdesk_team.xml',
         'views/view_crm_kanban.xml',
         'views/view_account_inv_send.xml',
+        'views/view_partner_form.xml',
     ],
     'demo': [
     ],
