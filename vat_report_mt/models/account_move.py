@@ -31,7 +31,7 @@ class AccountMove(models.Model):
                 total += round(rec.tax_value,2)
 
             diff = r.amount_by_group[0][1] - total if r.amount_by_group else 0
-            if diff != 0:
+            if round(diff,2) != 0:
                 if not exist_line:
                     line_id = r.env['account.move.line'].create({
                         'move_id': r.id,
@@ -80,7 +80,7 @@ class AccountMove(models.Model):
                     diff = (lines.amount_by_group[0][1] - abs(total)) * -1 if lines.amount_by_group else 0
                 else:
                     diff = lines.amount_by_group[0][1] - total if lines.amount_by_group else 0
-                if diff != 0:
+                if round(diff,2) != 0:
                     if not exist_line:
                         line_id = self.env['account.move.line'].create({
                             'move_id': lines.id,
@@ -96,6 +96,11 @@ class AccountMove(models.Model):
                         line = self.env['account.move.line'].search([('move_id','=',lines.id),('is_vat_round','=',True)])
                         line.tax_value = line.gross_value = diff
                         line.vat_line_id = lines.invoice_line_ids.filtered(lambda line: line.vat_line_id != False).mapped('vat_line_id')[0].id
+                else:
+                    if exist_line:
+                        move_line = self.env['account.move.line'].search([('move_id','=', lines.id),('is_vat_round','=',True)])
+                        if move_line: self.env.cr.execute(
+            'DELETE from account_move_line WHERE id=%s',(move_line.id,))
         return res
 
 
