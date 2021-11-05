@@ -10,6 +10,12 @@
         if (email) {
             $('.oc_btn_create').attr('disabled', 'disabled');
             $('.oc_btn_create')[0].style['opacity'] = '0.65';
+            if (!($('.success_send_mail').hasClass('d-none'))){
+                $('.success_send_mail').addClass('d-none');
+            }
+            if (!($('.error_send_mail').hasClass('d-none'))){
+                $('.error_send_mail').addClass('d-none');
+            }
             inviteUser(email)
                 .then((data) => {
                 console.log(data)
@@ -24,7 +30,7 @@
                 else {
                     $('.error_send_mail').removeClass('d-none');
                     $('input[type="email"]').val('');
-                    $('.error_send_mail').text('Something went wrong!');
+                    $('.error_send_mail').text(data.result['error']);
                     $('.oc_btn_create').removeAttr('disabled');
                     $('.oc_btn_create')[0].style.removeProperty('opacity');
                 }

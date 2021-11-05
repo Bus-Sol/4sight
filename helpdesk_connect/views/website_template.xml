@@ -27,7 +27,7 @@
                     <form class="container-form form oc_create_instance" t-if="not message">
                         <label for="login"
                                style="line-height: 2rem!important;font-size: 1.5rem;font-weight: 400!important;">
-                            Log in to submit tickets
+                            Enter your email address
                         </label>
                         <input type="email" name="login" id="login"
                                class="form-control form-control-sm"
@@ -36,7 +36,7 @@
 
                         <div class="oe_login_buttons pt-3">
                             <button class="btn oc_btn_create"
-                                    style="background-color: #2099bd !important;color:white;">Log In
+                                    style="background-color: #2099bd !important;color:white;">Proceed
                             </button>
                         </div>
                         <div class="success_send_mail alert alert-success d-none" role="alert"

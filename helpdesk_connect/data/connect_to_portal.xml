@@ -37,10 +37,12 @@
                     <div>
                         Dear ${ctx['user_mail']},<br /><br />
                         You've been invited to login into the portal of 4Sight Consultants Help Desk. <br /><br />
-                        To login to the help desk portal for: <br />
+                        To login to the help desk portal for: <br /><br />
                         % for t in ctx['token_url'].items():
                             <li>${t[1][0]} <a href="${t[1][1]}">Click here</a></li>
                         % endfor
+                        <br/>
+                        <br/>
                         We use Odoo if you never heard of it's an all in one business solution software loved by 5+ million users. It will considerably improve your experience at work and increase your productivity. If you are interested in this product and what the Odoo ERP can offer you, Odoo has more than a hundred different apps that can help your business automate and improve. If you are interested please get in touch with us for a free consultation.
                         <br /><br />
                         <p><a href="https://4sight.mt/contact-us/" target="_blank">contact us</a> for a demo.</p>
