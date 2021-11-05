@@ -45,7 +45,7 @@ class TrialPortal(http.Controller):
             try:
                 base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
-                Teams = request.env['helpdesk.team'].sudo().search([('website_published','=',True)])
+                Teams = request.env['helpdesk.team'].sudo().search([('website_published','=',True)], order='id desc')
                 team_dict = {}
                 for team in Teams:
                     #print(team, team.name)
