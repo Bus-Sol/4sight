@@ -17,8 +17,12 @@ class AccountMove(models.Model):
                         line.net_value = line.price_subtotal
                         line.tax_value = line.price_total - line.price_subtotal
                     if line.move_id.move_type == 'entry':
-                        line.net_value = line.debit or line.credit
-                        line.tax_value = sum(line.move_id.line_ids.mapped('debit')) - line.net_value
+                        if line.debit:
+                            line.net_value = line.debit
+                            line.tax_value = sum(line.move_id.line_ids.mapped('debit')) - line.net_value
+                        if line.credit:
+                            line.net_value = line.credit * -1
+                            line.tax_value = (sum(line.move_id.line_ids.mapped('debit')) - line.credit) * -1
                     line.gross_value = line.net_value + line.tax_value
                     line.vat_line_id = line.tax_ids.ids[0]
 
@@ -68,8 +72,12 @@ class AccountMove(models.Model):
                         record.net_value = record.price_subtotal
                         record.tax_value = record.price_total - record.price_subtotal
                     if record.move_id.move_type == 'entry':
-                        record.net_value = record.debit or record.credit
-                        record.tax_value = sum(record.move_id.line_ids.mapped('debit')) - record.net_value
+                        if record.debit:
+                            record.net_value = record.debit
+                            record.tax_value = sum(record.move_id.line_ids.mapped('debit')) - record.net_value
+                        if record.credit:
+                            record.net_value = record.credit * -1
+                            record.tax_value = (sum(record.move_id.line_ids.mapped('debit')) - record.credit) * -1
                     record.gross_value = record.net_value + record.tax_value
 
                 exist_line = False
