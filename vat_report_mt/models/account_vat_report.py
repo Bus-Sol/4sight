@@ -63,7 +63,7 @@ class AccountMoveLine(models.Model):
             actual_vat_code = line_id.vat_line_id.id
 
             line.append(
-                [line_id.vat_line_id.name if line_id.vat_line_id.id != actual_vat_code else '', line_id.date, line_id.account_id.name,
+                [line_id.vat_line_id.name if line_id.vat_line_id.id != actual_vat_code else '', line_id.date, line_id.account_id.display_name,
                  line_id.move_id.name, line_id.name, f"{line_id.net_value:,.2f}", f"{line_id.tax_value:,.2f}", f"{line_id.gross_value:,.2f}"])
 
         info_domain = {}
