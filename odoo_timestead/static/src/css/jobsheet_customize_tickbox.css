@@ -1,0 +1,19 @@
+
+@media (max-width: 767.98px) {
+    .custom-checkbox .custom-control-label::before {
+        border-radius: 0;
+        width: 15px;
+        height: 15px;
+}
+
+.custom-control-label::after {
+    position: absolute;
+    top: 0.43rem;
+    left: -1.35rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    content: "";
+    background: no-repeat 50% / 50% 50%;
+}
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="helpdesk_ticket_view_form_inherit_add_btn" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.inherit.add.btn</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='assign_ticket_to_self']" position='after'>
+                <button name="convert_to_job" string="Convert To Jobsheet" type="object" class="oe_highlight"
+                        groups="helpdesk.group_helpdesk_user" attrs="{'invisible': [('partner_id', '=', False)]}"/>
+
+            </xpath>
+            <field name="email_cc" position="after">
+                <field name="job_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

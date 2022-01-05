@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem name="Jobsheets"
+              id="menu_jobsheets"
+              sequence="40"
+              web_icon="odoo_timestead,static/description/icon.png"
+              groups="group_jobsheet_user"/>
+
+    <menuitem id="job_menu_customer"
+              name="Customers"
+              action="contacts.action_contacts"
+              groups="group_jobsheet_manager"
+              parent="menu_jobsheets"
+              sequence="3"/>
+
+    <menuitem id="job_menu_sales"
+              name="Sales"
+              action="sale.action_quotations_with_onboarding"
+              groups="group_jobsheet_manager"
+              parent="menu_jobsheets"
+              sequence="4"/>
+
+    <menuitem id="job_menu_services"
+              name="Services"
+              action="sale.product_template_action"
+              groups="group_jobsheet_manager"
+              parent="menu_jobsheets"
+              sequence="5"/>
+
+    <menuitem id="job_menu_projects"
+              name="Projects"
+              action="project.open_view_project_all"
+              groups="group_jobsheet_manager"
+              parent="menu_jobsheets"
+              sequence="6"/>
+
+    <menuitem id="job_menu_tasks"
+              name="Tasks"
+              action="project.action_view_all_task"
+              groups="group_jobsheet_manager"
+              parent="menu_jobsheets"
+              sequence="7"/>
+
+    <menuitem id="job_menu_configuration"
+              name="Configuration"
+              groups="group_jobsheet_manager"
+              parent="menu_jobsheets"
+              sequence="9"/>
+
+</odoo>
