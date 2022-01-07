@@ -199,6 +199,7 @@ class JobSheet(models.Model):
                 'res_id': obj.id,
                 'subject': values['subject'],
                 'body': values['body'],
+                'email_from': self.company_id.jobsheet_manager.login if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager') else self.env.user.login,
                 'attachment_ids': values['attachments'],
                 'partner_ids': [obj.partner_id.id],
                 'template_id': template and template.id or False,
@@ -223,12 +224,14 @@ class JobSheet(models.Model):
             }]]
         })
         invoice_id.sudo().action_post()
+        if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager'):
+            invoice_id.sudo().message_unsubscribe(partner_ids=[self.env.uid])
         self.get_email_template_and_send(invoice_id)
         message = _(
             "You went over 100%% of your allocated time, a new Invoice : <a href=# data-oe-model=account.move data-oe-id=%d>%s</a> has been created and sent to the customer.") % (
                       invoice_id.id, invoice_id.name)
         self.activity_schedule('mail.mail_activity_delivery_shortfall', note=message,
-                               user_id=self.company_id.jobsheet_manager.id)
+                               user_id=self.company_id.jobsheet_manager.id if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager') else self.env.uid)
         return invoice_id
 
     def create_sale_order_from_job(self, res):
@@ -245,12 +248,14 @@ class JobSheet(models.Model):
                 "price_unit": service.hour,
             }]]
         })
+        if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager'):
+            order_id.sudo().message_unsubscribe(partner_ids=[self.env.uid])
         self.sudo().sale_order_id = order_id.id
         message = _(
             "You went over 75%% of your allocated time, a new Sales Order : <a href=# data-oe-model=sale.order data-oe-id=%d>%s</a> has been created and sent to the customer.") % (
                       order_id.id, order_id.name)
         self.activity_schedule('mail.mail_activity_delivery_shortfall', note=message,
-                               user_id=self.company_id.jobsheet_manager.id)
+                               user_id=self.company_id.jobsheet_manager.id if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager') else self.env.uid)
         self.get_email_template_and_send(order_id)
 
 
@@ -357,7 +362,7 @@ class JobSheet(models.Model):
                 'user_id': res.env.uid,
                 'unit_amount': vals['hours'],
             }
-            if res.partner_id.jobsheet_type =='prepaid' and (not res.task_id or res.project_id):
+            if res.partner_id.jobsheet_type =='prepaid' and not res.task_id:
                 raise UserError(_('No task found to allocate hours.'))
             last_progress = res.task_id.progress
             current_service = res.partner_id.service_ids.filtered(
@@ -378,7 +383,7 @@ class JobSheet(models.Model):
                 'user_id': self.env.uid,
                 'unit_amount': vals['hours'] if 'hours' in vals else self.hours,
             }
-            if self.partner_id.jobsheet_type =='prepaid' and (not self.task_id or self.project_id):
+            if self.partner_id.jobsheet_type =='prepaid' and not self.task_id:
                 raise UserError(_('No task found to allocate hours.'))
             last_progress = self.task_id.progress
             self.create_account_analytic_line(values)

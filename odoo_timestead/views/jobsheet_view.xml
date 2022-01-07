@@ -179,9 +179,8 @@
                                     <field name="progress" widget="progressbar"/>
                                 </group>
                             </group>
-                            <field name="timesheet_ids" mode="tree,kanban"
-                                   attrs="{'readonly': [('status', '!=', 'created')]}">
-                                <tree editable="bottom" string="Timesheet Activities" default_order="date">
+                            <field name="timesheet_ids" mode="tree,kanban">
+                                <tree create="0" string="Timesheet Activities" default_order="date">
                                     <field name="date" invisible="1"/>
                                     <field name="user_id" invisible="1"/>
                                     <field name="employee_id" required="1" widget="many2one_avatar_employee"/>

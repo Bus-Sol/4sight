@@ -12,10 +12,23 @@ class ResPartner(models.Model):
     receive_invoice = fields.Boolean('Receive Invoice')
     service_ids = fields.Many2many('jobsheet.service', 'partner_jobsheet_service_rel',string='Related services')
     jobsheet_type = fields.Selection([('prepaid','Prepaid'),('contract_postpaid','Contract/Postpaid')])
+    check_balance = fields.Selection([('balanced','Balanced'),('out_of_balance','Out Of Balance')], store=True)
+    compute_balance = fields.Boolean(compute='compute_balance_partner')
+
+
+    def compute_balance_partner(self):
+        for rec in self.env['res.partner'].search([('jobsheet_type','=','prepaid')]):
+            compute_balance = False
+            tasks = self.env['project.task'].search([('partner_id','=',rec.id)])
+            if any(task.remaining_hours > 0 for task in tasks):
+                compute_balance = True
+                rec.check_balance = 'balanced'
+            else:
+                rec.check_balance = 'out_of_balance'
+            rec.compute_balance = compute_balance
 
     def write(self, vals):
         res = super(ResPartner, self).write(vals)
-        print(res, vals)
         if 'child_ids' in vals:
             for child_id in self.child_ids:
                 job_ids = self.env['client.jobsheet'].search([('partner_id', '=', child_id.parent_id.id)])
@@ -32,3 +45,18 @@ class ResPartner(models.Model):
                         inv.message_unsubscribe(partner_ids=[child_id.id])
 
         return res
+
+
+
+class Task(models.Model):
+    _inherit = "project.task"
+
+    @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
+    def _compute_remaining_hours(self):
+        for task in self:
+            task.remaining_hours = task.planned_hours - task.effective_hours - task.subtask_effective_hours
+            if task.partner_id.jobsheet_type == 'prepaid':
+                if task.remaining_hours <=0:
+                    task.partner_id.check_balance = 'out_of_balance'
+                else:
+                    task.partner_id.check_balance = 'balanced'

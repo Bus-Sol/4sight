@@ -3,6 +3,7 @@
     <menuitem name="Jobsheets"
               id="menu_jobsheets"
               sequence="40"
+              action="action_jobsheets"
               web_icon="odoo_timestead,static/description/icon.png"
               groups="group_jobsheet_user"/>
 
