@@ -9,8 +9,9 @@ class Helpdesk(models.Model):
 
     def convert_to_job(self):
         job = self.env['client.jobsheet'].create({
-            'partner_id': self.partner_id.id,
-            'brief': 'job sheet from ticket',
-            'project_id': self.partner_id.product_id.project_id.id or False
+            'partner_id': self.partner_id.parent_id.id if self.partner_id.parent_id else self.partner_id.id,
+            'brief': self.display_name,
+            'project_id': self.partner_id.product_id.project_id.id or False,
+            'details': self.description
         })
         self.job_id = job.id

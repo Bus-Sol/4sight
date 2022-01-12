@@ -112,6 +112,8 @@ class JobSheet(models.Model):
             self.project_id = self.service_id.project_id.id
         else:
             self.project_id = False
+        if self.type in ['postpaid','contract']:
+            self.project_id = 79
 
     @api.onchange('overtime')
     def onchange_overtime(self):
@@ -120,9 +122,11 @@ class JobSheet(models.Model):
 
     @api.constrains('details')
     def _check_details(self):
-        for rec in self:
-            if rec.details and len(rec.details) <= 102:
-                raise ValidationError(_('Please fill in details with at least 100 characters.'))
+        params = self._context.get('params', {})
+        if not params:
+            for rec in self:
+                if rec.details and len(rec.details) <= 102:
+                    raise ValidationError(_('Please fill in details with at least 100 characters.'))
 
     @api.constrains('hours_overtime', 'effective_hours')
     def _check_hours_overtime(self):
