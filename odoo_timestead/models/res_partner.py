@@ -10,7 +10,7 @@ class ResPartner(models.Model):
     type = fields.Selection(selection_add=[('jobsheet', 'Jobsheet Address')])
     receive_jobsheet = fields.Boolean('Receive Jobsheet')
     receive_invoice = fields.Boolean('Receive Invoice')
-    service_ids = fields.Many2many('jobsheet.service', 'partner_jobsheet_service_rel',string='Related services')
+    service_ids = fields.One2many('jobsheet.service', 'partner_service_id', string='Related services')
     jobsheet_type = fields.Selection([('prepaid','Prepaid'),('contract_postpaid','Contract/Postpaid')])
     check_balance = fields.Selection([('balanced','Balanced'),('out_of_balance','Out Of Balance')], store=True)
     compute_balance = fields.Boolean(compute='compute_balance_partner')

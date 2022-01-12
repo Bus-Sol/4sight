@@ -18,9 +18,10 @@
                     <field name="service_ids" widget="one2many" options="{'no_create': True}">
                         <tree string="Services" editable="bottom">
                             <field name="product_id"/>
-                            <field name="quantity" attrs="{'invisible': [('jobsheet_type', '!=', 'contract_postpaid')]}"/>
-                            <field name="buffer" groups="odoo_timestead.group_jobsheet_manager" attrs="{'invisible': [('jobsheet_type', '!=', 'contract_postpaid')]}"/>
-                            <field name="extra_hour" force_save="1" widget="timesheet_uom_no_toggle" groups="odoo_timestead.group_jobsheet_manager" attrs="{'invisible': [('jobsheet_type', '!=', 'contract_postpaid')]}"/>
+                            <field name="jobsheet_type"/>
+                            <field name="quantity" attrs="{'column_invisible': [('parent.jobsheet_type', '=', 'contract_postpaid')]}"/>
+                            <field name="buffer" groups="odoo_timestead.group_jobsheet_manager" attrs="{'column_invisible': [('parent.jobsheet_type', '=', 'contract_postpaid')]}"/>
+                            <field name="extra_hour" force_save="1" widget="timesheet_uom_no_toggle" groups="odoo_timestead.group_jobsheet_manager" attrs="{'column_invisible': [('parent.jobsheet_type', '=', 'contract_postpaid')]}"/>
                             <field name="hour" groups="odoo_timestead.group_jobsheet_manager"/>
                         </tree>
                     </field>
