@@ -94,7 +94,7 @@ class JobSheet(models.Model):
     def onchange_partner_id(self):
         if self.timesheet_ids:
             raise UserError(_('You cannot change customer once you filled in a timesheet.'))
-        self.service_id = False
+        self.service_id = self.partner_id.service_ids[0].product_id.id if self.partner_id.service_ids else False
         if self.partner_id.jobsheet_type == 'prepaid':
             self.is_prepaid = True
             self.type = 'prepaid'
@@ -578,17 +578,6 @@ class JobSheet(models.Model):
 
     def _prepare_account_move_line_from_rate(self):
         self.ensure_one()
-        product_id = self.env['product.product'].search([('name','=',self.name)])
-        product_service = False
-        # if product_id:
-        #     product_service = product_id
-        # else:
-        #     product_service = self.env['product.product'].create({
-        #         'name': self.name,
-        #         'type': 'service',
-        #         'uom_id': self.env.ref('uom.product_uom_hour').id,
-        #         'uom_po_id': self.env.ref('uom.product_uom_hour').id,
-        #     })
         current_service = self.partner_id.service_ids.filtered(
             lambda s: s.product_id == self.service_id)[0]
         res = {
@@ -681,17 +670,10 @@ class JobSheetline(models.Model):
     def _prepare_account_move_line(self):
         self.ensure_one()
         res = {
-            # 'display_type': self.display_type,
-            # 'sequence': self.sequence,
             'name': '%s: %s' % (self.jobsheet_id.name, self.name),
             'product_id': self.product_id.id,
-            # 'product_uom_id': self.product_uom.id,
             'quantity': self.product_uom_qty,
             'price_unit': self.price_unit,
-            # 'tax_ids': [(6, 0, self.taxes_id.ids)],
-            # 'analytic_account_id': self.account_analytic_id.id,
-            # 'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
-            # 'purchase_line_id': self.id,
         }
         return res
 

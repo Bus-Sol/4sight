@@ -5,7 +5,7 @@ from odoo import models, fields, api
 class JobSheetService(models.Model):
     _name = "jobsheet.service"
 
-    product_id = fields.Many2one('product.template', string='Service', domain=[('type','=', 'service'),('service_tracking', '!=', 'no')])
+    product_id = fields.Many2one('product.template', string='Service', domain=[('type','=', 'service')])
     quantity= fields.Float('Quantity')
     hour = fields.Float('Price')
     buffer = fields.Integer('Buffer (in %)')
