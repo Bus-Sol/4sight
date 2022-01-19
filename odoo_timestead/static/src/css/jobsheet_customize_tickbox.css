@@ -1,15 +1,34 @@
 
 @media (max-width: 767.98px) {
-    .custom-checkbox .custom-control-label::before {
+    div[name="overtime"] > .custom-checkbox .custom-control-label::before {
         border-radius: 0;
-        width: 15px;
-        height: 15px;
+        width: 24px;
+        height: 24px;
+        top: -0.1rem;
 }
 
-.custom-control-label::after {
+   div[name="overtime"] > .custom-control-label::after {
     position: absolute;
-    top: 0.43rem;
-    left: -1.35rem;
+    top: 0.3rem;
+    left: -1.09rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    content: "";
+    background: no-repeat 50% / 50% 50%;
+}
+
+    .custom-checkbox[name="tick_postpaid"] .custom-control-label::before {
+        border-radius: 0;
+        width: 24px;
+        height: 24px;
+        top: -0.1rem;
+}
+
+   div[name="tick_postpaid"] > .custom-control-label::after {
+    position: absolute;
+    top: 0.3rem;
+    left: -1.09rem;
     display: block;
     width: 1rem;
     height: 1rem;

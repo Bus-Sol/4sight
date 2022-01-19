@@ -55,6 +55,8 @@ class JobSheet(models.Model):
     progress = fields.Float(related='task_id.progress')
     sale_order_id = fields.Many2one('sale.order', string='Next Sale Order', groups='odoo_timestead.group_jobsheet_manager')
     tick_postpaid = fields.Boolean('Is Postpaid', default=False)
+    url_detail = fields.Char(string='Link for Details')
+    ticket_id = fields.Many2one('helpdesk.ticket')
 
     @api.depends('start_date')
     def compute_start_job(self):
@@ -355,7 +357,9 @@ class JobSheet(models.Model):
                     if child.receive_jobsheet:
                         list_followers.append(child.id)
                 res.message_subscribe(partner_ids=list_followers)
-
+        if vals.get('ticket_id'):
+            ticket = self.env['helpdesk.ticket'].browse(vals['ticket_id'])
+            ticket.job_id = res.id
         if vals.get('hours') and vals.get('hours') > 0:
             values = {
                 'job_id': res.id,
