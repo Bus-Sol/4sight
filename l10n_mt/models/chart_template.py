@@ -74,7 +74,7 @@ class AccountChartTemplate(models.Model):
                 'name': 'Bank',
                 'code': 'BNK1',
                 'company_id': company.id,
-                'bank_statements_source': 'file_import',
+                # 'bank_statements_source': 'file_import',
                 'payment_credit_account_id': account_1200,
                 'payment_debit_account_id': account_1200,
             },

@@ -17,6 +17,7 @@
         'report/vat_report_template.xml',
         'views/assets.xml',
         'views/account_vat_report.xml',
+        #'views/res_config_settings_view.xml',
     ],
     'qweb': [
         'static/src/xml/base.xml',

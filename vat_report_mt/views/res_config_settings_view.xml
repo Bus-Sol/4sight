@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_vat_mt" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.vat.mt.inherit.account.reports</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account_reports.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='account_tax_periodicity']/div[hasclass('o_setting_right_pane')]/div[hasclass('content-group')]/div[hasclass('row')][3]" position="after">
+                <div class="row">
+                    <label string="Limit tax backdates to one tax period" for="limit_tax_backdate" class="col-lg-5 o_light_label"/>
+                    <field name="limit_tax_backdate"/>
+                </div>
+                <div class="row" attrs="{'invisible': [('limit_tax_backdate', '!=', True)]}">
+                    <label string="Maximum tax amount for historic period" for="max_tax_amount" class="col-lg-5 o_light_label"/>
+                    <field name="max_tax_amount"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

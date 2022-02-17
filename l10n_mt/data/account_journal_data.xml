@@ -35,7 +35,7 @@
         <field name="code">BNK1</field>
 <!--        <field name="default_debit_account_id" ref="1200"/>-->
 <!--        <field name="default_credit_account_id" ref="1200"/>-->
-        <field name="bank_statements_source">file_import</field>
+<!--        <field name="bank_statements_source">file_import</field>-->
     </record>
 
         <record model="account.journal" id="account_journal_petty_cash">

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, _, api
-
+import datetime
+from odoo.exceptions import ValidationError
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -110,6 +111,19 @@ class AccountMove(models.Model):
                 'DELETE from account_move_line WHERE id=%s',(move_line.id,))
         return res
 
+    # def action_post(self):
+    #     res = super(AccountMove, self).action_post()
+    #     period_start, period_end = self.env.company._get_previous_tax_period(
+    #         fields.Date.from_string(datetime.date.today()))
+    #     print(period_start, period_end)
+    #     if self.env.company.limit_tax_backdate:
+    #         if  self.invoice_date < period_start:
+    #             raise ValidationError(_('Cannot backdate transactions earlier than previous tax period.'))
+    #         elif self.env.company.max_tax_amount:
+    #             ## SUm total tax ###
+    #             pass
+    #
+    #     return res
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
