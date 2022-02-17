@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="payment_acquirer_viva" model="payment.acquirer">
+            <field name="name">Viva Wallet</field>
+            <field name="image_128" type="base64" file="sight_viva_wallet/static/src/img/viva_icon.png"/>
+            <field name="provider">viva</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="view_template_id" ref="viva_form"/>
+        </record>
+    </data>
+</odoo>
