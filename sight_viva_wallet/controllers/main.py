@@ -32,7 +32,7 @@ class VivaController(http.Controller):
         return werkzeug.utils.redirect('/payment/process')
 
     def get_transaction_url(self, tx):
-        environment = 'prod' if tx.state == 'enabled' else 'test'
+        environment = 'prod' if tx.acquirer_id.state == 'enabled' else 'test'
         return tx.acquirer_id._get_viva_urls(environment)['viva_rest_trx']
 
     def viva_validate_data(self, **post):
@@ -54,7 +54,7 @@ class VivaController(http.Controller):
         access_token = tx.acquirer_id.request_token()
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
         headers['Authorization'] = "Bearer %s" % access_token
-        viva_url = 'https://api.vivapayments.com/checkout/v2/transactions/' + viva_transaction_id
+        viva_url = self.get_transaction_url(tx) + viva_transaction_id
         _logger.info('viva_url: %s' % viva_url)
         urequest = requests.get(url=viva_url, headers=headers)
         urequest.raise_for_status()
