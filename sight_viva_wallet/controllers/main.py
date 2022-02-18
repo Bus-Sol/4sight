@@ -41,6 +41,7 @@ class VivaController(http.Controller):
         reference = post.get('s')
         tx = None
         viva_transaction_id = post.get('t', False)
+        _logger.info('viva_transaction_id: %s' % viva_transaction_id)
         if reference:
             tx = request.env['payment.transaction'].sudo().search([('order_code', '=', reference)])
         if not tx:
@@ -49,13 +50,16 @@ class VivaController(http.Controller):
         if not viva_transaction_id:
             _logger.warning('Received notification for unknown payment transaction reference')
             return False
+        _logger.info('TX: %s' % tx)
         access_token = tx.acquirer_id.request_token()
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
         headers['Authorization'] = "Bearer %s" % access_token
         viva_url = self.get_transaction_url(tx) + viva_transaction_id
+        _logger.info('viva_url: %s' % viva_url)
         urequest = requests.get(url=viva_url, headers=headers)
         urequest.raise_for_status()
         resp = urequest.json()
+        _logger.info('resp: %s' % resp)
         if resp['statusId']:
             if resp['statusId'] == 'F':
                 _logger.info('Viva Wallet: validated data')
