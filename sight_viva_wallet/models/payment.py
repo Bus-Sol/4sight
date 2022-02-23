@@ -8,7 +8,8 @@ import base64
 from odoo import api, fields, models, _
 from odoo.http import request
 from odoo.addons.sight_viva_wallet.controllers.main import VivaController
-from odoo.addons.payment.models.payment_acquirer import ValidationError
+from odoo.exceptions import ValidationError
+
 _logger = logging.getLogger(__name__)
 
 
@@ -48,7 +49,7 @@ class PaymentAcquirerViva(models.Model):
 
     def request_token(self):
 
-        base64string = base64.encodebytes(bytes('%s:%s' % (self.viva_client_id, self.viva_client_secret),'ascii'))
+        base64string = base64.encodebytes(bytes('%s:%s' % (self.viva_client_id, self.viva_client_secret), 'ascii'))
         decode_credentials = base64string.decode('ascii').replace('\n', '')
         headers = {'Content-Type': 'application/x-www-form-urlencoded',
                    "Authorization": "Basic %s" % decode_credentials
@@ -59,29 +60,34 @@ class PaymentAcquirerViva(models.Model):
         response = requests.post(
             url=url_token,
             headers=headers, data=grant_type, timeout=60)
+        _logger.info('Response token: %s', response.json())
+        rslt = response.json()
         if response.status_code == 200:
-            rslt = response.json()
             return rslt['access_token']
+        else:
+            if 'error' in rslt:
+                raise ValidationError(_(rslt['error']))
 
     def create_order(self, token, viva_tx_values):
 
         environment = 'prod' if self.state == 'enabled' else 'test'
         url_create_order = self._get_viva_urls(environment)['viva_rest_url']
-        headers = {'Content-type': 'application/json','Accept': 'application/json'}
+        headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
         headers['Authorization'] = "Bearer %s" % token
         payload = json.dumps({
-        'amount': viva_tx_values['amount']*100,
-        'customer': {
-            'email': viva_tx_values['partner_email'],
-            'fullName': viva_tx_values['partner_name'],
-            'phone': viva_tx_values['partner_phone'],
-            'countryCode': viva_tx_values.get('partner_country') and viva_tx_values.get('partner_country').code or '',
-            'requestLang': viva_tx_values['partner_lang'],
-        }
-    })
+            'amount': viva_tx_values['amount'] * 100,
+            'customer': {
+                'email': viva_tx_values['partner_email'],
+                'fullName': viva_tx_values['partner_name'],
+                'phone': viva_tx_values['partner_phone'],
+                'countryCode': viva_tx_values.get('partner_country') and viva_tx_values.get(
+                    'partner_country').code or '',
+                'requestLang': viva_tx_values['partner_lang'],
+            }
+        })
         req = requests.post(
             url=url_create_order,
-            headers=headers,data=payload, timeout=60)
+            headers=headers, data=payload, timeout=60)
         res = req.json()
         if 'orderCode' in res:
             return res['orderCode']
@@ -96,10 +102,13 @@ class PaymentAcquirerViva(models.Model):
     def viva_form_generate_values(self, values):
         self.ensure_one()
         token = self.request_token()
+        _logger.info('Token: %s', token)
         order_code = False
         if token:
             order_code = self.create_order(token, values)
             request.session['order_code'] = order_code
+        else:
+            return False
         _logger.info('Checking if session containes OrderCode: %s', request.session)
         base_url = self.get_base_url()
         viva_tx_values = dict(values)
@@ -107,16 +116,15 @@ class PaymentAcquirerViva(models.Model):
             'Viva_return': urls.url_join(base_url, VivaController._return_url),
             'Viva_returncancel': urls.url_join(base_url, VivaController._cancel_url),
         })
-        txn = self.env['payment.transaction'].search([('reference','=',viva_tx_values['reference'])])
+        txn = self.env['payment.transaction'].search([('reference', '=', viva_tx_values['reference'])])
         if txn:
             txn.order_code = order_code
         return viva_tx_values
 
-
     def viva_get_form_action_url(self):
         self.ensure_one()
         environment = 'prod' if self.state == 'enabled' else 'test'
-        return self._get_viva_urls(environment)['viva_form_url']+str(request.session['order_code'])
+        return self._get_viva_urls(environment)['viva_form_url'] + str(request.session['order_code'])
 
 
 class PaymentTransactionViva(models.Model):
@@ -129,7 +137,7 @@ class PaymentTransactionViva(models.Model):
         reference, txn_id = data.get('s'), data.get('t')
         if not reference or not txn_id:
             error_msg = _('Viva Wallet: received data with missing reference (%s) or txn-id (%s))') % (
-            reference, txn_id)
+                reference, txn_id)
             _logger.error(error_msg)
             raise ValidationError(error_msg)
         tx = self.search([('order_code', '=', reference)])
@@ -155,7 +163,6 @@ class PaymentTransactionViva(models.Model):
 
         return invalid_parameters
 
-
     def _viva_form_validate(self, data):
         _logger.info('Entering validation with Viva Wallet payment: %s' % data)
         status = data.get('statusId', False)
@@ -167,10 +174,10 @@ class PaymentTransactionViva(models.Model):
                 'name': 'XXXXXXXXXXXX%s' % last4,
                 'acquirer_ref': data.get('t')
             })
-            if status =='F':
+            if status == 'F':
                 self._set_transaction_done()
                 self.write({'acquirer_reference': data.get('t'),
-                    'payment_token_id': payment_token.id})
+                            'payment_token_id': payment_token.id})
                 _logger.info('Validated for Viva Wallet payment %s: set as done' % (self.reference))
                 return True
 
@@ -182,10 +189,11 @@ class PaymentTransactionViva(models.Model):
                 _logger.info('Received notification for Viva Wallet payment %s: set as pending' % (self.reference))
                 return True
             else:
-                error = 'Received unrecognized status for Viva Wallet payment %s: %s, set as error' % (self.reference, status)
+                error = 'Received unrecognized status for Viva Wallet payment %s: %s, set as error' % (
+                    self.reference, status)
                 self.update(state_message=error)
                 self._set_transaction_cancel()
                 _logger.info(error)
                 self.write({'acquirer_reference': data.get('t'),
-                        'payment_token_id': data.get('cardNumber')})
+                            'payment_token_id': data.get('cardNumber')})
                 return True
