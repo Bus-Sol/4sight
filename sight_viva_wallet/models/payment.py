@@ -76,6 +76,7 @@ class PaymentAcquirerViva(models.Model):
         headers['Authorization'] = "Bearer %s" % token
         payload = json.dumps({
             'amount': viva_tx_values['amount'] * 100,
+            'customerTrns': viva_tx_values['reference'],
             'customer': {
                 'email': viva_tx_values['partner_email'],
                 'fullName': viva_tx_values['partner_name'],
