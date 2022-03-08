@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="menu_retails" model="website.menu">
+            <field name="name">Retail</field>
+            <field name="url">/retail</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">30</field>
+        </record>
+        <record id="action_open_website" model="ir.actions.act_url">
+            <field name="name">Retail</field>
+            <field name="target">self</field>
+            <field name="url">/retail</field>
+        </record>
+
+    </data>
+    <data>
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+        <value>crm.lead</value>
+        <value eval="['first_name',
+                      'father_name',
+                      'surname',
+                      'dob',
+                      'place_of_birth',
+                      'country_birth',
+                      'citizenship',
+                      'martial_status',
+                      'educational_level',
+                      'flat_num',
+                      'house_name',
+                      'street',
+                      'street_number',
+                      'postal_code',
+                    'district_id',
+                    'city_town_id',
+                    'country',
+                    'flat_num_2',
+                    'house_name_2',
+                    'street_2',
+                    'street_number_2',
+                    'postal_code_2',
+                    'district_2',
+                    'city_town_2',
+                    'country_2',
+                    'national_id_number',
+                    'national_id_insurrance_number',
+                    'national_id_insurrance_date',
+                    'national_id_expiration_date',
+                    'passport_number',
+                    'passport_insurrance_country',
+                    'passport_insurrance_date',
+                    'passport_expiration_date',
+                    'profession',
+                    'title_position',
+                    'employes_name',
+                    'annual_gross_income',
+                    'work_address',
+                    'post_code',
+                    'business_phone_number',
+                    'business_email_address',
+                    'employement_status_1',
+                    'employement_status_2',
+                    'employement_status_3',
+                    'mobile_number',
+                    'home_phone_number',
+                    'fax_number',
+                    'personal_email_1',
+                    'personal_email_2',
+                    'acc_exp_credit_turnover',
+                    'is_saving',
+                    'is_product_needs',
+                    'is_payroll',
+                    'is_personal_noncommercial_trx',
+                    'is_trade_finance_trx Trade',
+                    'is_domestic_trx_business',
+                    'is_crossborder_trx_business',
+                    'is_cash',
+                    'is_cheques',
+                    'is_domestic_transfers',
+                    'is_mutual_funds',
+                    'is_crossborder_incom_trans',
+                    'is_crossborder_outward_trans',
+                    'is_outward_domestic_trans',
+                    'is_stocks',
+                    'is_credit_card',
+                    'inward_transfers',
+                    'outward_transfers',
+                    'is_business_activity',
+                    'is_investment_activity',
+                    'is_salary_pension',
+                    'is_earnings_sop',
+                    'is_earnings_sob',
+                    'is_earnings_soi',
+                    'is_inheritance',
+                    'is_divorce_settlement',
+                    'is_insurance_proceeds_settlement',
+                    'is_winning_ngl',
+                    'is_winning_gl',
+                    'ba_line_of_bd',
+                      ]"/>
+    </function>
+    </data>
+</odoo>

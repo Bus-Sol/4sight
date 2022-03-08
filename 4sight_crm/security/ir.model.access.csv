@@ -1,0 +1,3 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+access_cyprus_district,cyprus.district,model_cyprus_district,,1,1,1,1
+access_cyprus_area,cyprus.area,model_cyprus_area,,1,1,1,1
