@@ -4,12 +4,13 @@ from odoo import http
 from odoo.http import content_disposition, Controller, request, route
 import requests
 
+
 class WebsiteRetailForm(http.Controller):
 
     @http.route(['/retail'], type='http', auth="public", website=True, sitemap=True)
     def post_customer_date(self, **kwargs):
 
-        print('*****************************',kwargs, request.session)
+        print('*****************************', kwargs, request.session)
         districts = request.env['cyprus.district'].sudo().search([])
         values = {
             'districts': districts,
@@ -19,18 +20,17 @@ class WebsiteRetailForm(http.Controller):
     @http.route(['/data/district/update_area_selection'], type='http', auth="public", methods=['POST'], website=True)
     def area_selection_json(self, district_id=None, **kwargs):
 
-        print(district_id)
         list_items = []
         if district_id:
-            district_key = request.env['cyprus.district'].sudo().search([('id','=',district_id)]).key
-            list_items = request.env['cyprus.area'].sudo().search_read([('district_name','=',district_key)],['id', 'key', 'name'])
-        print(list_items)
+            district_key = request.env['cyprus.district'].sudo().search([('id', '=', district_id)]).key
+            list_items = request.env['cyprus.area'].sudo().search_read([('district_name', '=', district_key)],
+                                                                       ['id', 'key', 'name'])
         return json.dumps(list_items)
 
     @http.route(['/data/district/update_street_api'], type='http', auth="public", methods=['POST'], website=True)
-    def street_selection_json(self, district_key =None, name_inserted=None,area_key=None, **kwargs):
+    def street_selection_json(self, district_key=None, name_inserted=None, area_key=None, **kwargs):
 
-        print(name_inserted, district_key,area_key)
+        print(name_inserted, district_key, area_key)
         user_lang = request.session['context']['lang']
         lng = 'el' if user_lang == 'el_GR' else 'en'
         list_items = []
@@ -42,10 +42,14 @@ class WebsiteRetailForm(http.Controller):
         }
 
         if name_inserted and district_key:
-            district_name = request.env['cyprus.district'].sudo().search([('id','=',district_key)],limit=1).key
+            district_name = request.env['cyprus.district'].sudo().search([('id', '=', district_key)], limit=1).key
             area = request.env['cyprus.area'].sudo().search([('id', '=', area_key)], limit=1).key
-            if district_name in ['occupied-areas','government-authorities','post-office-boxes','parcel24']:
-                url = "https://cypruspost.post/api/postal-codes/"+district_name+"?district="+area+"&param="+name_inserted+"&lng=en&page_token=" + next_page
+            district_match_url = {}
+            if district_name in ['occupied-areas', 'government-authorities', 'post-office-boxes', 'parcel24']:
+                district_match_url = {'occupied-areas': 'occupied-areas',
+                                      'government-authorities': 'government-services',
+                                      'post-office-boxes': 'post-office-boxes', 'parcel24': 'parcel24-locations'}
+                url = "https://cypruspost.post/api/postal-codes/" + district_match_url[district_name] + "?district=" + area + "&param=" + name_inserted + "&lng=en&page_token=" + next_page
             else:
                 url = "https://cypruspost.post/api/postal-codes/search?district=" + district_name + "&area=" + area + "&param=" + name_inserted + "&lng="+lng+"&page_token=" + next_page
 
@@ -54,7 +58,6 @@ class WebsiteRetailForm(http.Controller):
                     url = url
                     response = requests.request("GET", url, headers=headers, data=payload)
                     res = response.json()
-                    print(res)
                     if res['status_code'] == 400:
                         return json.dumps(['error'])
                     result = res['data']['result']
@@ -63,5 +66,4 @@ class WebsiteRetailForm(http.Controller):
                 except Exception as e:
                     print('*********', e)
                     break
-        print(list_items)
         return json.dumps(list_items)

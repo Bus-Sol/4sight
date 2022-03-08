@@ -60,11 +60,18 @@ odoo.define('4sight_crm.custom_s_website_form', function (require) {
                 }
                 else {
                     $('.js_select_street').append("<option value=''>Select Street</option>");
-                    obj.map(function(k) {
-                        $('.js_select_street').append('<option value=' +k.postal_code+'>'+k.street+'</option>');
-                    });
-                }
+                        obj.map(function(k) {
+                            let street = ""
+                            let postal = ""
+                            if (k.street) { street = k.street}
+                            if (k.service) { street = k.service}
+                            if (k.description) { street = k.description}
+                            if (k.postal_code) { postal = k.postal_code}
+                            if (k.postal_address) { postal = k.postal_address.substring(0,4)}
 
+                            $('.js_select_street').append('<option value=' +postal+'>'+street+'</option>');
+                        });
+                }
             });
         },
     });
