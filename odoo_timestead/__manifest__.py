@@ -12,6 +12,7 @@
     'data': [
         'security/jobsheet_security.xml',
         'security/ir.model.access.csv',
+        'data/jobsheet_project_data.xml',
         'data/data_jobsheet_seq.xml',
         'views/assets.xml',
         'views/designation_view.xml',

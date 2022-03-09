@@ -115,7 +115,7 @@ class JobSheet(models.Model):
         else:
             self.project_id = False
         if self.type in ['postpaid','contract']:
-            self.project_id = 79
+            self.project_id = self.env.ref('odoo_timestead.project_project_jobsheet').id
 
     @api.onchange('overtime')
     def onchange_overtime(self):
@@ -127,8 +127,8 @@ class JobSheet(models.Model):
         params = self._context.get('params', {})
         if not params:
             for rec in self:
-                if rec.details and len(rec.details) <= 102:
-                    raise ValidationError(_('Please fill in details with at least 100 characters.'))
+                if rec.details and len(rec.details) <= 50:
+                    raise ValidationError(_('Please fill in details with at least 50 characters.'))
 
     @api.constrains('hours_overtime', 'effective_hours')
     def _check_hours_overtime(self):
@@ -661,6 +661,13 @@ class JobSheet(models.Model):
                 duration = (rec.end_date - rec.start_date).total_seconds() / 3600
             rec.hours = duration
 
+    def preview_jobsheet(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': self.get_portal_url(),
+        }
 
 class JobSheetline(models.Model):
     _name = "jobsheet.line"
