@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': '4Sight - Custom CRM',
+    'name': '4Sight - Custom CRM', 
     'version': '1.0',
     'category': '',
     'description': """
