@@ -12,7 +12,8 @@
     'data': [
         'views/payment_views.xml',
         'views/payment_viva_templates.xml',
-        'data/payment_acquirer_data.xml'
+        'data/payment_acquirer_data.xml',
+        'views/journal_dashboard_kanban.xml'
     ],
     'demo': [
     ],
