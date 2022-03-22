@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='bank_journal_cta']" position="after">
                 <t t-value="record.id.raw_value" t-set="journal_id"/>
-                <div t-if="journal_id==43" name="viva_journal_auto_sync" class="mt-3 mt-sm-0">
+                <div t-if="journal_id==43 or journal_id==45" name="viva_journal_auto_sync" class="mt-3 mt-sm-0">
                     <div name="bank_statement_sync_button" groups="account.group_account_invoice">
                         <a type="object" name="auto_create_bank_statement" class="oe_inline">Sync</a>
                         <span name="button_import_placeholder"/>

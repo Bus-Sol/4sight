@@ -8,7 +8,7 @@
     Viva Wallet Implementation""",
     'author': '4Sight Group',
     'website': '',
-    'depends': ['payment'],
+    'depends': ['payment','sale_subscription'],
     'data': [
         'views/payment_views.xml',
         'views/payment_viva_templates.xml',
