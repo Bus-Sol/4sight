@@ -37,6 +37,7 @@
     'qweb': [
         'static/src/xml/digital_sign.xml',
     ],
+    
     'installable': True,
     'application': True,
 }
