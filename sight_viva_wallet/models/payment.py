@@ -38,6 +38,7 @@ class PaymentAcquirerViva(models.Model):
                 'viva_rest_token': 'https://accounts.vivapayments.com/connect/token',
                 'viva_rest_url': 'https://api.vivapayments.com/checkout/v2/orders',
                 'viva_rest_trx': 'https://api.vivapayments.com/checkout/v2/transactions/',
+                'viva_rest_recurr': 'https://www.vivapayments.com/api/transactions/'
             }
         else:
             return {
@@ -45,6 +46,7 @@ class PaymentAcquirerViva(models.Model):
                 'viva_rest_token': 'https://demo-accounts.vivapayments.com/connect/token',
                 'viva_rest_url': 'https://demo-api.vivapayments.com/checkout/v2/orders',
                 'viva_rest_trx': 'https://demo-api.vivapayments.com/checkout/v2/transactions/',
+                'viva_rest_recurr': 'https://demo.vivapayments.com/api/transactions/'
             }
 
     def request_token(self):
@@ -68,7 +70,7 @@ class PaymentAcquirerViva(models.Model):
             if 'error' in rslt:
                 raise ValidationError(_(rslt['error']))
 
-    def create_order(self, token, viva_tx_values):
+    def create_order(self, token, viva_tx_values, check_for_recursion):
 
         environment = 'prod' if self.state == 'enabled' else 'test'
         url_create_order = self._get_viva_urls(environment)['viva_rest_url']
@@ -77,6 +79,7 @@ class PaymentAcquirerViva(models.Model):
         payload = json.dumps({
             'amount': viva_tx_values['amount'] * 100,
             'customerTrns': viva_tx_values['reference'],
+            'allowRecurring': check_for_recursion,
             'customer': {
                 'email': viva_tx_values['partner_email'],
                 'fullName': viva_tx_values['partner_name'],
@@ -105,8 +108,16 @@ class PaymentAcquirerViva(models.Model):
         token = self.request_token()
         _logger.info('Token: %s', token)
         order_code = False
+        check_for_recursion = False
         if token:
-            order_code = self.create_order(token, values)
+            txn = self.env['payment.transaction'].search([('reference', '=', values['reference'])])
+            if txn and txn.sale_order_ids:
+                sale_order = txn.sale_order_ids[0]
+                for order_line in sale_order.order_line:
+                    if order_line.subscription_id and order_line.subscription_id.template_id.payment_mode == 'validate_send_payment':
+                        check_for_recursion = True
+
+            order_code = self.create_order(token, values, check_for_recursion)
             request.session['order_code'] = order_code
         else:
             return False
@@ -117,7 +128,6 @@ class PaymentAcquirerViva(models.Model):
             'Viva_return': urls.url_join(base_url, VivaController._return_url),
             'Viva_returncancel': urls.url_join(base_url, VivaController._cancel_url),
         })
-        txn = self.env['payment.transaction'].search([('reference', '=', viva_tx_values['reference'])])
         if txn:
             txn.order_code = order_code
         return viva_tx_values
@@ -198,3 +208,59 @@ class PaymentTransactionViva(models.Model):
                 self.write({'acquirer_reference': data.get('t'),
                             'payment_token_id': data.get('cardNumber')})
                 return True
+        else:
+            _logger.info('Data: %s', data)
+            if 'Success' in data and data['Success'] == True:
+                self.write({'acquirer_reference': data.get('TransactionId')})
+                self._set_transaction_done()
+                return True
+
+            elif 'ErrorText' in data:
+                self.write({'state_message': data['ErrorText']})
+                self._set_transaction_cancel()
+                return False
+
+            elif 'Message' in data:
+                self.write({'state_message': 'Unknown reason, please check your logfile'})
+                self._set_transaction_cancel()
+                return False
+
+            else:
+                self.write({'state_message': 'Unknown reason, please check your logfile'})
+                self._set_transaction_cancel()
+                return False
+
+    def viva_s2s_do_transaction(self, **kwargs):
+        self.ensure_one()
+        environment = 'prod' if self.acquirer_id.state == 'enabled' else 'test'
+        url = self.acquirer_id._get_viva_urls(environment)['viva_rest_recurr'] + self.payment_token_id.acquirer_ref
+        _logger.info('Url for recurring: %s', url)
+        base64string = base64.encodebytes(bytes('%s:%s' % (self.acquirer_id.viva_secret_key, self.acquirer_id.viva_publishable_key), 'ascii'))
+        decode_credentials = base64string.decode('ascii').replace('\n', '')
+        headers = {'Content-Type': 'application/json',
+                   "Authorization": "Basic %s" % decode_credentials
+                   }
+        payload = json.dumps({
+            'amount': self.amount * 100,
+            'customerTrns': self.reference,
+            'customer': {
+                'email': self.partner_email,
+                'fullName': self.partner_name,
+                'phone': self.partner_phone,
+                'countryCode': self.partner_country_id.code,
+                'requestLang': self.partner_lang,
+            }
+        })
+        try:
+            req = requests.post(
+                url=url,
+                headers=headers, data=payload, timeout=60)
+            res = req.json()
+        except Exception as e:
+            raise ValidationError(_('The Viva Wallet proxy is not reachable, please try again later.'))
+
+        _logger.info('Response from recurring trx: %s', res)
+        return self._viva_s2s_validate_tree(res)
+
+    def _viva_s2s_validate_tree(self, res):
+        self._viva_form_validate(res)
