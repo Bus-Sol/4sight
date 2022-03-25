@@ -38,6 +38,7 @@ class PaymentAcquirerViva(models.Model):
                 'viva_rest_token': 'https://accounts.vivapayments.com/connect/token',
                 'viva_rest_url': 'https://api.vivapayments.com/checkout/v2/orders',
                 'viva_rest_trx': 'https://api.vivapayments.com/checkout/v2/transactions/',
+                'viva_rest_recurr': 'https://www.vivapayments.com/api/transactions/'
             }
         else:
             return {
@@ -45,6 +46,7 @@ class PaymentAcquirerViva(models.Model):
                 'viva_rest_token': 'https://demo-accounts.vivapayments.com/connect/token',
                 'viva_rest_url': 'https://demo-api.vivapayments.com/checkout/v2/orders',
                 'viva_rest_trx': 'https://demo-api.vivapayments.com/checkout/v2/transactions/',
+                'viva_rest_recurr': 'https://demo.vivapayments.com/api/transactions/'
             }
 
     def request_token(self):
@@ -206,10 +208,33 @@ class PaymentTransactionViva(models.Model):
                 self.write({'acquirer_reference': data.get('t'),
                             'payment_token_id': data.get('cardNumber')})
                 return True
+        else:
+            _logger.info('Data: %s', data)
+            if 'Success' in data and data['Success'] == True:
+                self.write({'acquirer_reference': data.get('TransactionId')})
+                self._set_transaction_done()
+                return True
+
+            elif 'ErrorText' in data:
+                self.write({'state_message': data['ErrorText']})
+                self._set_transaction_cancel()
+                return False
+
+            elif 'Message' in data:
+                self.write({'state_message': 'Unknown reason, please check your logfile'})
+                self._set_transaction_cancel()
+                return False
+
+            else:
+                self.write({'state_message': 'Unknown reason, please check your logfile'})
+                self._set_transaction_cancel()
+                return False
 
     def viva_s2s_do_transaction(self, **kwargs):
         self.ensure_one()
-        url = 'https://demo.vivapayments.com/api/transactions/' + self.payment_token_id.acquirer_ref
+        environment = 'prod' if self.acquirer_id.state == 'enabled' else 'test'
+        url = self.acquirer_id._get_viva_urls(environment)['viva_rest_recurr'] + self.payment_token_id.acquirer_ref
+        _logger.info('Url for recurring: %s', url)
         base64string = base64.encodebytes(bytes('%s:%s' % (self.acquirer_id.viva_secret_key, self.acquirer_id.viva_publishable_key), 'ascii'))
         decode_credentials = base64string.decode('ascii').replace('\n', '')
         headers = {'Content-Type': 'application/json',
@@ -226,32 +251,16 @@ class PaymentTransactionViva(models.Model):
                 'requestLang': self.partner_lang,
             }
         })
-        req = requests.post(
-            url=url,
-            headers=headers, data=payload, timeout=60)
-        res = req.json()
+        try:
+            req = requests.post(
+                url=url,
+                headers=headers, data=payload, timeout=60)
+            res = req.json()
+        except Exception as e:
+            raise ValidationError(_('The Viva Wallet proxy is not reachable, please try again later.'))
+
         _logger.info('Response from recurring trx: %s', res)
         return self._viva_s2s_validate_tree(res)
 
     def _viva_s2s_validate_tree(self, res):
-
-        if 'Success' in res and res['Success'] == True:
-            self.write({'acquirer_reference': res.get('TransactionId')})
-            self._set_transaction_done()
-            self.execute_callback()
-            return True
-
-        elif 'ErrorText' in res:
-            self.write({'state_message': res['ErrorText']})
-            self._set_transaction_cancel()
-            return False
-
-        elif 'Message' in res:
-            self.write({'state_message': 'Unknown reason, please check your logfile'})
-            self._set_transaction_cancel()
-            return False
-
-        else:
-            self.write({'state_message': 'Unknown reason, please check your logfile'})
-            self._set_transaction_cancel()
-            return False
+        self._viva_form_validate(res)
