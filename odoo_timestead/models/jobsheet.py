@@ -305,7 +305,8 @@ class JobSheet(models.Model):
                 self.get_email_template_and_send(self.sale_order_id)
 
     def create_account_analytic_line(self, values):
-        if values['unit_amount'] > self.remaining_hours:
+        #### This is only in Prepaid mode ###
+        if self.type == 'prepaid' and values['unit_amount'] > self.remaining_hours:
             #### if hours surpass progress we have to look if there is a confirmed sales to put in the remaining hours####
             copy_vals = values.copy()
             sale_obj = self.env['sale.order']
