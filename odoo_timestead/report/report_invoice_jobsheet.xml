@@ -3,6 +3,7 @@
     <template id="report_invoice_document_inherit_jobsheet" inherit_id="account.report_invoice_document">
 
         <xpath expr="//div[@id='informations']/div[@name='origin']" position="replace">
+<!--            There are some changes here to get from prod-->
             <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_origin" name="origin">
                 <strong>Source:</strong>
                 <br/>
