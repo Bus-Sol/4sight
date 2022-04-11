@@ -26,6 +26,7 @@
             <tree>
                 <field name="jobsheet_start"/>
                 <field name="name"/>
+                <field name="user_id"/>
                 <field name="brief"/>
                 <field name="partner_id"/>
                 <field name="task_id"/>
@@ -128,7 +129,7 @@
                             <label for="start_date" string="Planned Date"/>
                             <div class="w-100">
                                 <div class="o_row">
-                                    <field name="start_date" widget="daterange" attrs="{'readonly': [('status', '!=', 'created')]}"
+                                    <field name="start_date" widget="daterange" required="1" attrs="{'readonly': [('status', '!=', 'created')]}"
                                            options='{"related_end_date": "end_date"}'/>
                                     <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon"
                                        title="Arrow"/>
@@ -363,12 +364,6 @@
         </field>
     </record>
 
-    <menuitem id="job_menu_jobsheets"
-              name="Jobsheets"
-              action="action_jobsheets"
-              groups="group_jobsheet_user,base.group_user"
-              parent="menu_jobsheets"
-              sequence="2"/>
 
     <record id="view_jobsheet_tags_form" model="ir.ui.view">
         <field name="name">Jobsheet Tags</field>
@@ -408,12 +403,6 @@
         </field>
     </record>
 
-    <menuitem id="job_menu_tags"
-              name="Jobsheet Tags"
-              action="action_tags"
-              parent="job_menu_configuration"
-              sequence="1"/>
-
     <!-- Settings actions -->
     <record id="res_config_settings_action_job" model="ir.actions.act_window">
         <field name="name">Settings</field>
@@ -424,12 +413,7 @@
         <field name="context">{'module' : 'odoo_timestead', 'bin_size': False}</field>
     </record>
 
-    <menuitem id="fsm_menu_settings_res_config"
-              name="Settings"
-              parent="job_menu_configuration"
-              sequence="0"
-              action="odoo_timestead.res_config_settings_action_job"
-              groups="base.group_system"/>
+
 
 
     <!--    Dashboard section     -->
@@ -480,11 +464,4 @@
         <field name="view_id" ref="jobsheet_view_dashboard"/>
         <!--        <field name="search_view_id" ref="view_jobsheet_filter"/>-->
     </record>
-
-    <menuitem id="job_menu_dashboard_jobsheets"
-              name="Dashboard"
-              action="action_open_dashboard_jobsheets"
-              groups="group_jobsheet_user"
-              parent="menu_jobsheets"
-              sequence="1"/>
 </odoo>

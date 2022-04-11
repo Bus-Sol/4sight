@@ -48,4 +48,31 @@
               parent="menu_jobsheets"
               sequence="9"/>
 
+    <menuitem id="job_menu_jobsheets"
+              name="Jobsheets"
+              action="action_jobsheets"
+              groups="group_jobsheet_user,base.group_user"
+              parent="menu_jobsheets"
+              sequence="2"/>
+
+    <menuitem id="job_menu_tags"
+              name="Jobsheet Tags"
+              action="action_tags"
+              parent="job_menu_configuration"
+              sequence="1"/>
+
+    <menuitem id="fsm_menu_settings_res_config"
+              name="Settings"
+              parent="job_menu_configuration"
+              sequence="0"
+              action="odoo_timestead.res_config_settings_action_job"
+              groups="base.group_system"/>
+
+    <menuitem id="job_menu_dashboard_jobsheets"
+              name="Dashboard"
+              action="action_open_dashboard_jobsheets"
+              groups="group_jobsheet_user"
+              parent="menu_jobsheets"
+              sequence="1"/>
+
 </odoo>

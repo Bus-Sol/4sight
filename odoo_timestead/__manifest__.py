@@ -17,8 +17,8 @@
         'views/assets.xml',
         'views/designation_view.xml',
         'views/jobsheet_types_view.xml',
-        'views/menu_jobsheet.xml',
         'views/jobsheet_view.xml',
+        'views/menu_jobsheet.xml',
         'views/view_account_move.xml',
         'wizard/batched_jobsheet.xml',
         'views/jobsheet_portal_template.xml',
@@ -37,6 +37,7 @@
     'qweb': [
         'static/src/xml/digital_sign.xml',
     ],
+    
     'installable': True,
     'application': True,
 }
