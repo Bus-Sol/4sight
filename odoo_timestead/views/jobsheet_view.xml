@@ -26,7 +26,7 @@
             <tree>
                 <field name="jobsheet_start"/>
                 <field name="name"/>
-                <field name="user_id"/>
+                <field name="user_id" string="Technician"/>
                 <field name="brief"/>
                 <field name="partner_id"/>
                 <field name="task_id"/>
@@ -136,7 +136,7 @@
                                     <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon"
                                        title="Arrow"
                                        attrs="{'invisible': [('start_date', '=', False), ('end_date', '=', False)]}"/>
-                                    <field name="end_date" widget="daterange" attrs="{'readonly': [('status', '!=', 'created')]}"
+                                    <field name="end_date" widget="daterange" required="1" attrs="{'readonly': [('status', '!=', 'created')]}"
                                            options='{"related_start_date": "start_date"}'/>
                                 </div>
                             </div>
