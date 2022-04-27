@@ -23,6 +23,9 @@
                     To
                     <t t-esc="last_jobsheet"/>
                 </t>
+                <t t-if="not o.job_ids">
+                  <p class="m-0" t-field="o.invoice_origin"/>
+                </t>
             </div>
         </xpath>
 
@@ -45,6 +48,9 @@
                     <t t-esc="first_jobsheet.strftime('%Y-%m-%d')"/>
                     To
                     <t t-esc="last_jobsheet.strftime('%Y-%m-%d')"/>
+                </t>
+                <t t-if="not o.job_ids">
+                  <p class="m-0" t-field="o.ref"/>
                 </t>
             </div>
             <t t-set="i" t-value="0"/>

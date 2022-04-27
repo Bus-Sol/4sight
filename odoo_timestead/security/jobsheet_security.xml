@@ -26,22 +26,26 @@
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
-        <record id="jobsheet_rule_prevent_edit_after_sign" model="ir.rule">
-            <field name="name">Prevent edit Doc after Sign for simple users</field>
-            <field name="model_id" ref="model_client_jobsheet"/>
-            <field name="domain_force">[("status","=", "created")]</field>
-            <field name="groups" eval="[(4, ref('group_jobsheet_user')), (4, ref('group_jobsheet_manager'))]"/>
-            <field name="perm_unlink" eval="1"/>
-            <field name="perm_write" eval="1"/>
-            <field name="perm_read" eval="0"/>
-            <field name="perm_create" eval="0"/>
-        </record>
-
         <record id="jobsheet_rule_access_edit_after_sign" model="ir.rule">
             <field name="name">Access edit Doc after Sign for simple users</field>
             <field name="model_id" ref="model_client_jobsheet"/>
             <field name="domain_force">[(1,"=", 1)]</field>
             <field name="groups" eval="[(4, ref('group_jobsheet_admin'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <record id="jobsheet_rule_access_portal" model="ir.rule">
+            <field name="name">Jobsheet: portal users</field>
+            <field name="model_id" ref="model_client_jobsheet"/>
+            <field name="domain_force">[
+                '|',
+                    ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                    ('message_partner_ids', 'in', [user.partner_id.id])
+            ]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
             <field name="perm_unlink" eval="1"/>
             <field name="perm_write" eval="1"/>
             <field name="perm_read" eval="1"/>
