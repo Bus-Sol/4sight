@@ -2,6 +2,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from werkzeug.urls import url_encode
+import datetime
 
 class JobSheet(models.Model):
     _name = "client.jobsheet"
@@ -325,6 +326,8 @@ class JobSheet(models.Model):
                     'service_id': self.service_id.id,
                     'project_id': self.project_id.id,
                     'type': 'prepaid',
+                    'start_date': self.start_date,
+                    'end_date': self.start_date + datetime.timedelta(minutes=remaining_hours),
                     'brief': self.brief,
                     'details': self.details,
                     'jobsheet_start': self.start_date,
