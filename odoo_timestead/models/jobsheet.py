@@ -287,9 +287,9 @@ class JobSheet(models.Model):
             sale_obj = self.env['sale.order']
             order_lines = sale_obj.sudo().search([('partner_id', '=',self.partner_id.id),('state','=','sent')]).order_line
             if order_lines:
-                sale_order = order_lines.sudo().filtered(lambda s: s.product_id.product_tmpl_id == self.service_id).sudo().order_id[0]
+                sale_order = order_lines.sudo().filtered(lambda s: s.product_id.product_tmpl_id == self.service_id).sudo().order_id
                 if sale_order:
-                    self.sudo().sale_order_id= sale_order
+                    self.sudo().sale_order_id= sale_order[0]
         ###########"
         if last_progress >= 75:
             if remaining_hour < 0:
