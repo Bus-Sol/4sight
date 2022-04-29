@@ -16,7 +16,7 @@ class JobSheet(models.Model):
     partner_id = fields.Many2one('res.partner', 'Client', domain=get_list_partners)
     service_domain = fields.Many2many('product.template', compute='compute_service_domain')
     service_id = fields.Many2one('product.template', domain="[('id', 'in', service_domain)]")
-    user_id = fields.Many2one('res.users', 'User', required=True, default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', 'Technicien', required=True, default=lambda self: self.env.user)
     brief = fields.Char('Brief')
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     details = fields.Text(string='Details')
@@ -57,6 +57,7 @@ class JobSheet(models.Model):
     tick_postpaid = fields.Boolean('Is Postpaid', default=False)
     url_detail = fields.Char(string='Link for Details')
     ticket_id = fields.Many2one('helpdesk.ticket')
+    invoice_amount = fields.Float('Revenue', compute="_get_invoiced", store=True)
 
     @api.depends('start_date')
     def compute_start_job(self):
@@ -492,6 +493,7 @@ class JobSheet(models.Model):
                 lambda r: r.job_ids and order.id in r.job_ids.ids)
             order.sudo().move_ids = invoices
             order.sudo().move_count = len(invoices)
+            order.sudo().invoice_amount = sum(invoices.mapped('amount_total_signed'))
 
     def mark_as_signed(self):
         if not self.signature :

@@ -178,6 +178,7 @@
                     <group>
                         <field name="details" attrs="{'readonly': [('status', '!=', 'created')]}" required="1"/>
                         <field name="url_detail" widget="url"/>
+                        <field name="invoice_amount"/>
                     </group>
 
                     <notebook>
@@ -426,24 +427,13 @@
         <field name="name">client.jobsheet.graph.view</field>
         <field name="model">client.jobsheet</field>
         <field name="arch" type="xml">
-            <graph string="Jobsheet Statistics" type="bar">
+            <graph string="Jobsheet Statistics" type="bar" sample="1">
                 <field name="jobsheet_start" interval="month" type="row"/>
                 <field name="effective_hours" type="measure"/>
             </graph>
         </field>
     </record>
 
-<!--     Dashboard for : Employee Average Hours -->
-<!--    <record id="employee_avg_hours_view_graph" model="ir.ui.view">-->
-<!--        <field name="name">client.jobsheet.employee.avg.graph.view</field>-->
-<!--        <field name="model">client.jobsheet</field>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <graph string="Employee Average Hours" type="bar">-->
-<!--                <field name="user_id" type="row"/>-->
-<!--                <field name="effective_hours" type="measure"/>-->
-<!--            </graph>-->
-<!--        </field>-->
-<!--    </record>-->
 
     <record id="jobsheet_view_dashboard" model="ir.ui.view">
         <field name="name">client.jobsheet.view.dashboard</field>
@@ -452,16 +442,13 @@
         <field name="arch" type="xml">
             <dashboard sample="1">
                 <group>
-                    <group>
-                        <widget name="pie_chart" title="Top Client Hours"
-                                attrs="{'groupby': 'partner_id', 'measure': 'effective_hours'}"/>
-                        <widget name="pie_chart" title="Employee Jobsheets Hours"
-                                attrs="{'groupby': 'user_id', 'measure': 'effective_hours'}"/>
-                    </group>
-                    <group>
-                        <view type="graph" ref="jobsheet_view_graph"/>
-                    </group>
-
+                    <view type="graph" ref="jobsheet_view_graph"/>
+                </group>
+                <group>
+                    <widget name="pie_chart" title="Top Client Hours"
+                            attrs="{'groupby': 'partner_id', 'measure': 'effective_hours'}"/>
+                    <widget name="pie_chart" title="Employee Jobsheets Hours"
+                            attrs="{'groupby': 'user_id', 'measure': 'effective_hours'}"/>
                 </group>
             </dashboard>
         </field>
