@@ -7,6 +7,11 @@
         <field name="priority" eval="15"/>
         <field name="arch" type="xml">
             <search string="Search Jobsheet">
+                <field name="name" string="Jobsheet Ref"/>
+                <field name="partner_id"/>
+                <field name="project_id"/>
+                <field name="task_id"/>
+                    <field name="user_id"/>
                 <field name="jobsheet_start"/>
                 <filter string="Jobsheet Start Date" name="filter_jobsheet_start" date="jobsheet_start"/>
                 <group expand="1" string="Group By">
@@ -45,16 +50,6 @@
         <field name="arch" type="xml">
             <form string="JobSheet">
                 <header>
-                    <!--                    <button class="btn-primary" name="action_timer_start" type="object" string="Start"-->
-                    <!--                            attrs="{'invisible': ['|',('display_timer_start_primary', '=', False),('status', '!=', 'created')]}"-->
-                    <!--                            icon="fa-clock-o"/>-->
-                    <button class="btn-primary btn-danger o_fsm_stop" name="action_timer_stop" type="object"
-                            attrs="{'invisible': [('display_timer_stop', '=', False)]}"
-                            string="Stop" icon="fa-clock-o"/>
-                    <button class="btn-primary" name="action_timer_pause" type="object"
-                            attrs="{'invisible': [('display_timer_pause', '=', False)]}" string="Pause"/>
-                    <button class="btn-primary btn-info" name="action_timer_resume" type="object"
-                            attrs="{'invisible': [('display_timer_resume', '=', False)]}" string="Resume"/>
                     <button name="action_create_invoice" string="Create Invoice"
                             groups="odoo_timestead.group_jobsheet_manager"
                             confirm="Are you sure you want to invoice this jobsheet?" type="object" class="oe_highlight"
@@ -149,11 +144,6 @@
                         <group>
                             <field name="date_order" invisible="1"/>
                             <field name="jobsheet_type_id" attrs="{'readonly': [('status', '!=', 'created')]}"/>
-
-                            <!--                            <field name="start_date" widget="daterange" options='{"related_end_date": "end_date"}'-->
-                            <!--                                   attrs="{'readonly': [('status', '!=', 'created')]}"/>-->
-                            <!--                            <field name="end_date" widget="daterange" options='{"related_start_date": "start_date"}'-->
-                            <!--                                   attrs="{'readonly': [('status', '!=', 'created')]}"/>-->
                             <field name="brief" required="1" attrs="{'readonly': [('status', '!=', 'created')]}"/>
                             <label for="type" string="Jobsheet Type"/>
                             <div name="type" class="o_row">

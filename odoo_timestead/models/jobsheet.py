@@ -101,6 +101,7 @@ class JobSheet(models.Model):
     def onchange_partner_id(self):
         if self.timesheet_ids:
             raise UserError(_('You cannot change customer once you filled in a timesheet.'))
+        self.service_id = False
         self.service_id = self.partner_id.service_ids[0].product_id.id if self.partner_id.service_ids else False
         if self.partner_id.jobsheet_type == 'prepaid':
             self.is_prepaid = True
@@ -110,8 +111,6 @@ class JobSheet(models.Model):
             self.is_prepaid = False
             self.tick_postpaid = False
             self.type = 'contract'
-        if self.type in ['postpaid','contract']:
-            self.project_id = self.env.ref('odoo_timestead.project_project_jobsheet').id
 
     @api.onchange('service_id')
     def onchange_service_id(self):
