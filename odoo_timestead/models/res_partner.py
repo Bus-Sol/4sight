@@ -51,6 +51,9 @@ class ResPartner(models.Model):
 class Task(models.Model):
     _inherit = "project.task"
 
+    jobsheet_type = fields.Selection(related='partner_id.jobsheet_type')
+    check_balance = fields.Selection(related='partner_id.check_balance')
+
     @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
     def _compute_remaining_hours(self):
         for task in self:

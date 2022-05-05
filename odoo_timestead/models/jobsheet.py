@@ -3,6 +3,9 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from werkzeug.urls import url_encode
 import datetime
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class JobSheet(models.Model):
     _name = "client.jobsheet"
@@ -107,6 +110,8 @@ class JobSheet(models.Model):
             self.is_prepaid = False
             self.tick_postpaid = False
             self.type = 'contract'
+        if self.type in ['postpaid','contract']:
+            self.project_id = self.env.ref('odoo_timestead.project_project_jobsheet').id
 
     @api.onchange('service_id')
     def onchange_service_id(self):
@@ -132,12 +137,6 @@ class JobSheet(models.Model):
                 if rec.details and len(rec.details) <= 50:
                     raise ValidationError(_('Please fill in details with at least 50 characters.'))
 
-    @api.constrains('hours_overtime', 'effective_hours')
-    def _check_hours_overtime(self):
-        for rec in self:
-            if rec.hours_overtime > rec.effective_hours:
-                raise ValidationError(_('You cannot go over Hours Spent Time.'))
-
     @api.depends('timesheet_ids.unit_amount')
     def _compute_effective_hours(self):
         for job in self:
@@ -145,39 +144,28 @@ class JobSheet(models.Model):
 
     @api.depends('project_id')
     def compute_task_id(self):
+
+        SaleOrderLine = self.env['sale.order.line']
+        ProjectTask = self.env['project.task']
         for job in self:
-            tasks = job.project_id.task_ids.filtered(lambda t: t.partner_id == job.partner_id)
-            if len(tasks) == 1:
-                job.task_id = tasks.id
-            elif len(tasks) > 1:
-                tasks_filtered = tasks.filtered(lambda t: round(t.progress) < 100)
-                if len(tasks_filtered) == 1:
-                    job.task_id = tasks_filtered.id
+            if job.type == 'prepaid':
+                sale_order_line = SaleOrderLine.search([('order_partner_id','=',job.partner_id.id),('product_id','=',self.service_id.product_variant_id.id),('state','=','sale')])
+                _logger.info('sale_order_line: %s', sale_order_line)
+                tasks = ProjectTask.search([('sale_line_id','in',sale_order_line.ids)])
+                _logger.info('tasks: %s', tasks)
+                if len(tasks) == 1:
+                    job.task_id = tasks.id
+                elif len(tasks) > 1:
+                    tasks_filtered = tasks.filtered(lambda t: round(t.progress) < 100)
+                    if len(tasks_filtered) == 1:
+                        job.task_id = tasks_filtered.id
+                    else:
+                        job.task_id = tasks_filtered.filtered(lambda t: t.progress >= 0)[0] if tasks_filtered.filtered(lambda t: t.progress >= 0) else False
                 else:
-                    job.task_id = tasks_filtered.filtered(lambda t: t.progress > 0)[0] if tasks_filtered.filtered(lambda t: t.progress > 0) else False
+                    job.task_id = False
             else:
                 job.task_id = False
 
-    def action_timer_stop(self):
-        minutes_spent = super(JobSheet, self).action_timer_stop()
-        values = {
-            'job_id': self.id,
-            'project_id': self.project_id.id,
-            'task_id': self.task_id.id,
-            'date': fields.Datetime.now(),
-            'name': self.details or '/',
-            'user_id': self.env.uid,
-            'unit_amount': minutes_spent / 60,
-        }
-        self.end_date = fields.Datetime.now()
-        timesheet = self.env['account.analytic.line'].create(values)
-        self.hours = self.effective_hours
-        self.write({
-            'timer_start': False,
-            'timer_pause': False
-        })
-        self.timesheet_ids = [(4, timesheet.id, None)]
-        self.user_timer_id.unlink()
 
     def get_email_template_and_send(self, obj):
         template = False
@@ -326,6 +314,7 @@ class JobSheet(models.Model):
                     'service_id': self.service_id.id,
                     'project_id': self.project_id.id,
                     'type': 'prepaid',
+                    'user_id': self.user_id.ids,
                     'start_date': self.start_date,
                     'end_date': self.start_date + datetime.timedelta(minutes=remaining_hours),
                     'brief': self.brief,
@@ -365,6 +354,8 @@ class JobSheet(models.Model):
         if vals.get('ticket_id'):
             ticket = self.env['helpdesk.ticket'].browse(vals['ticket_id'])
             ticket.job_id = res.id
+        if vals.get('hours_overtime'):
+                raise ValidationError(_('Please save Jobsheet before entering Overtime.'))
         if vals.get('hours') and vals.get('hours') > 0:
             values = {
                 'job_id': res.id,
@@ -411,7 +402,18 @@ class JobSheet(models.Model):
             if type == 'prepaid':
                 self.trigger_send_quotation(last_progress, progress, self.task_id.remaining_hours, current_service)
 
+        if vals.get('hours_overtime'):
+            hours_overtime = vals.get('hours_overtime')
+            if hours_overtime > self.effective_hours:
+                raise ValidationError(_('You cannot go over Hours Spent Time.'))
+
         return super(JobSheet, self).write(vals)
+
+    def unlink(self):
+        for rec in self:
+            if rec.timesheet_ids:
+                rec.timesheet_ids.unlink()
+        return super(JobSheet, self).unlink()
 
     def action_view_project_ids(self):
         self.ensure_one()
