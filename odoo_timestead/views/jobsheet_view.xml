@@ -57,23 +57,17 @@
                     <button name="mark_as_signed" string="MARK AS Signed" type="object" class="oe_highlight"
                             attrs="{'invisible': ['|', ('status', 'in', ['signed','invoiced','confirmed']),('signature','=', False)]}"/>
                     <button name="action_jobsheet_send" string="Confirm by Email" type="object"
-                            attrs="{'invisible': ['|',('status', '!=', 'created'),('display_timer_start_primary', '=', False)]}"/>
+                            attrs="{'invisible': [('status', '!=', 'created')]}"/>
                     <button name="action_jobsheet_confirm" string="Confirm" type="object" class="oe_highlight"
                             confirm="You are confirming without the customer signature"
-                            attrs="{'invisible': ['|',('status', '!=', 'created'),('display_timer_start_primary', '=', False)]}"/>
+                            attrs="{'invisible': [('status', '!=', 'created')]}"/>
                     <button name="action_send_copy" string="Send a Copy" type="object"
                             attrs="{'invisible': [('status', '=', 'created')]}"/>
-                    <field name="timer_start" widget="timer_timer"
-                           class="text-danger ml-auto h2 ml-4 font-weight-bold"/>
+                    <button name="action_reset_tocreate" string="Reset to Create Mode" type="object" class="oe_highlight" groups="odoo_timestead.group_jobsheet_manager"
+                            attrs="{'invisible': [('status', '=', 'created')]}"/>
                     <field name="status" class="ml-4" widget="statusbar"
                            statusbar_visible="created,sent,signed,confirmed,invoiced"
                            readonly="1"/>
-                    <field name="timer_pause" invisible="1"/>
-                    <field name="display_timer_start_primary" invisible="1"/>
-                    <field name="display_timer_start_secondary" invisible="1"/>
-                    <field name="display_timer_stop" invisible="1"/>
-                    <field name="display_timer_pause" invisible="1"/>
-                    <field name="display_timer_resume" invisible="1"/>
                 </header>
                 <sheet>
                     <field name="company_id" invisible="1"/>

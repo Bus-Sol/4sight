@@ -48,7 +48,6 @@ class JobSheet(models.Model):
     company_id = fields.Many2one('res.company', required=True, readonly=True, default=lambda self: self.env.company)
     planned_date_begin = fields.Datetime("Start date")
     planned_date_end = fields.Datetime("End date")
-    display_timer_start_secondary = fields.Boolean(compute='_compute_display_timer_buttons')
     project_id = fields.Many2one('project.project', string='Project', help='Project in which to create the task')
     timesheet_ids = fields.One2many('account.analytic.line', 'job_id', 'Timesheets')
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True,
@@ -101,8 +100,8 @@ class JobSheet(models.Model):
     def onchange_partner_id(self):
         if self.timesheet_ids:
             raise UserError(_('You cannot change customer once you filled in a timesheet.'))
-        self.service_id = False
         self.service_id = self.partner_id.service_ids[0].product_id.id if self.partner_id.service_ids else False
+        self.project_id = self.service_id.project_id.id
         if self.partner_id.jobsheet_type == 'prepaid':
             self.is_prepaid = True
             self.type = 'prepaid'
@@ -146,6 +145,7 @@ class JobSheet(models.Model):
 
         SaleOrderLine = self.env['sale.order.line']
         ProjectTask = self.env['project.task']
+        task_id = False
         for job in self:
             if job.type == 'prepaid':
                 sale_order_line = SaleOrderLine.search([('order_partner_id','=',job.partner_id.id),('product_id','=',self.service_id.product_variant_id.id),('state','=','sale')])
@@ -153,17 +153,23 @@ class JobSheet(models.Model):
                 tasks = ProjectTask.search([('sale_line_id','in',sale_order_line.ids)])
                 _logger.info('tasks: %s', tasks)
                 if len(tasks) == 1:
-                    job.task_id = tasks.id
+                    task_id = tasks.id
+
                 elif len(tasks) > 1:
-                    tasks_filtered = tasks.filtered(lambda t: round(t.progress) < 100)
-                    if len(tasks_filtered) == 1:
-                        job.task_id = tasks_filtered.id
+                    inprogress_task = tasks.filtered(lambda t: 0 < round(t.progress) < 100)
+                    if inprogress_task:
+                        task_id = inprogress_task[0].id
                     else:
-                        job.task_id = tasks_filtered.filtered(lambda t: t.progress >= 0)[0] if tasks_filtered.filtered(lambda t: t.progress >= 0) else False
+                        new_task = tasks.filtered(lambda t: round(t.progress) >= 0)
+                        if new_task:
+                            task_id = new_task[0].id
+                        else:
+                            task_id = False
                 else:
-                    job.task_id = False
+                    task_id = False
             else:
-                job.task_id = False
+                task_id = False
+            job.task_id = task_id
 
 
     def get_email_template_and_send(self, obj):
@@ -234,24 +240,35 @@ class JobSheet(models.Model):
             self = res
         service = self.partner_id.service_ids.filtered(
             lambda s: s.product_id == self.task_id.sale_line_id.product_id.product_tmpl_id)[0]
-        order_id = self.env['sale.order'].sudo().create({
-            'partner_id': self.partner_id.id,
-            "user_id": self.company_id.jobsheet_manager.id if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager') else self.env.uid,
-            'order_line': [[0, 0, {
-                "product_id": service.product_id.id,
-                "product_uom_qty": service.quantity,
-                "price_unit": service.hour,
-            }]]
-        })
-        if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager'):
-            order_id.sudo().message_unsubscribe(partner_ids=[self.env.uid])
-        self.sudo().sale_order_id = order_id.id
-        message = _(
-            "You went over 75%% of your allocated time, a new Sales Order : <a href=# data-oe-model=sale.order data-oe-id=%d>%s</a> has been created and sent to the customer.") % (
-                      order_id.id, order_id.name)
-        self.activity_schedule('mail.mail_activity_delivery_shortfall', note=message,
-                               user_id=self.company_id.jobsheet_manager.id if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager') else self.env.uid)
-        self.get_email_template_and_send(order_id)
+
+        SaleOrderLine = self.env['sale.order.line']
+        ProjectTask = self.env['project.task']
+        sale_order_line = SaleOrderLine.search([('order_partner_id', '=', self.partner_id.id),
+                                                ('product_id', '=', self.service_id.product_variant_id.id),
+                                                ('state', '=', 'sale')])
+        task = ProjectTask.search(
+            [('sale_line_id', 'in', sale_order_line.ids), ('id', '!=', self.task_id.id), ('remaining_hours', '>', 0)],
+            limit=1)
+
+        if not task:
+            order_id = self.env['sale.order'].sudo().create({
+                'partner_id': self.partner_id.id,
+                "user_id": self.company_id.jobsheet_manager.id if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager') else self.env.uid,
+                'order_line': [[0, 0, {
+                    "product_id": service.product_id.id,
+                    "product_uom_qty": service.quantity,
+                    "price_unit": service.hour,
+                }]]
+            })
+            if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager'):
+                order_id.sudo().message_unsubscribe(partner_ids=[self.env.uid])
+            self.sudo().sale_order_id = order_id.id
+            message = _(
+                "You went over 75%% of your allocated time, a new Sales Order : <a href=# data-oe-model=sale.order data-oe-id=%d>%s</a> has been created and sent to the customer.") % (
+                          order_id.id, order_id.name)
+            self.activity_schedule('mail.mail_activity_delivery_shortfall', note=message,
+                                   user_id=self.company_id.jobsheet_manager.id if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager') else self.env.uid)
+            self.get_email_template_and_send(order_id)
 
 
     def trigger_send_quotation(self, last_progress, progress, remaining_hour, current_service):
@@ -298,11 +315,15 @@ class JobSheet(models.Model):
         if self.type == 'prepaid' and values['unit_amount'] > self.remaining_hours:
             #### if hours surpass progress we have to look if there is a confirmed sales to put in the remaining hours####
             copy_vals = values.copy()
-            sale_obj = self.env['sale.order']
+            SaleOrderLine = self.env['sale.order.line']
+            ProjectTask = self.env['project.task']
             check_next_sale_order = False
-            order_lines = sale_obj.sudo().search([('partner_id', '=', self.partner_id.id), ('state', '=', 'sale'),('id','!=',self.task_id.sudo().sale_line_id.sudo().order_id.id)]).sudo().order_line
-            if order_lines:
-                sale_order = order_lines.sudo().filtered(lambda s: s.product_id.product_tmpl_id == self.service_id and s.qty_delivered ==0).sudo().order_id
+            sale_order_line = SaleOrderLine.search([('order_partner_id', '=', self.partner_id.id),
+                                                    ('product_id', '=', self.service_id.product_variant_id.id),
+                                                    ('state', '=', 'sale')])
+            task = ProjectTask.search([('sale_line_id', 'in', sale_order_line.ids),('id','!=',self.task_id.id),('remaining_hours','>', 0)],limit=1)
+            if task:
+                sale_order = task.sudo().sale_line_id.sudo().order_id
                 check_next_sale_order = sale_order[0] if sale_order else False
             if check_next_sale_order:
                 remaining_hours = values['unit_amount'] - self.remaining_hours
@@ -313,7 +334,7 @@ class JobSheet(models.Model):
                     'service_id': self.service_id.id,
                     'project_id': self.project_id.id,
                     'type': 'prepaid',
-                    'user_id': self.user_id.ids,
+                    'user_id': self.user_id.id,
                     'start_date': self.start_date,
                     'end_date': self.start_date + datetime.timedelta(minutes=remaining_hours),
                     'brief': self.brief,
@@ -321,9 +342,10 @@ class JobSheet(models.Model):
                     'jobsheet_start': self.start_date,
                     'task_id':check_next_sale_order.tasks_ids[0].id
                 })
+                new_job.task_id = check_next_sale_order.tasks_ids[0].id
                 copy_vals['job_id'] = new_job.id
                 copy_vals['unit_amount'] = remaining_hours
-                copy_vals['task_id'] = new_job.task_id.id
+                copy_vals['task_id'] = check_next_sale_order.tasks_ids[0].id
                 self.env['account.analytic.line'].create(copy_vals)
                 message = _(
                     "The current task has been completed with the remaining hours, the rest of the allocated hours are registered in a new jobsheet : <a href=# data-oe-model=client.jobsheet data-oe-id=%d>%s</a>.") % (
@@ -442,24 +464,6 @@ class JobSheet(models.Model):
         }
         return action
 
-    @api.depends('timer_start', 'timer_pause')
-    def _compute_display_timer_buttons(self):
-        for ticket in self:
-            ticket.update({
-                'display_timer_start_primary': False,
-                'display_timer_start_secondary': False,
-                'display_timer_stop': False,
-                'display_timer_pause': False,
-                'display_timer_resume': False,
-            })
-            super(JobSheet, ticket)._compute_display_timer_buttons()
-            ticket.display_timer_start_secondary = ticket.display_timer_start_primary
-            if not ticket.timer_start:
-                ticket.update({
-                    'display_timer_stop': False,
-                    'display_timer_pause': False,
-                    'display_timer_resume': False,
-                })
 
     @api.depends('jobsheet_line.price_unit')
     def _amount_all(self):
@@ -509,6 +513,9 @@ class JobSheet(models.Model):
     def action_jobsheet_confirm(self):
         self.status = 'confirmed'
 
+    def action_reset_tocreate(self):
+        self.status = 'created'
+
     def action_jobsheet_send(self):
 
         self.ensure_one()
@@ -544,11 +551,6 @@ class JobSheet(models.Model):
             self.filtered(lambda o: o.status == 'created').with_context(tracking_disable=True).write({'status': 'sent'})
         return super(JobSheet, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
-    def action_timer_start(self):
-        if not self.user_timer_id.timer_start:
-            self.start_date = fields.Datetime.now()
-            self.end_date = False
-            super(JobSheet, self).action_timer_start()
 
     def action_send_copy(self):
 

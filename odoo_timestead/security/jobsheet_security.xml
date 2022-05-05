@@ -27,10 +27,21 @@
         </record>
 
         <record id="jobsheet_rule_access_edit_after_sign" model="ir.rule">
-            <field name="name">Access edit Doc after Sign for simple users</field>
+            <field name="name">Jobsheet: view all jobs</field>
             <field name="model_id" ref="model_client_jobsheet"/>
             <field name="domain_force">[(1,"=", 1)]</field>
-            <field name="groups" eval="[(4, ref('group_jobsheet_admin'))]"/>
+            <field name="groups" eval="[(4, ref('group_jobsheet_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <record id="jobsheet_rule_access_edit_after_sign" model="ir.rule">
+            <field name="name">Jobsheet: technicien</field>
+            <field name="model_id" ref="model_client_jobsheet"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_jobsheet_user'))]"/>
             <field name="perm_unlink" eval="1"/>
             <field name="perm_write" eval="1"/>
             <field name="perm_read" eval="1"/>

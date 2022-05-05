@@ -63,3 +63,28 @@ class Task(models.Model):
                     task.partner_id.check_balance = 'out_of_balance'
                 else:
                     task.partner_id.check_balance = 'balanced'
+
+    @api.depends('sale_line_id', 'timesheet_ids', 'timesheet_ids.unit_amount')
+    def _compute_remaining_hours_so(self):
+
+        timesheets = self.timesheet_ids.filtered(
+            lambda t: t.task_id.sale_line_id in (t.so_line, t._origin.so_line) and t.so_line.remaining_hours_available)
+
+        mapped_remaining_hours = {task._origin.id: task.sale_line_id and task.sale_line_id.remaining_hours or 0.0 for
+                                  task in self}
+        uom_hour = self.env.ref('uom.product_uom_hour')
+        for timesheet in timesheets:
+            delta = 0
+            if timesheet._origin.so_line == timesheet.task_id.sale_line_id:
+                delta += timesheet._origin.unit_amount
+            if timesheet.so_line == timesheet.task_id.sale_line_id:
+                delta -= timesheet.unit_amount
+            if delta:
+                mapped_remaining_hours[timesheet.task_id._origin.id] += timesheet.product_uom_id._compute_quantity(
+                    delta, uom_hour)
+
+        for task in self:
+            if task.jobsheet_type == 'prepaid':
+                task.remaining_hours_so = task.remaining_hours
+            else:
+                task.remaining_hours_so = mapped_remaining_hours[task._origin.id]
