@@ -383,7 +383,7 @@ class JobSheet(models.Model):
                 'project_id': res.project_id.id,
                 'task_id': res.task_id.id,
                 'date': fields.Datetime.now(),
-                'name': '/',
+                'name': res.brief,
                 'user_id': res.env.uid,
                 'unit_amount': vals['hours'],
             }
@@ -404,7 +404,7 @@ class JobSheet(models.Model):
                 'project_id': self.project_id.id,
                 'task_id': self.task_id.id,
                 'date': fields.Datetime.now(),
-                'name': '/',
+                'name': self.brief,
                 'user_id': self.env.uid,
                 'unit_amount': vals['hours'] if 'hours' in vals else self.hours,
             }
@@ -422,6 +422,10 @@ class JobSheet(models.Model):
             type = vals.get('type') if vals.get('type') else self.type
             if type == 'prepaid':
                 self.trigger_send_quotation(last_progress, progress, self.task_id.remaining_hours, current_service)
+
+        if vals.get('brief'):
+            for rec in self.timesheet_ids:
+                rec.name = vals['brief']
 
         if vals.get('hours_overtime'):
             hours_overtime = vals.get('hours_overtime')
