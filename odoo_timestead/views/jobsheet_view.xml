@@ -54,7 +54,7 @@
                             groups="odoo_timestead.group_jobsheet_manager"
                             confirm="Are you sure you want to invoice this jobsheet?" type="object" class="oe_highlight"
                             attrs="{'invisible': ['|',('status', '=', 'invoiced'),('is_prepaid','=',True)]}"/>
-                    <button name="mark_as_signed" string="MARK AS Signed" type="object" class="oe_highlight"
+                    <button name="mark_as_signed" string="Sign" type="object" class="oe_highlight"
                             attrs="{'invisible': ['|', ('status', 'in', ['signed','invoiced','confirmed']),('signature','=', False)]}"/>
                     <button name="action_jobsheet_send" string="Confirm by Email" type="object"
                             attrs="{'invisible': [('status', '!=', 'created')]}"/>
@@ -63,7 +63,7 @@
                             attrs="{'invisible': [('status', '!=', 'created')]}"/>
                     <button name="action_send_copy" string="Send a Copy" type="object"
                             attrs="{'invisible': [('status', '=', 'created')]}"/>
-                    <button name="action_reset_tocreate" string="Reset to Create Mode" type="object" class="oe_highlight" groups="odoo_timestead.group_jobsheet_manager"
+                    <button name="action_reset_tocreate" string="Unlock" type="object" class="oe_highlight" groups="odoo_timestead.group_jobsheet_admin"
                             attrs="{'invisible': [('status', '=', 'created')]}"/>
                     <field name="status" class="ml-4" widget="statusbar"
                            statusbar_visible="created,sent,signed,confirmed,invoiced"
@@ -149,7 +149,7 @@
                             </div>
                             <label for="overtime" string="Overtime"/>
                             <div name="overtime" class="o_row">
-                                <field name="overtime"/>
+                                <field name="overtime" attrs="{'readonly': [('status', '!=', 'created')]}"/>
                                 <div class="o_row oe_inline" attrs="{'invisible': [('overtime', '=', False)]}">
                                     Please insert your overtime hours
                                     <field name="hours_overtime" class="oe_inline" widget="timesheet_uom"/>
@@ -162,7 +162,7 @@
                     <group>
                         <field name="details" attrs="{'readonly': [('status', '!=', 'created')]}" required="1"/>
                         <field name="url_detail" widget="url"/>
-                        <field name="invoice_amount"/>
+                        <field name="invoice_amount" groups="odoo_timestead.group_jobsheet_manager"/>
                     </group>
 
                     <notebook>
@@ -175,6 +175,8 @@
                                            attrs="{'readonly': [('status', '!=', 'created')]}"/>
                                     <field name="signature" widget="signature"
                                            attrs="{'readonly': [('status', '!=', 'created')]}"/>
+<!--                                    <button name="mark_as_signed" string="Sign" type="object" class="oe_highlight"-->
+<!--                            attrs="{'invisible': [('signature','=', False)]}"/>-->
                                 </group>
                             </group>
                         </page>
@@ -190,7 +192,7 @@
                                     <field name="progress" widget="progressbar"/>
                                 </group>
                             </group>
-                            <field name="timesheet_ids" mode="tree,kanban">
+                            <field name="timesheet_ids" mode="tree,kanban" attrs="{'readonly': [('status', '!=', 'created')]}">
                                 <tree create="0" string="Timesheet Activities" default_order="date">
                                     <field name="date" invisible="1"/>
                                     <field name="user_id" invisible="1"/>

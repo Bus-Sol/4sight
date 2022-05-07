@@ -29,7 +29,7 @@ class JobSheet(models.Model):
     jobsheet_start = fields.Date(string='Jobsheet Start', compute='compute_start_job', store=True)
     end_date = fields.Datetime(string='End')
     jobsheet_line = fields.One2many('jobsheet.line', 'jobsheet_id', 'Jobsheet Details')
-    status = fields.Selection([('created','Created'),('confirmed', 'Confirmed'),('sent','Email Sent'),('signed','Signed by Client'),('invoiced','Invoiced')], default="created")
+    status = fields.Selection([('created','Created'),('confirmed', 'Confirmed'),('sent','Email Sent'),('signed','Signed by Client'),('invoiced','Invoiced')], default="created", tracking=True)
     hours = fields.Float('Hours')
     signee = fields.Char('Signee')
     move_ids = fields.Many2many("account.move", string='Moves', compute="_get_invoiced", readonly=True,
@@ -65,14 +65,13 @@ class JobSheet(models.Model):
     @api.depends('start_date')
     def compute_start_job(self):
         for rec in self:
-            if rec.start_date and not rec.jobsheet_start:
+            if rec.start_date:
                 rec.jobsheet_start = rec.start_date
 
     @api.onchange('start_date','end_date')
     def onchange_start_end_date(self):
         if self.start_date and self.end_date:
             duration = self.end_date - self.start_date
-            print(duration)
             seconds = duration.total_seconds()
             hours = seconds // 3600
             if hours > 8:
@@ -273,8 +272,11 @@ class JobSheet(models.Model):
 
     def trigger_send_quotation(self, last_progress, progress, remaining_hour, current_service):
 
-        if last_progress >=100 :
-            raise UserError(_('You cannot go over 100%, please contact your administrator'))
+        if progress <= last_progress:
+            pass
+        else:
+            if last_progress >=100 :
+                raise UserError(_('You cannot go over 100%, please contact your administrator'))
         if progress >= 75 and last_progress < 75:
             #### if we're surpassing 75% #####
             if remaining_hour < 0:
@@ -411,7 +413,11 @@ class JobSheet(models.Model):
             if self.partner_id.jobsheet_type =='prepaid' and not self.task_id:
                 raise UserError(_('No task found to allocate hours.'))
             last_progress = self.task_id.progress
-            self.create_account_analytic_line(values)
+            timesheet_id = self.timesheet_ids[0] if self.timesheet_ids else None
+            if timesheet_id:
+                timesheet_id.write(values)
+            else:
+                self.create_account_analytic_line(values)
             if 'hours' in vals:
                 vals['hours'] = self.effective_hours
             else:
@@ -436,8 +442,11 @@ class JobSheet(models.Model):
 
     def unlink(self):
         for rec in self:
-            if rec.timesheet_ids:
-                rec.timesheet_ids.unlink()
+            if rec.status != 'created':
+                raise ValidationError(_('You cannot delete a signed or confirmed Jobsheet.'))
+            else:
+                if rec.timesheet_ids:
+                    rec.timesheet_ids.unlink()
         return super(JobSheet, self).unlink()
 
     def action_view_project_ids(self):
