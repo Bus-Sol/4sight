@@ -16,7 +16,7 @@
                 <filter string="Jobsheet Start Date" name="filter_jobsheet_start" date="jobsheet_start"/>
                 <group expand="1" string="Group By">
                     <filter string="Customer" name="group_by_customer" context="{'group_by': 'partner_id'}"/>
-                    <filter string="Technicien" name="group_by_technicien" context="{'group_by': 'user_id'}"/>
+                    <filter string="Technician" name="group_by_technicien" context="{'group_by': 'user_id'}"/>
                     <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
                     <filter string="Jobsheet Type" name="group_by_type" context="{'group_by': 'type'}"/>
                 </group>
@@ -144,7 +144,7 @@
                                 <field name="type" force_save="1"/>
                                 <div class="o_row oe_inline" attrs="{'invisible': [('type', '=', 'prepaid')]}">
                                     Tick for Out of Contract
-                                    <field name="tick_postpaid"/>
+                                    <field name="tick_postpaid" attrs="{'readonly': [('status', '!=', 'created')]}"/>
                                 </div>
                             </div>
                             <label for="overtime" string="Overtime"/>
@@ -152,7 +152,7 @@
                                 <field name="overtime" attrs="{'readonly': [('status', '!=', 'created')]}"/>
                                 <div class="o_row oe_inline" attrs="{'invisible': [('overtime', '=', False)]}">
                                     Please insert your overtime hours
-                                    <field name="hours_overtime" class="oe_inline" widget="timesheet_uom"/>
+                                    <field name="hours_overtime" class="oe_inline" widget="timesheet_uom" attrs="{'readonly': [('status', '!=', 'created')]}"/>
                                 </div>
                             </div>
                             <field name="sale_order_id" groups="odoo_timestead.group_jobsheet_manager"
