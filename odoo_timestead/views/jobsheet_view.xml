@@ -55,7 +55,7 @@
                             confirm="Are you sure you want to invoice this jobsheet?" type="object" class="oe_highlight"
                             attrs="{'invisible': ['|',('status', '=', 'invoiced'),('is_prepaid','=',True)]}"/>
                     <button name="mark_as_signed" string="Sign" type="object" class="oe_highlight"
-                            attrs="{'invisible': ['|', ('status', 'in', ['signed','invoiced','confirmed']),('signature','=', False)]}"/>
+                            attrs="{'invisible': [('status', 'in', ['signed','invoiced','confirmed'])]}"/>
                     <button name="action_jobsheet_send" string="Confirm by Email" type="object"
                             attrs="{'invisible': [('status', '!=', 'created')]}"/>
                     <button name="action_jobsheet_confirm" string="Confirm" type="object" class="oe_highlight"
@@ -175,8 +175,8 @@
                                            attrs="{'readonly': [('status', '!=', 'created')]}"/>
                                     <field name="signature" widget="signature"
                                            attrs="{'readonly': [('status', '!=', 'created')]}"/>
-<!--                                    <button name="mark_as_signed" string="Sign" type="object" class="oe_highlight"-->
-<!--                            attrs="{'invisible': [('signature','=', False)]}"/>-->
+                                    <button name="mark_as_signed" string="Sign" type="object"
+                            attrs="{'invisible': [('status', 'in', ['signed','invoiced','confirmed'])]}"/>
                                 </group>
                             </group>
                         </page>
