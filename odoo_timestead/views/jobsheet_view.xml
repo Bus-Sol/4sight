@@ -7,11 +7,16 @@
         <field name="priority" eval="15"/>
         <field name="arch" type="xml">
             <search string="Search Jobsheet">
+                <field name="name" string="Jobsheet Ref"/>
+                <field name="partner_id"/>
+                <field name="project_id"/>
+                <field name="task_id"/>
+                    <field name="user_id"/>
                 <field name="jobsheet_start"/>
                 <filter string="Jobsheet Start Date" name="filter_jobsheet_start" date="jobsheet_start"/>
                 <group expand="1" string="Group By">
                     <filter string="Customer" name="group_by_customer" context="{'group_by': 'partner_id'}"/>
-                    <filter string="Technicien" name="group_by_technicien" context="{'group_by': 'user_id'}"/>
+                    <filter string="Technician" name="group_by_technicien" context="{'group_by': 'user_id'}"/>
                     <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
                     <filter string="Jobsheet Type" name="group_by_type" context="{'group_by': 'type'}"/>
                 </group>
@@ -45,40 +50,24 @@
         <field name="arch" type="xml">
             <form string="JobSheet">
                 <header>
-                    <!--                    <button class="btn-primary" name="action_timer_start" type="object" string="Start"-->
-                    <!--                            attrs="{'invisible': ['|',('display_timer_start_primary', '=', False),('status', '!=', 'created')]}"-->
-                    <!--                            icon="fa-clock-o"/>-->
-                    <button class="btn-primary btn-danger o_fsm_stop" name="action_timer_stop" type="object"
-                            attrs="{'invisible': [('display_timer_stop', '=', False)]}"
-                            string="Stop" icon="fa-clock-o"/>
-                    <button class="btn-primary" name="action_timer_pause" type="object"
-                            attrs="{'invisible': [('display_timer_pause', '=', False)]}" string="Pause"/>
-                    <button class="btn-primary btn-info" name="action_timer_resume" type="object"
-                            attrs="{'invisible': [('display_timer_resume', '=', False)]}" string="Resume"/>
                     <button name="action_create_invoice" string="Create Invoice"
                             groups="odoo_timestead.group_jobsheet_manager"
                             confirm="Are you sure you want to invoice this jobsheet?" type="object" class="oe_highlight"
                             attrs="{'invisible': ['|',('status', '=', 'invoiced'),('is_prepaid','=',True)]}"/>
-                    <button name="mark_as_signed" string="MARK AS Signed" type="object" class="oe_highlight"
-                            attrs="{'invisible': ['|', ('status', 'in', ['signed','invoiced','confirmed']),('signature','=', False)]}"/>
+                    <button name="mark_as_signed" string="Sign" type="object" class="oe_highlight"
+                            attrs="{'invisible': [('status', 'in', ['signed','invoiced','confirmed'])]}"/>
                     <button name="action_jobsheet_send" string="Confirm by Email" type="object"
-                            attrs="{'invisible': ['|',('status', '!=', 'created'),('display_timer_start_primary', '=', False)]}"/>
+                            attrs="{'invisible': [('status', '!=', 'created')]}"/>
                     <button name="action_jobsheet_confirm" string="Confirm" type="object" class="oe_highlight"
                             confirm="You are confirming without the customer signature"
-                            attrs="{'invisible': ['|',('status', '!=', 'created'),('display_timer_start_primary', '=', False)]}"/>
+                            attrs="{'invisible': [('status', '!=', 'created')]}"/>
                     <button name="action_send_copy" string="Send a Copy" type="object"
                             attrs="{'invisible': [('status', '=', 'created')]}"/>
-                    <field name="timer_start" widget="timer_timer"
-                           class="text-danger ml-auto h2 ml-4 font-weight-bold"/>
+                    <button name="action_reset_tocreate" string="Unlock" type="object" class="oe_highlight" groups="odoo_timestead.group_jobsheet_admin"
+                            attrs="{'invisible': [('status', '=', 'created')]}"/>
                     <field name="status" class="ml-4" widget="statusbar"
                            statusbar_visible="created,sent,signed,confirmed,invoiced"
                            readonly="1"/>
-                    <field name="timer_pause" invisible="1"/>
-                    <field name="display_timer_start_primary" invisible="1"/>
-                    <field name="display_timer_start_secondary" invisible="1"/>
-                    <field name="display_timer_stop" invisible="1"/>
-                    <field name="display_timer_pause" invisible="1"/>
-                    <field name="display_timer_resume" invisible="1"/>
                 </header>
                 <sheet>
                     <field name="company_id" invisible="1"/>
@@ -149,26 +138,21 @@
                         <group>
                             <field name="date_order" invisible="1"/>
                             <field name="jobsheet_type_id" attrs="{'readonly': [('status', '!=', 'created')]}"/>
-
-                            <!--                            <field name="start_date" widget="daterange" options='{"related_end_date": "end_date"}'-->
-                            <!--                                   attrs="{'readonly': [('status', '!=', 'created')]}"/>-->
-                            <!--                            <field name="end_date" widget="daterange" options='{"related_start_date": "start_date"}'-->
-                            <!--                                   attrs="{'readonly': [('status', '!=', 'created')]}"/>-->
                             <field name="brief" required="1" attrs="{'readonly': [('status', '!=', 'created')]}"/>
                             <label for="type" string="Jobsheet Type"/>
                             <div name="type" class="o_row">
                                 <field name="type" force_save="1"/>
                                 <div class="o_row oe_inline" attrs="{'invisible': [('type', '=', 'prepaid')]}">
                                     Tick for Out of Contract
-                                    <field name="tick_postpaid"/>
+                                    <field name="tick_postpaid" attrs="{'readonly': [('status', '!=', 'created')]}"/>
                                 </div>
                             </div>
                             <label for="overtime" string="Overtime"/>
                             <div name="overtime" class="o_row">
-                                <field name="overtime"/>
+                                <field name="overtime" attrs="{'readonly': [('status', '!=', 'created')]}"/>
                                 <div class="o_row oe_inline" attrs="{'invisible': [('overtime', '=', False)]}">
                                     Please insert your overtime hours
-                                    <field name="hours_overtime" class="oe_inline" widget="timesheet_uom"/>
+                                    <field name="hours_overtime" class="oe_inline" widget="timesheet_uom" attrs="{'readonly': [('status', '!=', 'created')]}"/>
                                 </div>
                             </div>
                             <field name="sale_order_id" groups="odoo_timestead.group_jobsheet_manager"
@@ -178,7 +162,7 @@
                     <group>
                         <field name="details" attrs="{'readonly': [('status', '!=', 'created')]}" required="1"/>
                         <field name="url_detail" widget="url"/>
-                        <field name="invoice_amount"/>
+                        <field name="invoice_amount" groups="odoo_timestead.group_jobsheet_manager"/>
                     </group>
 
                     <notebook>
@@ -191,6 +175,8 @@
                                            attrs="{'readonly': [('status', '!=', 'created')]}"/>
                                     <field name="signature" widget="signature"
                                            attrs="{'readonly': [('status', '!=', 'created')]}"/>
+                                    <button name="mark_as_signed" string="Sign" type="object"
+                            attrs="{'invisible': [('status', 'in', ['signed','invoiced','confirmed'])]}"/>
                                 </group>
                             </group>
                         </page>
@@ -206,7 +192,7 @@
                                     <field name="progress" widget="progressbar"/>
                                 </group>
                             </group>
-                            <field name="timesheet_ids" mode="tree,kanban">
+                            <field name="timesheet_ids" mode="tree,kanban" attrs="{'readonly': [('status', '!=', 'created')]}">
                                 <tree create="0" string="Timesheet Activities" default_order="date">
                                     <field name="date" invisible="1"/>
                                     <field name="user_id" invisible="1"/>
