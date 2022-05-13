@@ -9,7 +9,7 @@
 
     <menuitem id="job_menu_customer"
               name="Customers"
-              action="contacts.action_contacts"
+              action="action_jobsheets_customer"
               groups="group_jobsheet_manager"
               parent="menu_jobsheets"
               sequence="3"/>
@@ -23,7 +23,7 @@
 
     <menuitem id="job_menu_services"
               name="Services"
-              action="sale.product_template_action"
+              action="services_template_action"
               groups="group_jobsheet_manager"
               parent="menu_jobsheets"
               sequence="5"/>

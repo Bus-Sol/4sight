@@ -23,6 +23,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">client.jobsheet</field>
         <field name="view_id" ref="view_report_jobsheet"/>
+        <field name="context">{'search_default_my_jobsheet': 1}</field>
         <field name="view_mode">tree</field>
     </record>
 
@@ -50,7 +51,7 @@
                 <field name="partner_id"/>
 <!--                <field name="compute_balance" invisible="1"/>-->
 <!--                <field name="check_balance"/>-->
-                <field name="effective_hours" string="Total Hours" widget="timesheet_uom"/>
+                <field name="effective_hours" string="Hours Spent" widget="timesheet_uom"/>
                 <field name="remaining_hours" string="Available Hours" widget="timesheet_uom" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
                 <field name="progress" invisible="1"/>
                 <field name="jobsheet_type" invisible="1"/>

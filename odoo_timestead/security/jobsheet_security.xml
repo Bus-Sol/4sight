@@ -30,7 +30,7 @@
             <field name="name">Jobsheet: view all jobs</field>
             <field name="model_id" ref="model_client_jobsheet"/>
             <field name="domain_force">[(1,"=", 1)]</field>
-            <field name="groups" eval="[(4, ref('group_jobsheet_manager'),(4, ref('group_jobsheet_admin'))]"/>
+            <field name="groups" eval="[(4, ref('group_jobsheet_manager')),(4, ref('group_jobsheet_admin'))]"/>
             <field name="perm_unlink" eval="1"/>
             <field name="perm_write" eval="1"/>
             <field name="perm_read" eval="1"/>
