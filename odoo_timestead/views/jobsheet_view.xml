@@ -8,9 +8,11 @@
         <field name="arch" type="xml">
             <search string="Search Jobsheet">
                 <filter string="My Jobsheets" name="my_jobsheet" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Overtime" name="overtime" domain="[('overtime', '=', True)]"/>
+                <field name="name" string="Jobsheet Ref"/>
                 <field name="user_id"/>
                 <separator/>
-                <field name="name" string="Jobsheet Ref"/>
                 <field name="partner_id"/>
                 <field name="project_id"/>
                 <field name="task_id"/>
