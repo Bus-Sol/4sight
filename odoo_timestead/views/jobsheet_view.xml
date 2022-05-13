@@ -7,11 +7,16 @@
         <field name="priority" eval="15"/>
         <field name="arch" type="xml">
             <search string="Search Jobsheet">
+                <filter string="My Jobsheets" name="my_jobsheet" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Overtime" name="overtime" domain="[('overtime', '=', True)]"/>
                 <field name="name" string="Jobsheet Ref"/>
+                <field name="user_id"/>
+                <separator/>
                 <field name="partner_id"/>
                 <field name="project_id"/>
                 <field name="task_id"/>
-                    <field name="user_id"/>
+                <separator/>
                 <field name="jobsheet_start"/>
                 <filter string="Jobsheet Start Date" name="filter_jobsheet_start" date="jobsheet_start"/>
                 <group expand="1" string="Group By">
@@ -156,7 +161,7 @@
                                 </div>
                             </div>
                             <field name="sale_order_id" groups="odoo_timestead.group_jobsheet_manager"
-                                   attrs="{'readonly': [('status', '!=', 'created')]}"/>
+                                   attrs="{'readonly': [('status', '!=', 'created')], 'invisible': [('type', '!=', 'prepaid')]}"/>
                         </group>
                     </group>
                     <group>
@@ -351,9 +356,43 @@
         <field name="res_model">client.jobsheet</field>
         <field name="view_mode">tree,form,pivot,activity</field>
         <field name="view_id" ref="view_jobsheet_tree"/>
+        <field name="search_view_id" ref="view_jobsheet_filter"/>
+        <field name="context">{'search_default_my_jobsheet': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a Jobsheet
+            </p>
+        </field>
+    </record>
+
+    <record id="action_jobsheets_customer" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="search_view_id" ref="base.view_res_partner_filter"/>
+        <field name="context">{'default_is_company': True}</field>
+        <field name="domain">[('jobsheet_type', '!=', False)]</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a contact in your address book
+          </p><p>
+            Odoo helps you to easily track all activities related to a customer.
+          </p>
+        </field>
+    </record>
+
+    <record id="services_template_action" model="ir.actions.act_window">
+        <field name="name">Services</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="product.product_template_search_view"/>
+        <field name="domain">[('type', '=', 'service')]</field>
+        <field name="context">{'default_type': 'service'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Service found. Let's create one!
             </p>
         </field>
     </record>
