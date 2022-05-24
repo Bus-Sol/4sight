@@ -6,6 +6,15 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object"
+                    name="action_open_jobsheet" context="{'default_partner_id': active_id}" icon="fa-tasks" attrs="{'invisible': [('job_count', '=', 0)]}">
+                    <div class="o_stat_info">
+                        <field name="job_count" class="o_stat_value"/>
+                        <span class="o_stat_text"> Jobsheets</span>
+                    </div>
+                </button>
+            </div>
             <xpath expr="//page/field[@name='child_ids']/form//group/group/field[@name='email']" position="after">
                 <field name="receive_jobsheet" attrs="{'invisible': [('type', '!=', 'jobsheet')]}"/>
                 <field name="receive_invoice" attrs="{'invisible': [('type', '!=', 'jobsheet')]}"/>
