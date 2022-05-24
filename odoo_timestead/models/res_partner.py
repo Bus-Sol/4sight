@@ -12,20 +12,31 @@ class ResPartner(models.Model):
     receive_invoice = fields.Boolean('Receive Invoice')
     service_ids = fields.One2many('jobsheet.service', 'partner_service_id', string='Related services')
     jobsheet_type = fields.Selection([('prepaid','Prepaid'),('contract_postpaid','Contract/Postpaid')])
-    check_balance = fields.Selection([('balanced','Balanced'),('out_of_balance','Out Of Balance')], store=True)
-    compute_balance = fields.Boolean(compute='compute_balance_partner')
+    job_count = fields.Integer("Jobsheets", compute='_compute_job_count')
 
+    def _compute_job_count(self):
+        # retrieve all children partners and prefetch 'parent_id' on them
+        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
+        all_partners.read(['parent_id'])
 
-    def compute_balance_partner(self):
-        for rec in self.env['res.partner'].search([('jobsheet_type','=','prepaid')]):
-            compute_balance = False
-            tasks = self.env['project.task'].search([('partner_id','=',rec.id)])
-            if any(task.remaining_hours > 0 for task in tasks):
-                compute_balance = True
-                rec.check_balance = 'balanced'
-            else:
-                rec.check_balance = 'out_of_balance'
-            rec.compute_balance = compute_balance
+        # group tickets by partner, and account for each partner in self
+        groups = self.env['client.jobsheet'].read_group(
+            [('partner_id', 'in', all_partners.ids)],
+            fields=['partner_id'], groupby=['partner_id'],
+        )
+        self.job_count = 0
+        for group in groups:
+            partner = self.browse(group['partner_id'][0])
+            while partner:
+                if partner in self:
+                    partner.job_count += group['partner_id_count']
+                partner = partner.parent_id
+
+    def action_open_jobsheet(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("odoo_timestead.action_jobsheets")
+        action['context'] = {}
+        action['domain'] = [('partner_id', 'child_of', self.ids)]
+        return action
 
     def write(self, vals):
         res = super(ResPartner, self).write(vals)
@@ -52,7 +63,18 @@ class Task(models.Model):
     _inherit = "project.task"
 
     jobsheet_type = fields.Selection(related='partner_id.jobsheet_type')
-    check_balance = fields.Selection(related='partner_id.check_balance')
+    check_balance = fields.Selection([('balanced','Balanced'),('out_of_balance','Out Of Balance')], string='Check Balance',compute='compute_balanced_task', store=True)
+
+    @api.depends('remaining_hours')
+    def compute_balanced_task(self):
+        for rec in self:
+            check_balance = False
+            if rec.remaining_hours > 0 :
+                check_balance = 'balanced'
+            else:
+                check_balance = 'out_of_balance'
+            rec.check_balance = check_balance
+
 
     @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
     def _compute_remaining_hours(self):

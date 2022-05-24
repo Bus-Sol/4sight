@@ -7,7 +7,7 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
-        if any(service for service in self.order_line if service.product_id.service_policy =='ordered_timesheet') and (self.user_has_groups('base.group_portal') or self.user_has_groups('base.group_public')):
+        if any(service for service in self.order_line if service.product_id.service_policy =='ordered_timesheet') and self.partner_id.jobsheet_type == 'prepaid':
             move = self._create_invoices()
             move.action_post()
             customer = move.partner_id
