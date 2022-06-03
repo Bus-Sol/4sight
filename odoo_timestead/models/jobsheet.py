@@ -207,6 +207,8 @@ class JobSheet(models.Model):
                 'res_id': obj.id,
                 'subject': values['subject'],
                 'body': values['body'],
+                'author_id': self.company_id.jobsheet_manager.partner_id.id if not self.env.user.has_group(
+                    'odoo_timestead.group_jobsheet_manager') else self.env.user.partner_id.id,
                 'email_from': self.company_id.jobsheet_manager.login if not self.env.user.has_group(
                     'odoo_timestead.group_jobsheet_manager') else self.env.user.login,
                 'attachment_ids': values['attachments'],
@@ -235,7 +237,7 @@ class JobSheet(models.Model):
         })
         invoice_id.sudo().action_post()
         if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager'):
-            invoice_id.sudo().message_unsubscribe(partner_ids=[self.env.uid])
+            invoice_id.sudo().message_unsubscribe(partner_ids=[self.env.user.partner_id.id])
         self.get_email_template_and_send(invoice_id)
         message = _(
             "You went over 100%% of your allocated time, a new Invoice : <a href=# data-oe-model=account.move data-oe-id=%d>%s</a> has been created and sent to the customer.") % (
@@ -272,7 +274,7 @@ class JobSheet(models.Model):
                 }]]
             })
             if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager'):
-                order_id.sudo().message_unsubscribe(partner_ids=[self.env.uid])
+                order_id.sudo().message_unsubscribe(partner_ids=[self.env.user.partner_id.id])
             self.sudo().sale_order_id = order_id.id
             message = _(
                 "You went over 75%% of your allocated time, a new Sales Order : <a href=# data-oe-model=sale.order data-oe-id=%d>%s</a> has been created and sent to the customer.") % (
