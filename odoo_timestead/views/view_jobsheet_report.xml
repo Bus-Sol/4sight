@@ -74,6 +74,12 @@
         <field name="view_mode">tree</field>
     </record>
 
+    <record id="action_report_balance" model="ir.actions.client">
+            <field name="name">Out of Balance Report</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'jobsheet.balance.report'}" />
+        </record>
+
     <menuitem id="job_menu_reporting"
               name="Reporting"
               parent="menu_jobsheets"
@@ -91,5 +97,11 @@
               action="action_report_balance_jobsheets"
               parent="job_menu_reporting"
               sequence="2"/>
+
+    <menuitem id="job_menu_balance_reporting"
+              name="Out of Balance Report"
+              action="action_report_balance"
+              parent="job_menu_reporting"
+              sequence="3"/>
 
 </odoo>

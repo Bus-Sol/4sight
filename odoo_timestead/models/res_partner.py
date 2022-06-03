@@ -64,6 +64,7 @@ class Task(models.Model):
 
     jobsheet_type = fields.Selection(related='partner_id.jobsheet_type')
     check_balance = fields.Selection([('balanced','Balanced'),('out_of_balance','Out Of Balance')], string='Check Balance',compute='compute_balanced_task', store=True)
+    related_service_id = fields.Many2one('product.template', related='sale_line_id.product_id.product_tmpl_id', store=True)
 
     @api.depends('remaining_hours')
     def compute_balanced_task(self):
@@ -74,17 +75,6 @@ class Task(models.Model):
             else:
                 check_balance = 'out_of_balance'
             rec.check_balance = check_balance
-
-
-#     @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
-#     def _compute_remaining_hours(self):
-#         for task in self:
-#             task.remaining_hours = task.planned_hours - task.effective_hours - task.subtask_effective_hours
-#             if task.partner_id.jobsheet_type == 'prepaid':
-#                 if task.remaining_hours <=0:
-#                     task.partner_id.check_balance = 'out_of_balance'
-#                 else:
-#                     task.partner_id.check_balance = 'balanced'
 
     @api.depends('sale_line_id', 'timesheet_ids', 'timesheet_ids.unit_amount')
     def _compute_remaining_hours_so(self):

@@ -9,12 +9,12 @@ _logger = logging.getLogger(__name__)
 
 class JobSheet(models.Model):
     _name = "client.jobsheet"
-    _inherit = ['mail.thread','portal.mixin','timer.mixin','mail.activity.mixin']
+    _inherit = ['mail.thread', 'portal.mixin', 'timer.mixin', 'mail.activity.mixin']
     _order = 'id desc'
     _description = "Jobsheet"
 
     def get_list_partners(self):
-        return [('jobsheet_type','!=',False)]
+        return [('jobsheet_type', '!=', False)]
 
     name = fields.Char('Ref', required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'))
     partner_id = fields.Many2one('res.partner', 'Client', domain=get_list_partners)
@@ -29,21 +29,25 @@ class JobSheet(models.Model):
     jobsheet_start = fields.Date(string='Jobsheet Start', compute='compute_start_job', store=True)
     end_date = fields.Datetime(string='End')
     jobsheet_line = fields.One2many('jobsheet.line', 'jobsheet_id', 'Jobsheet Details')
-    status = fields.Selection([('created','Created'),('confirmed', 'Confirmed'),('sent','Email Sent'),('signed','Signed by Client'),('invoiced','Invoiced')], default="created", tracking=True)
+    status = fields.Selection(
+        [('created', 'Created'), ('confirmed', 'Confirmed'), ('sent', 'Email Sent'), ('signed', 'Signed by Client'),
+         ('invoiced', 'Invoiced')], default="created", tracking=True)
     hours = fields.Float('Hours')
     signee = fields.Char('Signee')
     move_ids = fields.Many2many("account.move", string='Moves', compute="_get_invoiced", readonly=True,
-                                   copy=False, groups='odoo_timestead.group_jobsheet_manager')
+                                copy=False, groups='odoo_timestead.group_jobsheet_manager')
     move_count = fields.Integer(string='Move Count', compute='_get_invoiced', readonly=True)
-    signature = fields.Binary(string='Signature',attachment=True)
+    signature = fields.Binary(string='Signature', attachment=True)
     category_id = fields.Many2many('jobsheet.tags', column1='jobsheet_id',
                                    column2='category_id', string='Tags')
     overtime = fields.Boolean('Overtime', default=False)
     hours_overtime = fields.Float()
-    type = fields.Selection([('postpaid','Postpaid'),('contract','Daily Contract'),('prepaid','Prepaid')], default='contract', string='Type', readonly=1)
+    type = fields.Selection([('postpaid', 'Postpaid'), ('contract', 'Out of Contract'), ('prepaid', 'Prepaid')],
+                            default='contract', string='Type', readonly=1)
     is_prepaid = fields.Boolean(default=True)
     currency_id = fields.Many2one('res.currency', 'Currency', required=True,
-                                  default=lambda self: self.env.company.currency_id.id, groups='odoo_timestead.group_jobsheet_manager')
+                                  default=lambda self: self.env.company.currency_id.id,
+                                  groups='odoo_timestead.group_jobsheet_manager')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all', tracking=4)
     company_id = fields.Many2one('res.company', required=True, readonly=True, default=lambda self: self.env.company)
     planned_date_begin = fields.Datetime("Start date")
@@ -56,8 +60,9 @@ class JobSheet(models.Model):
     planned_hours = fields.Float(related='task_id.planned_hours')
     remaining_hours = fields.Float(related='task_id.remaining_hours')
     progress = fields.Float(related='task_id.progress')
-    sale_order_id = fields.Many2one('sale.order', string='Next Sale Order', groups='odoo_timestead.group_jobsheet_manager')
-    tick_postpaid = fields.Boolean('Is Postpaid', default=False)
+    sale_order_id = fields.Many2one('sale.order', string='Next Sale Order',
+                                    groups='odoo_timestead.group_jobsheet_manager')
+    tick_postpaid = fields.Boolean('Is out of contract', default=False)
     url_detail = fields.Char(string='Link for Details')
     ticket_id = fields.Many2one('helpdesk.ticket')
     invoice_amount = fields.Float('Revenue', compute="_get_invoiced", store=True)
@@ -68,7 +73,7 @@ class JobSheet(models.Model):
             if rec.start_date:
                 rec.jobsheet_start = rec.start_date
 
-    @api.onchange('start_date','end_date')
+    @api.onchange('start_date', 'end_date')
     def onchange_start_end_date(self):
         if self.start_date and self.end_date:
             duration = self.end_date - self.start_date
@@ -86,13 +91,14 @@ class JobSheet(models.Model):
     def onchange_tick_postpaid(self):
         if not self.is_prepaid:
             if self.tick_postpaid:
-                self.type = 'postpaid'
-            else:
                 self.type = 'contract'
+            else:
+                self.type = 'postpaid'
 
     @api.depends('partner_id')
     def compute_service_domain(self):
-        domain = [('id', 'in', self.partner_id.service_ids.mapped('product_id').ids)] if self.partner_id and self.partner_id.service_ids else [('id', '=', False)]
+        domain = [('id', 'in', self.partner_id.service_ids.mapped(
+            'product_id').ids)] if self.partner_id and self.partner_id.service_ids else [('id', '=', False)]
         self.service_domain = self.env['product.template'].search(domain)
 
     @api.onchange('partner_id')
@@ -108,7 +114,7 @@ class JobSheet(models.Model):
         else:
             self.is_prepaid = False
             self.tick_postpaid = False
-            self.type = 'contract'
+            self.type = 'postpaid'
 
     @api.onchange('service_id')
     def onchange_service_id(self):
@@ -118,7 +124,7 @@ class JobSheet(models.Model):
             self.project_id = self.service_id.project_id.id
         else:
             self.project_id = False
-        if self.type in ['postpaid','contract']:
+        if self.type in ['postpaid', 'contract']:
             self.project_id = self.env.ref('odoo_timestead.project_project_jobsheet').id
 
     @api.onchange('overtime')
@@ -147,9 +153,11 @@ class JobSheet(models.Model):
         task_id = False
         for job in self:
             if job.type == 'prepaid':
-                sale_order_line = SaleOrderLine.search([('order_partner_id','=',job.partner_id.id),('product_id','=',self.service_id.product_variant_id.id),('state','=','sale')])
+                sale_order_line = SaleOrderLine.search([('order_partner_id', '=', job.partner_id.id),
+                                                        ('product_id', '=', self.service_id.product_variant_id.id),
+                                                        ('state', '=', 'sale')])
                 _logger.info('sale_order_line: %s', sale_order_line)
-                tasks = ProjectTask.search([('sale_line_id','in',sale_order_line.ids)])
+                tasks = ProjectTask.search([('sale_line_id', 'in', sale_order_line.ids)])
                 _logger.info('tasks: %s', tasks)
                 if len(tasks) == 1:
                     task_id = tasks.id
@@ -159,7 +167,7 @@ class JobSheet(models.Model):
                     if inprogress_task:
                         task_id = inprogress_task[0].id
                     else:
-                        new_task = tasks.filtered(lambda t: round(t.progress) >= 0)
+                        new_task = tasks.filtered(lambda t: 0 <= round(t.progress) < 100)
                         if new_task:
                             task_id = new_task[0].id
                         else:
@@ -199,7 +207,8 @@ class JobSheet(models.Model):
                 'res_id': obj.id,
                 'subject': values['subject'],
                 'body': values['body'],
-                'email_from': self.company_id.jobsheet_manager.login if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager') else self.env.user.login,
+                'email_from': self.company_id.jobsheet_manager.login if not self.env.user.has_group(
+                    'odoo_timestead.group_jobsheet_manager') else self.env.user.login,
                 'attachment_ids': values['attachments'],
                 'partner_ids': [obj.partner_id.id],
                 'template_id': template and template.id or False,
@@ -215,7 +224,8 @@ class JobSheet(models.Model):
             'job_ids': [(6, 0, self.ids)],
             'move_type': 'out_invoice',
             'invoice_user_id': self.company_id.jobsheet_manager.id,
-            'user_id': self.company_id.jobsheet_manager.id if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager') else self.env.uid,
+            'user_id': self.company_id.jobsheet_manager.id if not self.env.user.has_group(
+                'odoo_timestead.group_jobsheet_manager') else self.env.uid,
             'invoice_line_ids': [[0, 0, {
                 "name": self.name,
                 "quantity": buffer,
@@ -231,7 +241,8 @@ class JobSheet(models.Model):
             "You went over 100%% of your allocated time, a new Invoice : <a href=# data-oe-model=account.move data-oe-id=%d>%s</a> has been created and sent to the customer.") % (
                       invoice_id.id, invoice_id.name)
         self.activity_schedule('mail.mail_activity_delivery_shortfall', note=message,
-                               user_id=self.company_id.jobsheet_manager.id if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager') else self.env.uid)
+                               user_id=self.company_id.jobsheet_manager.id if not self.env.user.has_group(
+                                   'odoo_timestead.group_jobsheet_manager') else self.env.uid)
         return invoice_id
 
     def create_sale_order_from_job(self, res):
@@ -252,7 +263,8 @@ class JobSheet(models.Model):
         if not task:
             order_id = self.env['sale.order'].sudo().create({
                 'partner_id': self.partner_id.id,
-                "user_id": self.company_id.jobsheet_manager.id if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager') else self.env.uid,
+                "user_id": self.company_id.jobsheet_manager.id if not self.env.user.has_group(
+                    'odoo_timestead.group_jobsheet_manager') else self.env.uid,
                 'order_line': [[0, 0, {
                     "product_id": service.product_id.id,
                     "product_uom_qty": service.quantity,
@@ -266,16 +278,16 @@ class JobSheet(models.Model):
                 "You went over 75%% of your allocated time, a new Sales Order : <a href=# data-oe-model=sale.order data-oe-id=%d>%s</a> has been created and sent to the customer.") % (
                           order_id.id, order_id.name)
             self.activity_schedule('mail.mail_activity_delivery_shortfall', note=message,
-                                   user_id=self.company_id.jobsheet_manager.id if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager') else self.env.uid)
+                                   user_id=self.company_id.jobsheet_manager.id if not self.env.user.has_group(
+                                       'odoo_timestead.group_jobsheet_manager') else self.env.uid)
             self.get_email_template_and_send(order_id)
-
 
     def trigger_send_quotation(self, last_progress, progress, remaining_hour, current_service):
 
         if progress <= last_progress:
             pass
         else:
-            if last_progress >=100 :
+            if last_progress >= 100:
                 raise UserError(_('You cannot go over 100%, please contact your administrator'))
         if progress >= 75 and last_progress < 75:
             #### if we're surpassing 75% #####
@@ -293,11 +305,13 @@ class JobSheet(models.Model):
         ##### Get Sale Order: Look if we already create next Sales to be sent as a remainder ###
         if not self.sudo().sale_order_id:
             sale_obj = self.env['sale.order']
-            order_lines = sale_obj.sudo().search([('partner_id', '=',self.partner_id.id),('state','=','sent')]).order_line
+            order_lines = sale_obj.sudo().search(
+                [('partner_id', '=', self.partner_id.id), ('state', '=', 'sent')]).order_line
             if order_lines:
-                sale_order = order_lines.sudo().filtered(lambda s: s.product_id.product_tmpl_id == self.service_id).sudo().order_id
+                sale_order = order_lines.sudo().filtered(
+                    lambda s: s.product_id.product_tmpl_id == self.service_id).sudo().order_id
                 if sale_order:
-                    self.sudo().sale_order_id= sale_order[0]
+                    self.sudo().sale_order_id = sale_order[0]
         ###########"
         if last_progress >= 75:
             if remaining_hour < 0:
@@ -323,7 +337,8 @@ class JobSheet(models.Model):
             sale_order_line = SaleOrderLine.search([('order_partner_id', '=', self.partner_id.id),
                                                     ('product_id', '=', self.service_id.product_variant_id.id),
                                                     ('state', '=', 'sale')])
-            task = ProjectTask.search([('sale_line_id', 'in', sale_order_line.ids),('id','!=',self.task_id.id),('remaining_hours','>', 0)],limit=1)
+            task = ProjectTask.search([('sale_line_id', 'in', sale_order_line.ids), ('id', '!=', self.task_id.id),
+                                       ('remaining_hours', '>', 0)], limit=1)
             if task:
                 sale_order = task.sudo().sale_line_id.sudo().order_id
                 check_next_sale_order = sale_order[0] if sale_order else False
@@ -331,7 +346,7 @@ class JobSheet(models.Model):
                 remaining_hours = values['unit_amount'] - self.remaining_hours
                 values['unit_amount'] = self.remaining_hours
                 self.env['account.analytic.line'].create(values)
-                new_job= self.env['client.jobsheet'].create({
+                new_job = self.env['client.jobsheet'].create({
                     'partner_id': self.partner_id.id,
                     'service_id': self.service_id.id,
                     'project_id': self.project_id.id,
@@ -342,7 +357,7 @@ class JobSheet(models.Model):
                     'brief': self.brief,
                     'details': self.details,
                     'jobsheet_start': self.start_date,
-                    'task_id':check_next_sale_order.tasks_ids[0].id
+                    'task_id': check_next_sale_order.tasks_ids[0].id
                 })
                 new_job.task_id = check_next_sale_order.tasks_ids[0].id
                 copy_vals['job_id'] = new_job.id
@@ -378,7 +393,7 @@ class JobSheet(models.Model):
             ticket = self.env['helpdesk.ticket'].browse(vals['ticket_id'])
             ticket.job_id = res.id
         if vals.get('hours_overtime'):
-                raise ValidationError(_('Please save Jobsheet before entering Overtime.'))
+            raise ValidationError(_('Please save Jobsheet before entering Overtime.'))
         if vals.get('hours') and vals.get('hours') > 0:
             values = {
                 'job_id': res.id,
@@ -389,7 +404,7 @@ class JobSheet(models.Model):
                 'user_id': res.env.uid,
                 'unit_amount': vals['hours'],
             }
-            if res.partner_id.jobsheet_type =='prepaid' and not res.task_id:
+            if res.partner_id.jobsheet_type == 'prepaid' and not res.task_id:
                 raise UserError(_('No task found to allocate hours.'))
             last_progress = res.task_id.progress
             current_service = res.partner_id.service_ids.filtered(
@@ -410,7 +425,7 @@ class JobSheet(models.Model):
                 'user_id': self.env.uid,
                 'unit_amount': vals['hours'] if 'hours' in vals else self.hours,
             }
-            if self.partner_id.jobsheet_type =='prepaid' and not self.task_id:
+            if self.partner_id.jobsheet_type == 'prepaid' and not self.task_id:
                 raise UserError(_('No task found to allocate hours.'))
             last_progress = self.task_id.progress
             timesheet_id = self.timesheet_ids[0] if self.timesheet_ids else None
@@ -477,7 +492,6 @@ class JobSheet(models.Model):
         }
         return action
 
-
     @api.depends('jobsheet_line.price_unit')
     def _amount_all(self):
         for order in self:
@@ -517,9 +531,9 @@ class JobSheet(models.Model):
             order.sudo().invoice_amount = sum(invoices.mapped('amount_total_signed'))
 
     def mark_as_signed(self):
-        if not self.signature :
+        if not self.signature:
             raise UserError(_("Make sure to sign first."))
-        if not self.signee :
+        if not self.signee:
             raise UserError(_("Please enter the name of the signee."))
         self.status = 'signed'
 
@@ -563,7 +577,6 @@ class JobSheet(models.Model):
         if self.env.context.get('mark_job_as_sent'):
             self.filtered(lambda o: o.status == 'created').with_context(tracking_disable=True).write({'status': 'sent'})
         return super(JobSheet, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
-
 
     def action_send_copy(self):
 
@@ -624,7 +637,7 @@ class JobSheet(models.Model):
         for order in self:
             if (order.status == 'created' and order.company_id.inv_after_sign):
                 raise UserError(_("Only signed jobsheets are ready to be invoiced."))
-            if order.type != 'postpaid':
+            if order.type == 'prepaid':
                 raise UserError(_("You can only invoice Postpaid Type."))
             invoice_vals = order._prepare_invoice(ref=False)
             invoice_vals['invoice_line_ids'].append((0, 0, order.sudo()._prepare_account_move_line_from_rate()))
@@ -636,18 +649,17 @@ class JobSheet(models.Model):
             order.sudo().status = 'invoiced'
             return self.action_open_invoice(moves)
 
-
     def action_open_invoice(self, invoices):
 
-        return  {
-                'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'view_id': self.env.ref('account.view_move_form').id,
-                'res_model': 'account.move',
-                'res_id': invoices.id,
-                'target': 'current',
-            }
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': self.env.ref('account.view_move_form').id,
+            'res_model': 'account.move',
+            'res_id': invoices.id,
+            'target': 'current',
+        }
 
     def action_view_invoice(self):
         invoices = self.mapped('move_ids')
@@ -657,7 +669,7 @@ class JobSheet(models.Model):
         elif len(invoices) == 1:
             form_view = [(self.env.ref('account.view_move_form').id, 'form')]
             if 'views' in action:
-                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+                action['views'] = form_view + [(state, view) for state, view in action['views'] if view != 'form']
             else:
                 action['views'] = form_view
             action['res_id'] = invoices.id
@@ -675,7 +687,7 @@ class JobSheet(models.Model):
         action['context'] = context
         return action
 
-    @api.onchange('start_date','end_date')
+    @api.onchange('start_date', 'end_date')
     def onchange_compute_hours(self):
         for rec in self:
             duration = 0
@@ -690,6 +702,7 @@ class JobSheet(models.Model):
             'target': 'self',
             'url': self.get_portal_url(),
         }
+
 
 class JobSheetline(models.Model):
     _name = "jobsheet.line"
