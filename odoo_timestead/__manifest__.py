@@ -8,7 +8,7 @@
         """
         """,
     'author': '4Sight Group',
-    'depends': ['contacts','product','sale_timesheet','account','portal','timer','analytic','project','helpdesk'],
+    'depends': ['contacts','product','sale_timesheet','account','portal','timer','analytic','project','helpdesk', 'account_reports'],
     'data': [
         'security/jobsheet_security.xml',
         'security/ir.model.access.csv',

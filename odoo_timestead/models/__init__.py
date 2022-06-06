@@ -11,3 +11,4 @@ from . import jobsheet_service
 from . import helpdesk_ticket
 from . import account_analytic_line
 from . import sale_order
+from . import jobsheet_reports

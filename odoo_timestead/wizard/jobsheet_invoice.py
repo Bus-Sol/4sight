@@ -18,7 +18,7 @@ class JobsheetInvoice(models.Model):
         if not result:
             raise UserError(_("Please select Jobsheets per one customer."))
         for jobsheet in jobsheets:
-            if jobsheet.type != 'postpaid':
+            if jobsheet.type == 'prepaid':
                 raise UserError(_("You can only invoice Postpaid Type."))
         invoice_vals_list = []
         customer_ref = ' '.join(label for label in jobsheets.mapped('name') if label)
