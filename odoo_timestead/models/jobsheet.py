@@ -231,6 +231,7 @@ class JobSheet(models.Model):
             'invoice_line_ids': [[0, 0, {
                 "name": self.name,
                 "quantity": buffer,
+                'tax_ids': [(6, 0, self.service_id.taxes_id.ids)],
                 "price_unit": service.hour,
                 "product_uom_id": self.env.ref('uom.product_uom_hour').id
             }]]
@@ -271,6 +272,7 @@ class JobSheet(models.Model):
                     "product_id": service.product_id.id,
                     "product_uom_qty": service.quantity,
                     "price_unit": service.hour,
+                    'tax_id': [(6, 0, self.service_id.taxes_id.ids)],
                 }]]
             })
             if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager'):
@@ -631,6 +633,7 @@ class JobSheet(models.Model):
             'product_uom_id': self.env.ref('uom.product_uom_hour').id,
             'quantity': self.effective_hours,
             'price_unit': current_service.hour,
+            'tax_ids': [(6, 0, self.service_id.taxes_id.ids)],
         }
         return res
 
@@ -726,6 +729,7 @@ class JobSheetline(models.Model):
             'product_id': self.product_id.id,
             'quantity': self.product_uom_qty,
             'price_unit': self.price_unit,
+            'tax_ids': [(6, 0, self.product_id.taxes_id.ids)],
         }
         return res
 
