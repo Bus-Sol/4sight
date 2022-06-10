@@ -7,7 +7,7 @@ class AccountMove(models.Model):
 
     @api.model
     def cron_compute_field(self):
-        for line in self.env['account.move'].search([('invoice_line_ids','!=',False)]).invoice_line_ids:
+        for line in self.env['account.move'].search([('invoice_line_ids','!=',False),('company_id','=',455)]).invoice_line_ids:
             if line:
                 if line.tax_ids:
                     if line.move_id.move_type in ['out_refund', 'in_refund']:
@@ -16,45 +16,47 @@ class AccountMove(models.Model):
                     else:
                         line.net_value = line.price_subtotal
                         line.tax_value = line.price_total - line.price_subtotal
+                        tax = 0
                     if line.move_id.move_type == 'entry':
                         if line.debit:
                             line.net_value = line.debit
-                            line.tax_value = sum(line.move_id.line_ids.mapped('debit')) - line.net_value
                         if line.credit:
                             line.net_value = line.credit * -1
-                            line.tax_value = (sum(line.move_id.line_ids.mapped('debit')) - line.credit) * -1
+                        taxes = line.tax_ids.compute_all(line.net_value, product=line.product_id, partner=line.partner_id)['taxes']
+                        tax = taxes[0]['amount'] if taxes else 0
+                        line.tax_value = tax
                     line.gross_value = line.net_value + line.tax_value
                     line.vat_line_id = line.tax_ids.ids[0]
 
-        for r in self.env['account.move'].search([('move_type', 'in', ['in_invoice','out_invoice'])]):
-
-            exist_line = False
-            total = 0
-            for rec in r.env['account.move.line'].search([('move_id', '=', r.id)]):
-                if rec.is_vat_round:
-                    exist_line = True
-
-            for rec in r.invoice_line_ids:
-                total += round(rec.tax_value,2)
-
-            diff = r.amount_by_group[0][1] - total if r.amount_by_group else 0
-            if diff != 0 and r.move_type != 'entry':
-                if not exist_line:
-                    line_id = r.env['account.move.line'].create({
-                        'move_id': r.id,
-                        'exclude_from_invoice_tab': True,
-                        'is_vat_round': True,
-                        'tax_value': diff,
-                        'gross_value': diff,
-                        'vat_line_id': r.invoice_line_ids.filtered(lambda line: line.vat_line_id != False).mapped('vat_line_id')[0].id,
-                        'name': 'VAT Rounding',
-                        'account_id': r.invoice_line_ids.filtered(lambda line: line.account_id != False).mapped('account_id')[0].id
-                    })
-                else:
-                    line = r.env['account.move.line'].search(
-                        [('move_id', '=', r.id), ('is_vat_round', '=', True)])
-                    line.tax_value = line.gross_value = diff
-                    line.vat_line_id = r.invoice_line_ids.filtered(lambda line: line.vat_line_id != False).mapped('vat_line_id')[0].id
+        # for r in self.env['account.move'].search([('move_type', 'in', ['in_invoice','out_invoice'])]):
+        #
+        #     exist_line = False
+        #     total = 0
+        #     for rec in r.env['account.move.line'].search([('move_id', '=', r.id)]):
+        #         if rec.is_vat_round:
+        #             exist_line = True
+        #
+        #     for rec in r.invoice_line_ids:
+        #         total += round(rec.tax_value,2)
+        #
+        #     diff = r.amount_by_group[0][1] - total if r.amount_by_group else 0
+        #     if diff != 0 and r.move_type != 'entry':
+        #         if not exist_line:
+        #             line_id = r.env['account.move.line'].create({
+        #                 'move_id': r.id,
+        #                 'exclude_from_invoice_tab': True,
+        #                 'is_vat_round': True,
+        #                 'tax_value': diff,
+        #                 'gross_value': diff,
+        #                 'vat_line_id': r.invoice_line_ids.filtered(lambda line: line.vat_line_id != False).mapped('vat_line_id')[0].id,
+        #                 'name': 'VAT Rounding',
+        #                 'account_id': r.invoice_line_ids.filtered(lambda line: line.account_id != False).mapped('account_id')[0].id
+        #             })
+        #         else:
+        #             line = r.env['account.move.line'].search(
+        #                 [('move_id', '=', r.id), ('is_vat_round', '=', True)])
+        #             line.tax_value = line.gross_value = diff
+        #             line.vat_line_id = r.invoice_line_ids.filtered(lambda line: line.vat_line_id != False).mapped('vat_line_id')[0].id
 
     def write(self, vals):
         res = super(AccountMove, self).write(vals)
@@ -71,13 +73,17 @@ class AccountMove(models.Model):
                     else:
                         record.net_value = record.price_subtotal
                         record.tax_value = record.price_total - record.price_subtotal
+                    tax = 0
                     if record.move_id.move_type == 'entry':
                         if record.debit:
                             record.net_value = record.debit
-                            record.tax_value = sum(record.move_id.line_ids.mapped('debit')) - record.net_value
                         if record.credit:
                             record.net_value = record.credit * -1
-                            record.tax_value = (sum(record.move_id.line_ids.mapped('debit')) - record.credit) * -1
+                        taxes = \
+                            record.tax_ids.compute_all(record.net_value, product=record.product_id,
+                                                       partner=record.partner_id)['taxes']
+                        tax = taxes[0]['amount'] if taxes else 0
+                        record.tax_value = tax
                     record.gross_value = record.net_value + record.tax_value
 
                 exist_line = False
