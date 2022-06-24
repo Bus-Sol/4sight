@@ -103,7 +103,7 @@ class JobSheet(models.Model):
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
-        if self.timesheet_ids and self.partner_id.jobsheet_type == 'prepaid':
+        if self.timesheet_ids and self._origin.partner_id.jobsheet_type == 'prepaid':
             raise UserError(_('You cannot change customer once you filled in a timesheet.'))
         self.service_id = self.partner_id.service_ids[0].product_id.id if self.partner_id.service_ids else False
         self.project_id = self.service_id.project_id.id
@@ -118,7 +118,7 @@ class JobSheet(models.Model):
 
     @api.onchange('service_id')
     def onchange_service_id(self):
-        if self.timesheet_ids and self.partner_id.jobsheet_type == 'prepaid':
+        if self.timesheet_ids and self._origin.partner_id.jobsheet_type == 'prepaid':
             raise UserError(_('You cannot change the service once you filled in a timesheet.'))
         if self.service_id:
             self.project_id = self.service_id.project_id.id
