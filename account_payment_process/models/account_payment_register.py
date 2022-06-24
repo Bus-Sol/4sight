@@ -171,7 +171,7 @@ class AccountPaymentRegisterLine(models.TransientModel):
     @api.constrains('amount')
     def check_amount_value(self):
         for line in self:
-            if line.amount:
+            if line.amount and line.payment_type == 'inbound':
                 if line.amount > line.previous_amount:
                     raise UserError(_("You cannot set an amount higher than its original."))
 
