@@ -103,7 +103,7 @@ class JobSheet(models.Model):
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
-        if self.timesheet_ids:
+        if self.timesheet_ids and self._origin.partner_id.jobsheet_type == 'prepaid':
             raise UserError(_('You cannot change customer once you filled in a timesheet.'))
         self.service_id = self.partner_id.service_ids[0].product_id.id if self.partner_id.service_ids else False
         self.project_id = self.service_id.project_id.id
@@ -118,7 +118,7 @@ class JobSheet(models.Model):
 
     @api.onchange('service_id')
     def onchange_service_id(self):
-        if self.timesheet_ids:
+        if self.timesheet_ids and self._origin.partner_id.jobsheet_type == 'prepaid':
             raise UserError(_('You cannot change the service once you filled in a timesheet.'))
         if self.service_id:
             self.project_id = self.service_id.project_id.id
@@ -228,6 +228,7 @@ class JobSheet(models.Model):
             'invoice_user_id': self.company_id.jobsheet_manager.id,
             'user_id': self.company_id.jobsheet_manager.id if not self.env.user.has_group(
                 'odoo_timestead.group_jobsheet_manager') else self.env.uid,
+            'partner_bank_id': self.company_id.partner_id.bank_ids[:1].id,
             'invoice_line_ids': [[0, 0, {
                 "name": self.name,
                 "quantity": buffer,
@@ -618,6 +619,7 @@ class JobSheet(models.Model):
             'partner_id': self[0].partner_id.id,
             'invoice_user_id': self.company_id.jobsheet_manager.id,
             'invoice_origin': ref if ref else self.name or '',
+            'partner_bank_id': self.company_id.partner_id.bank_ids[:1].id,
             'invoice_line_ids': [],
         }
 

@@ -3,6 +3,8 @@ import sys
 
 from odoo import models, fields, _, api
 from odoo.exceptions import UserError
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -34,7 +36,6 @@ class AccountPaymentRegister(models.TransientModel):
     def default_get(self, fields_list):
         # OVERRIDE
         res = super().default_get(fields_list)
-        print(res)
         if 'invoice_line_ids' in fields_list:
             if self._context.get('active_model') == 'account.move':
                 lines = self.env['account.move'].browse(self._context.get('active_ids', [])).line_ids
@@ -91,11 +92,11 @@ class AccountPaymentRegister(models.TransientModel):
                 for inv_line_id in self.invoice_line_ids:
 
                     if inv_line_id['ref_move_copy'] == payment['copy_ref']:
-                        payment['amount'] = inv_line_id['amount']
+                        payment['amount'] = abs(inv_line_id['amount'])
                         payment['ref'] = inv_line_id['name']
             for payment in payment_vals_list:
                 payment.pop('copy_ref', None)
-
+        _logger.info('Vals : %s', payment_vals_list)
 
         payments = self.env['account.payment'].create(payment_vals_list)
 
@@ -171,7 +172,7 @@ class AccountPaymentRegisterLine(models.TransientModel):
     @api.constrains('amount')
     def check_amount_value(self):
         for line in self:
-            if line.amount:
+            if line.amount and line.inv_line_id.payment_type == 'inbound':
                 if line.amount > line.previous_amount:
                     raise UserError(_("You cannot set an amount higher than its original."))
 
