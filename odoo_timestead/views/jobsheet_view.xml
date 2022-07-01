@@ -34,16 +34,19 @@
         <field name="model">client.jobsheet</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="jobsheet_start"/>
+                <field name="jobsheet_start" optional="show"/>
+                <field name="start_date" optional="hide"/>
+                <field name="end_date" optional="hide"/>
                 <field name="name"/>
-                <field name="user_id" string="Technician"/>
+                <field name="user_id" string="Technician" optional="show"/>
                 <field name="brief"/>
                 <field name="partner_id"/>
-                <field name="task_id"/>
-                <field name="effective_hours" widget="timesheet_uom"/>
+                <field name="task_id" optional="show"/>
+                <field name="effective_hours" widget="timesheet_uom" sum="Total Hours Spent"/>
                 <field name="status" widget="badge" decoration-success="status == 'invoiced'"
                        decoration-danger="status in ['sent','signed']" decoration-info="status == 'created'"
                        optional="show"/>
+                <field name="category_id" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="company_id" invisible="1"/>
             </tree>
         </field>
@@ -327,8 +330,9 @@
         <field name="model">client.jobsheet</field>
         <field name="arch" type="xml">
             <pivot string="Jobsheets" sample="1">
-                <field name="date_order" type="row"/>
-                <field name="hours" type="measure"/>
+                <field name="user_id" type="row"/>
+                <field name="hours" type="measure" widget="float_time"/>
+                <field name="jobsheet_start" type="col"/>
             </pivot>
         </field>
     </record>
@@ -354,8 +358,11 @@
         <field name="name">Jobsheets</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">client.jobsheet</field>
-        <field name="view_mode">tree,form,pivot,activity</field>
+        <field name="view_mode">tree,form,pivot,activity,graph</field>
         <field name="view_id" ref="view_jobsheet_tree"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('odoo_timestead.view_jobsheet_tree')}),
+                (0, 0, {'view_mode': 'graph', 'view_id': ref('odoo_timestead.jobsheet_view_graph_top_client')})]"/>
         <field name="search_view_id" ref="view_jobsheet_filter"/>
         <field name="context">{'search_default_my_jobsheet': 1}</field>
         <field name="help" type="html">
@@ -448,6 +455,17 @@
 
 
     <!--    Dashboard section     -->
+        <record model="ir.ui.view" id="jobsheet_view_graph_top_client">
+            <field name="name">client.jobsheet.graph.view.top.client</field>
+            <field name="model">client.jobsheet</field>
+            <field name="arch" type="xml">
+                <graph string="Client Hours" sample="1">
+                    <field name="partner_id"/>
+                    <field name="effective_hours" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
     <record id="jobsheet_view_graph" model="ir.ui.view">
         <field name="name">client.jobsheet.graph.view</field>
         <field name="model">client.jobsheet</field>
@@ -466,12 +484,11 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <dashboard sample="1">
+                <view type="pivot" ref="view_jobsheet_pivot"/>
                 <group>
                     <view type="graph" ref="jobsheet_view_graph"/>
                 </group>
                 <group>
-                    <widget name="pie_chart" title="Top Client Hours"
-                            attrs="{'groupby': 'partner_id', 'measure': 'effective_hours'}"/>
                     <widget name="pie_chart" title="Employee Jobsheets Hours"
                             attrs="{'groupby': 'user_id', 'measure': 'effective_hours'}"/>
                 </group>

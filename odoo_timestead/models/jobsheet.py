@@ -20,14 +20,14 @@ class JobSheet(models.Model):
     partner_id = fields.Many2one('res.partner', 'Client', domain=get_list_partners)
     service_domain = fields.Many2many('product.template', compute='compute_service_domain')
     service_id = fields.Many2one('product.template', domain="[('id', 'in', service_domain)]")
-    user_id = fields.Many2one('res.users', 'Technicien', required=True, default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', 'Technician', required=True, default=lambda self: self.env.user)
     brief = fields.Char('Brief')
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     details = fields.Text(string='Details')
     jobsheet_type_id = fields.Many2one('jobsheet.type', 'Jobsheet Types')
-    start_date = fields.Datetime(string='Start')
+    start_date = fields.Datetime(string='Job Start Time')
     jobsheet_start = fields.Date(string='Jobsheet Start', compute='compute_start_job', store=True)
-    end_date = fields.Datetime(string='End')
+    end_date = fields.Datetime(string='Job End Time')
     jobsheet_line = fields.One2many('jobsheet.line', 'jobsheet_id', 'Jobsheet Details')
     status = fields.Selection(
         [('created', 'Created'), ('confirmed', 'Confirmed'), ('sent', 'Email Sent'), ('signed', 'Signed by Client'),

@@ -6,6 +6,7 @@
         <field name="model">client.jobsheet</field>
         <field name="arch" type="xml">
             <tree create="false" delete="false" edit="false">
+                <field name="create_date" widget="date" optional="show"/>
                 <field name="jobsheet_start"/>
                 <field name="start_date" />
                 <field name="end_date" />
@@ -25,7 +26,7 @@
         <field name="res_model">client.jobsheet</field>
         <field name="view_id" ref="view_report_jobsheet"/>
         <field name="domain">[('overtime', '=', True)]</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No Jobsheet with overtime, yet.
