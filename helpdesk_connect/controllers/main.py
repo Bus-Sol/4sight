@@ -6,7 +6,7 @@ _logger = logging.getLogger(__name__)
 from werkzeug import urls
 from odoo.addons.auth_signup.models.res_users import SignupError
 from odoo import SUPERUSER_ID
-
+from urllib.parse import urlparse, parse_qs
 
 class TrialPortal(http.Controller):
 
@@ -62,8 +62,6 @@ class TrialPortal(http.Controller):
 
     @http.route('/portal/helpdesk/<string:team>', type='http',method='post', auth="public", website=True)
     def get_portal_user(self, request, team = None):
-        print('team****************', team)
-        from urllib.parse import urlparse, parse_qs
         url = request.httprequest.url
         parsed = urlparse(url)
         user_name = parse_qs(parsed.query)['user_id'][0]
@@ -73,17 +71,18 @@ class TrialPortal(http.Controller):
         user_id = request.env['res.users'].sudo().search([('login','=',values['login'])])
         if token == parse_qs(parsed.query)['token'][0]:
             if user_id:
-
-                request.params['password'] = values['password']
-                try:
-                    uid = request.session.authenticate(request.session.db, values['login'], request.params['password'])
-                    request.params['login_success'] = True
-                    partner_id = self.assign_user_to_company(email.split('@')[1])
-                    if partner_id:
-                        user_id.partner_id.parent_id= partner_id
-                except Exception:
-                    return http.redirect_with_hash('/')
-
+                if request.session.uid:
+                    pass
+                else:
+                    request.params['password'] = values['password']
+                    try:
+                        uid = request.session.authenticate(request.session.db, values['login'], request.params['password'])
+                        request.params['login_success'] = True
+                        partner_id = self.assign_user_to_company(email.split('@')[1])
+                        if partner_id:
+                            user_id.partner_id.parent_id= partner_id
+                    except Exception:
+                        return http.redirect_with_hash('/')
 
             else:
                 db, login, password = request.env['res.users'].sudo().signup(values, token=None)

@@ -357,6 +357,7 @@
     <record model="ir.ui.view" id="jobsheet_view_graph_top_client">
             <field name="name">client.jobsheet.graph.view.top.client</field>
             <field name="model">client.jobsheet</field>
+            <field name="priority">2</field>
             <field name="arch" type="xml">
                 <graph string="Client Hours" sample="1">
                     <field name="partner_id"/>
