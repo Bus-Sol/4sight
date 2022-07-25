@@ -11,9 +11,7 @@ class AccountMove(models.Model):
     @api.depends('job_ids')
     def _get_jobsheets(self):
         for order in self:
-            jobsheets = self.env['client.jobsheet'].search([('move_ids', 'in', order.ids)])
-            order.job_ids = jobsheets
-            order.job_count = len(jobsheets)
+            order.job_count = len(order.job_ids)
 
 
     def action_view_jobsheets(self):
