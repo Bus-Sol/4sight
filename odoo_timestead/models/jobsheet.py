@@ -326,9 +326,9 @@ class JobSheet(models.Model):
                 else:
                     current_service.extra_hour = 0
                     self.create_invoice_from_job(abs(remaining_hour))
-                    self.get_email_template_and_send(self.sale_order_id)
+                    self.get_email_template_and_send(self.suod().sale_order_id)
             else:
-                self.get_email_template_and_send(self.sale_order_id)
+                self.get_email_template_and_send(self.suod().sale_order_id)
 
     def create_account_analytic_line(self, values):
         #### This is only in Prepaid mode ###
