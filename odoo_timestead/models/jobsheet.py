@@ -60,8 +60,7 @@ class JobSheet(models.Model):
     planned_hours = fields.Float(related='task_id.planned_hours')
     remaining_hours = fields.Float(related='task_id.remaining_hours')
     progress = fields.Float(related='task_id.progress')
-    sale_order_id = fields.Many2one('sale.order', string='Next Sale Order',
-                                    groups='odoo_timestead.group_jobsheet_manager')
+    sale_order_id = fields.Many2one('sale.order', string='Next Sale Order')
     tick_postpaid = fields.Boolean('Is out of contract', default=False)
     url_detail = fields.Char(string='Link for Details')
     ticket_id = fields.Many2one('helpdesk.ticket')
