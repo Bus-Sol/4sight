@@ -178,13 +178,16 @@ class JobSheet(models.Model):
             job.task_id = task_id
 
 
-    def get_email_template_and_send(self, obj):
+    def get_email_template_and_send(self, obj, create_invoice_after_confirm_so=False):
         template = False
         if obj:
             if obj._name == 'sale.order':
                 template = self.env.ref('sale.email_template_edi_sale')
             if obj._name == 'account.move':
-                template = self.env.ref('account.email_template_edi_invoice')
+                if create_invoice_after_confirm_so:
+                    template = self.env.ref('odoo_timestead.jobsheet_email_template_edi_invoice')
+                else:
+                    template = self.env.ref('account.email_template_edi_invoice')
             values = self.env['mail.compose.message'].sudo().generate_email_for_composer(
                 template.id, [obj.id],
                 ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to',

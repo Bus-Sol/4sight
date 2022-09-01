@@ -14,6 +14,6 @@ class SaleOrder(models.Model):
             for service in customer.service_ids:
                 if service.product_id.product_variant_id.id in self.order_line.mapped('product_id').ids:
                     service.extra_hour = service.quantity * (service.buffer / 100)
-            self.env['client.jobsheet'].get_email_template_and_send(move)
+            self.env['client.jobsheet'].get_email_template_and_send(move, create_invoice_after_confirm_so=True)
 
         return res
