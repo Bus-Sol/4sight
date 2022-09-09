@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <report
+       id="action_report_proposal"
+       string="Sales Proposal"
+       model="proposal.proposal"
+       report_type="qweb-pdf"
+       file="sales_proposal.sale_proposal_report"
+       name="sales_proposal.report_sale_proposal"
+       print_report_name="'Sales Proposal - %s' % (object.name)"
+    />
+
+</odoo>

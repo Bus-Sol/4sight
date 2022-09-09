@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- External Layout changing -->
+    <!--<template id="external_layout_standard_inherited" inherit_id="web.external_layout_standard">-->
+    <!--        <xpath expr="//div[hasclass('footer')]" position="replace">-->
+    <!--            <div class="footer">-->
+    <!--                <table width="100%">-->
+    <!--                     <tr>-->
+    <!--                        <td style="height: 2px; width: 50%; background-color:#245080 !important;border: 1px !important; border-style: solid !important; border-color: #245080 !important;"></td>-->
+    <!--                        <td style="height: 2px; width: 50%; background-color:#65b6db !important;border: 1px !important; border-style: solid !important; border-color: #65b6db !important;"></td>-->
+    <!--                     </tr>-->
+    <!--                </table>-->
+    <!--                <div class="text-center">-->
+    <!--                    <div t-field="company.report_footer"/>-->
+    <!--                    <div t-if="report_type == 'pdf'">-->
+    <!--                        Page: <span class="page"/> / <span class="topage"/>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </xpath>-->
+    <!--</template>-->
+    <!--<template id="external_layout_boxed_inherited" inherit_id="web.external_layout_boxed">-->
+    <!--        <xpath expr="//div[hasclass('footer')]" position="replace">-->
+    <!--            <div class="footer">-->
+    <!--                <table width="100%">-->
+    <!--                     <tr>-->
+    <!--                        <td style="height: 2px; width: 50%; background-color:#245080 !important;border: 1px !important; border-style: solid !important; border-color: #245080 !important;"></td>-->
+    <!--                        <td style="height: 2px; width: 50%; background-color:#65b6db !important;border: 1px !important; border-style: solid !important; border-color: #65b6db !important;"></td>-->
+    <!--                     </tr>-->
+    <!--                </table>-->
+    <!--                <div class="text-center">-->
+    <!--                    <div t-field="company.report_footer"/>-->
+    <!--                    <div t-if="report_type == 'pdf'">-->
+    <!--                        Page: <span class="page"/> / <span class="topage"/>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </xpath>-->
+    <!--</template>-->
+    <!--<template id="external_layout_clean_inherited" inherit_id="web.external_layout_clean">-->
+    <!--        <xpath expr="//div[hasclass('footer')]" position="replace">-->
+    <!--            <div class="footer">-->
+    <!--                <table width="100%">-->
+    <!--                     <tr>-->
+    <!--                        <td style="height: 2px; width: 50%; background-color:#245080 !important;border: 1px !important; border-style: solid !important; border-color: #245080 !important;"></td>-->
+    <!--                        <td style="height: 2px; width: 50%; background-color:#65b6db !important;border: 1px !important; border-style: solid !important; border-color: #65b6db !important;"></td>-->
+    <!--                     </tr>-->
+    <!--                </table>-->
+    <!--                <div class="text-center">-->
+    <!--                    <div t-field="company.report_footer"/>-->
+    <!--                    <div t-if="report_type == 'pdf'">-->
+    <!--                        Page: <span class="page"/> / <span class="topage"/>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </xpath>-->
+    <!--</template>-->
+    <!--<template id="external_layout_background_inherited" inherit_id="web.external_layout_background">-->
+    <!--        <xpath expr="//div[hasclass('footer')]" position="replace">-->
+    <!--            <div class="footer">-->
+    <!--                <table width="100%">-->
+    <!--                     <tr>-->
+    <!--                        <td style="height: 2px; width: 50%; background-color:#245080 !important;border: 1px !important; border-style: solid !important; border-color: #245080 !important;"></td>-->
+    <!--                        <td style="height: 2px; width: 50%; background-color:#65b6db !important;border: 1px !important; border-style: solid !important; border-color: #65b6db !important;"></td>-->
+    <!--                     </tr>-->
+    <!--                </table>-->
+    <!--                <div class="text-center">-->
+    <!--                    <div t-field="company.report_footer"/>-->
+    <!--                    <div t-if="report_type == 'pdf'">-->
+    <!--                        Page: <span class="page"/> / <span class="topage"/>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </xpath>-->
+    <!--</template>-->
+    <!--    -->
+    <!-- end of exteranl Layout Inheritance -->
+
+
+
+
+    <template id="report_sale_proposal_document">
+        <t t-if="o and 'company_id' in o">
+            <t t-set="company" t-value="o.company_id"></t>
+        </t>
+        <t t-if="not o or not 'company_id' in o">
+            <t t-set="company" t-value="res_company"></t>
+        </t>
+        <div class="header">
+            <!-- <div class="o_clean_header"> -->
+            <div class="row">
+                <div class="col-6">
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                </div>
+                <div class="col-5 offset-1 text-right" name="company_address">
+                    <ul class="list-unstyled">
+                        <strong><li t-if="company.name"><span t-field="company.name"/></li></strong>
+                        <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'TRN'"/>: <span t-field="company.vat"/></li>
+                        <li t-if="company.phone">Tel: <span t-field="company.phone"/></li>
+                        <li t-if="company.email"><span t-field="company.email"/></li>
+                        <li t-if="company.website"><span t-field="company.website"/></li>
+                    </ul>
+                </div>
+            </div>
+            <table width="100%">
+                <tr>
+                    <td style="height: 2px; width: 50%; background-color:#245080 !important;border: 1px !important; border-style: solid !important; border-color: #245080 !important;"></td>
+                    <td style="height: 2px; width: 50%; background-color:#65b6db !important;border: 1px !important; border-style: solid !important; border-color: #65b6db !important;"></td>
+                </tr>
+            </table>
+        </div>
+        <t t-call="web.external_layout">
+            <div class="page">
+                <div class="oe_structure"/>
+                <section data-snippet-id="text-image" style="height: 200px">
+
+                </section>
+                <section data-snippet-id="text-image" style="height: 502px; background-image: url(../sales_proposal/static/description/index.png);">
+                    <section data-snippet-id="text-image" style="height: 250px">
+
+                    </section>
+                    <div class="container">
+                        <div class="row" style="text-align:center;">
+                            <div class="col-md-6 mt15">
+                                <h2><span t-field="o.name"/></h2>
+                                <h4>Date:<![CDATA[&nbsp;]]><span t-field="o.date" t-options='{"format": "dd/MM/yyyy"}'/></h4>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <table class="text-center align-middle" width="100%">
+                    <tr>
+                        <td width="40%"><![CDATA[&nbsp;]]></td>
+                        <td class="text-center align-middle" style="height: 6rem">
+                            <t t-if="o.ref">
+                                <img alt="Barcode" t-if="len(o.ref) == 13" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', o.ref, 600, 150)" style="width:100%;height::4rem;"/>
+                                <img alt="Barcode" t-elif="len(o.ref) == 8" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN8', o.ref, 600, 150)" style="width:100%;height::4rem;"/>
+                                <img alt="Barcode" t-else="" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.ref, 600, 150)" style="width:100%;height::4rem;"/>
+                                <span t-field="o.ref"/>
+                            </t>
+                        </td>
+                        <td width="40%"><![CDATA[&nbsp;]]></td>
+                    </tr>
+                </table>
+                <section style="height: 100px;">
+                </section>
+                <div  style="page-break-before: always;"/>
+                <t  t-foreach="o.page_ids.sorted(key=lambda x: x.sequence)" t-as="page">
+                <span t-raw="page.page_id.description"/>
+                
+                <t  t-if="o.include_quote == True">
+                <t  t-if="page.page_id.is_quotation == True">
+                <div class="container" style="page-break-before: always;">
+                    <div class="row" style="text-align:center;">
+                               <div class="col-md-6 mt15">
+                                   <h3>Quotation Details</h3>
+                               </div>
+                    </div>
+                </div>
+                <t t-set="doc" t-value="o.sale_id" />
+                <table class="table table-sm" style=" table-layout:fixed;" >
+	                <thead>
+	                    <tr>
+	                        <th width="30px" style="background-color:#245080 !important;border: 1px !important; border-style: solid !important; border-color: #fff; color:#fff !important; ">Customer</th>
+	                        <th width="30px" style="background-color:#245080 !important;border: 1px !important; border-style: solid !important; border-color: #fff; color:#fff !important; ">Invoicing/ shipping address</th>
+	                        <th width="20px" style="background-color:#245080 !important;border: 1px !important; border-style: solid !important; border-color: #fff; color:#fff !important; ">Quotation Date</th>
+	                        <th width="20px" style="background-color:#245080 !important;border: 1px !important; border-style: solid !important; border-color: #fff; color:#fff !important; ">Quotation #</th>
+	                    </tr>
+	               </thead>
+                   <tbody class="sale_tbody">
+                      <tr>
+                          <td style="border: 1px !important; border-style: solid !important; border-color: #fff !important;">
+                              <div t-field="doc.partner_id"/>
+                              <t t-if="doc.partner_id.street">
+                                  <t t-esc="doc.partner_id.street"/><br/>
+                              </t>
+                              <t t-if="doc.partner_id.street2">
+                                  <t t-esc="doc.partner_id.street2"/><br/>
+                              </t>
+                              <t t-if="doc.partner_id.city">
+                                  <t t-esc="doc.partner_id.city"/><br/>
+                              </t>
+                              <t t-if="doc.partner_id.state_id.name">
+                                  <t t-esc="doc.partner_id.state_id.name"/><br/>
+                              </t>
+                              <t t-if="doc.partner_id.country_id.name">
+                                  <t t-esc="doc.partner_id.country_id.name"/><br/>
+                              </t>
+                              <t t-if="doc.partner_id.zip">
+                                  <t t-esc="doc.partner_id.zip"/><br/>
+                              </t>
+                              <div t-field="doc.partner_id.vat"/>
+                          </td>
+                       <td style="border: 1px !important; border-style: solid !important; border-color: #fff !important;">
+                           <div t-field="doc.partner_invoice_id"/>
+                           <t t-if="doc.partner_invoice_id.street">
+                               <t t-esc="doc.partner_invoice_id.street"/><br/>
+                           </t>
+                           <t t-if="doc.partner_invoice_id.street2">
+                               <t t-esc="doc.partner_invoice_id.street2"/><br/>
+                           </t>
+                           <t t-if="doc.partner_invoice_id.city">
+                               <t t-esc="doc.partner_invoice_id.city"/><br/>
+                           </t>
+                           <t t-if="doc.partner_invoice_id.state_id">
+                               <t t-esc="doc.partner_invoice_id.state_id.name"/><br/>
+                           </t>
+                           <t t-if="doc.partner_invoice_id.country_id">
+                           <t t-esc="doc.partner_invoice_id.country_id.name"/><br/>
+                           </t>
+                           <t t-if="doc.partner_invoice_id.zip">
+                               <t t-esc="doc.partner_invoice_id.zip"/><br/>
+                           </t>
+                           <div t-field="doc.partner_invoice_id.vat"/>
+                       </td>
+                       <td style="border: 1px !important; border-style: solid !important; border-color: #fff !important;">
+                          <span t-field="doc.date_order"/>
+                       </td>
+                       <td style="border: 1px !important; border-style: solid !important; border-color: #fff !important;">
+                          <strong><span t-field="doc.name"/></strong>
+                       </td>
+                      </tr>
+                   </tbody>
+                </table>
+                <!-- Is there a discount on at least one line? -->
+                <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/>
+
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th style="background-color:#245080 !important;color:#FFF !important;">Description</th>
+                                <th style="background-color:#245080 !important;color:#FFF !important;" class="text-right">Quantity</th>
+                                <th style="background-color:#245080 !important;color:#FFF !important;" class="text-right">Unit Price</th>
+                                <th style="background-color:#245080 !important;color:#FFF !important;" t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
+                                <th style="background-color:#245080 !important;color:#FFF !important;" class="text-right">Vat</th>
+                                <th style="background-color:#245080 !important;color:#FFF !important;" class="text-right">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody class="sale_tbody">
+                            <t t-foreach="doc.order_line" t-as="l">
+                                <tr t-if="l.product_uom_qty">
+                                    <td>
+                                        <span t-field="l.name"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.product_uom_qty"/>
+                                        <span groups="product.group_uom" t-field="l.product_uom"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.price_unit"/>
+                                    </td>
+                                    <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                                        <span t-field="l.discount"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.price_tax"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.price_subtotal"
+                                              t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <div name="total">
+                        <div class="col-xs-4 pull-right">
+                            <table class="table table-condensed">
+                                <tr class="border-black">
+                                    <td><strong>Total Without VAT</strong></td>
+                                    <td class="text-right">
+                                        <span t-field="doc.amount_untaxed"
+                                              t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VAT</td>
+                                    <td class="text-right">
+                                        <span t-field="doc.amount_tax"
+                                              t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                    </td>
+                                </tr>
+                                <tr class="border-black">
+                                    <td style="background-color:#245080 !important;color:#FFF !important;"><strong>Total</strong></td>
+                                    <td style="background-color:#245080 !important;color:#FFF !important;" class="text-right">
+                                        <span t-field="doc.amount_total"
+                                              t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <t t-if="o.sale_id.sale_order_option_ids">
+                        <div class="container" style="margin-top:50px;">
+                            <div class="row" style="text-align:center;">
+                                <div class="col-md-6 mt15">
+                                    <h3>Requested Products Details</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-sm" style=" table-layout:fixed;" >
+                            <thead>
+                                <tr>
+                                    <th width="30px" style="background-color:#245080 !important;border: 1px !important; border-style: solid !important; border-color: #fff; color:#fff !important; ">Work Order</th>
+                                    <th width="30px" style="background-color:#245080 !important;border: 1px !important; border-style: solid !important; border-color: #fff; color:#fff !important; ">Description</th>
+                                    <th width="20px" style="background-color:#245080 !important;border: 1px !important; border-style: solid !important; border-color: #fff; color:#fff !important; ">Quantity</th>
+                                    <th width="20px" style="background-color:#245080 !important;border: 1px !important; border-style: solid !important; border-color: #fff; color:#fff !important; ">Unit Price</th>
+                                    <th width="20px" style="background-color:#245080 !important;border: 1px !important; border-style: solid !important; border-color: #fff; color:#fff !important; ">Sub Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="sale_tbody">
+                                <t t-set="sub_total" t-value="0"/>
+                                 <t t-set="total_amt" t-value="0"/>
+                                <tr t-foreach="o.sale_id.sale_order_option_ids" t-as="req">
+                                    <td>
+                                        <span t-field="req.name"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="req.quantity"/>
+                                        <span groups="product.group_uom" t-field="req.uom_id.name"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="req.price_unit"/>
+                                        <t t-set="sub_total" t-value="req.quantity*req.price_unit"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{0:,.2f}'.format(sub_total)"/>
+                                        <t t-set="total_amt" t-value="total_amt + sub_total"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div name="total">
+                        <div class="col-xs-4 pull-right">
+                            <table class="table table-condensed">
+                                <tr class="border-black">
+                                    <td style="background-color:#245080 !important;color:#FFF !important;"><strong>Total</strong></td>
+                                    <td style="background-color:#245080 !important;color:#FFF !important;" class="text-right">
+                                        <span t-esc="'{0:,.2f}'.format(total_amt)"/>
+                                        <span t-esc="o.sale_id.currency_id.name"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    </t>
+                    <br/><br/><br/><br/><br/><br/><br/><br/>
+                    <div style="font:15px lucida-console,sans-serif !important; ">
+                        <p t-if="doc.note">
+                            <strong><span>Note:</span> </strong> <span t-field="doc.note" />
+                        </p>
+                    </div>
+                    <div style=" background-color: #245080; color:#fff !important; font:15px lucida-console,sans-serif !important;">
+                        <p t-if="doc.payment_term_id ">
+                            <strong> <span>Payment Terms :</span></strong><span t-field="doc.payment_term_id"/>
+                        </p>
+                    </div>
+                </t>
+                </t>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_sale_proposal">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="sales_proposal.report_sale_proposal_document"/>
+            </t>
+        </t>
+    </template>
+
+
+
+
+</odoo>

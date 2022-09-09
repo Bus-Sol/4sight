@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem name="Proposals"
+              id="proposal_proposal_root"
+              parent="sale.sale_menu_root"
+              sequence="2"/>
+
+
+    <record id="sales_proposal_view" model="ir.ui.view">
+        <field name="name">sales.proposal.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/div[@class='oe_button_box']" position="inside">
+                <button class="oe_stat_button" style="min-width: 200px;" type="object" name="sales_proposal_button" icon="fa-briefcase">
+                    <field string="Sales Proposal" name="sales_proposal_count" widget="statinfo"/>
+                </button>
+                </xpath>
+            </field>
+    </record>
+    <record id="proposal_proposal_form_view" model="ir.ui.view">
+        <field name="name">proposal.proposal.form.view</field>
+        <field name="model">proposal.proposal</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button class="oe_highlight" name="send_sale_proposals" string="Send By Email" type="object" attrs="{'invisible':[('include_quote', '!=', True)]}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="True"/>
+                            <field name="ref" readonly="True"/>
+                        </group>
+                        <group>
+                            <field name="date" required="True"/>
+                            <field name="include_quote"/>
+                            <field name="sale_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Pages">
+                            <field name="page_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="page_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="proposal_proposal_tree_view" model="ir.ui.view">
+        <field name="name">proposal.proposal.tree.view</field>
+        <field name="model">proposal.proposal</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="proposal_proposal_action_form" model="ir.actions.act_window">
+        <field name="name">Proposal</field>
+        <field name="res_model">proposal.proposal</field>
+        <field name='view_mode'>tree,form</field>
+    </record>
+
+    <menuitem
+            id="menu_proposal_main"
+            parent="proposal_proposal_root"
+            action="proposal_proposal_action_form"
+            sequence="0"/>
+
+    <record id="proposal_page_form_view" model="ir.ui.view">
+        <field name="name">proposal.page.form.view</field>
+        <field name="model">proposal.page</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="name"  attrs="{'readonly': [('name', '=', 'Quotation')]}" required="True"/>
+                        <field name="is_quotation" invisible="1"  />
+                    </group>
+                    <field name="description" attrs="{'readonly': [('name', '=', 'Quotation')],'required': [('name', '!=', 'Quotation')]}" />
+                    <field name="quotation" invisible="1"  />
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="proposal_page_tree_view" model="ir.ui.view">
+        <field name="name">proposal.page.tree.view</field>
+        <field name="model">proposal.page</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" attrs="{'readonly': [('name', '=', 'Quotation')]}" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="proposal_page_action_form" model="ir.actions.act_window">
+        <field name="name">Pages</field>
+        <field name="res_model">proposal.page</field>
+        <field name='view_mode'>tree,form</field>
+    </record>
+
+    <!-- <menuitem
+            id="menu_proposal_page"
+            parent="proposal_proposal_root"
+            action="proposal_page_action_form"
+            sequence="10"/>-->
+
+    <menuitem name="Proposal Management"
+              id="proposal_management"
+              parent="sale.menu_sale_config"
+              sequence="6"/>
+    <menuitem name="Pages"
+              id="menu_proposal_page"
+              parent="proposal_management"
+              action="proposal_page_action_form"
+              sequence="2"/>
+
+</odoo>
