@@ -14,6 +14,7 @@
         'account_reports',
     ],
     'data': [
+        'data/paper_format_vat_cy.xml',
         'report/vat_report_template.xml',
         'views/assets.xml',
     ],
