@@ -84,8 +84,7 @@ class AccountReportVatCy(models.AbstractModel):
             if minimal_layout:
                 header = ''
             landscape = False
-            self.env.context.update({'print_vat':True})
-            return self.env['ir.actions.report']._run_wkhtmltopdf(
+            return self.env['ir.actions.report'].with_context(print_vat=True)._run_wkhtmltopdf(
                 [body],
                 header=header,
                 landscape=landscape,
@@ -99,7 +98,7 @@ class IrActionsReport(models.Model):
     def get_paperformat(self, **kwargs):
         # force the right format (euro/A4) when sending letters, only if we are not using the l10n_DE layout
         res = super(IrActionsReport, self).get_paperformat()
-        if not self.env.context:
+        if self.env.context.get('print_vat', False):
             paper_format_id = self.env.ref('vat_report_cy.paperformat_vat_cy').id
             paperformat_id = self.env['report.paperformat'].browse(paper_format_id)
             return paperformat_id
