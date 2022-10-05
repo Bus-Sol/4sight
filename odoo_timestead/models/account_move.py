@@ -12,8 +12,7 @@ class AccountMove(models.Model):
     def _get_jobsheets(self):
 
         for order in self:
-            jobsheets = self.env['client.jobsheet'].search([]).filtered(
-                lambda r: r.move_ids and order.id in r.move_ids.ids)
+            jobsheets = self.env['client.jobsheet'].search([('move_ids', 'in', order.ids)])
             order.job_ids = jobsheets
             order.job_count = len(jobsheets)
 

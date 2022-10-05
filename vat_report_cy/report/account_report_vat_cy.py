@@ -31,7 +31,13 @@ class AccountReportVatCy(models.AbstractModel):
             split_value = str(v).split('.')
             if split_value:
                 if len(split_value) > 1:
-                    lines_data[k] = (int(split_value[0]), split_value[1] if int(split_value[1]) !=0 else '00')
+                    format_cent = "00"
+                    if split_value[1] !=0:
+                        if len(split_value[1]) == 1:
+                            format_cent = split_value[1] + "0"
+                        else:
+                            format_cent = split_value[1][:2]
+                    lines_data[k] = (int(split_value[0]),format_cent)
                 else:
                     lines_data[k] = (int(split_value[0]), '00')
     def get_pdf(self, options, minimal_layout=True, **kwargs ):
