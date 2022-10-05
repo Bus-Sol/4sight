@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="print_template">
+            <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
+            <html>
+                <head>
+                    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+                    <t t-call-assets="account_reports.assets_financial_report" t-js="False"/>
+                    <t t-call-assets="web.assets_common"/>
+                    <style type="text/css">
+                        .table, .row ul, .table-header {
+                        display: flex;
+                        flex-wrap: wrap;
+                        font-family: Arial, Helvetica, sans-serif;
+                        }
+                        .table-header {
+                        justify-content: flex-end;
+                        }
+
+                        .col-left div , .col-right div {
+                        padding: 10px;
+                        box-sizing: border-box;
+                        }
+
+                        .col-left {
+                        width:21%;
+                        border:1px solid #000;
+                        margin-right: 10px;
+                        <!--margin-top:58px-->
+                        }
+
+                        .col-left div:first-child{
+                        min-height: 250px;
+                        }
+
+                        .col-right {
+                        <!--width:70%;-->
+
+                        }
+
+                        .row-border {
+                        border:1px solid #000;
+                        }
+                        .row ul {
+                        list-style: none;
+                        width: 100%;
+                        margin:0;
+                        padding:0
+                        }
+
+                        .row ul li:first-child {
+                        width: 70%;
+                        }
+
+                        .row ul li:nth-child(2),.row ul li:nth-child(3), .row ul li:nth-child(4), .table-header &gt;
+                        div{
+                        width: 10%;
+                        text-align: center;
+                        }
+                        p, span {
+                        font-size:14px;
+                        }
+                    </style>
+                </head>
+                <body class="o_account_reports_body_print">
+                    <div class="container">
+                        <div class="row mt32 mb32">
+                            <div class="col-12 text-center">
+                                <h2 style="color: black;">VAT RETURN</h2>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <p>For the period from
+                                    <input type="text" id="date_from" t-att-value="date_from"/>
+                                    to
+                                    <input type="text" id="data_end" t-att-value="date_to"/>
+                                </p>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-6">
+                                <h6>
+                                    <t t-esc="company.name"/>
+                                </h6>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="offset-6 col-6">
+                                <p>VAT Registration number: <t t-esc="company.vat"/></p>
+                                <p>Date of printing:
+                                    <t t-esc="datetime.datetime.now().strftime('%d/%m/%Y')"/>
+                                </p>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row box" style="width: 100%; border: 1px solid black; padding:4px;">
+                            <strong style="font-size:13px;">
+                                This return should be submitted duly completed to the VAT Commissioner by <input type="text" id="client" name="client"/> , otherwise a
+                                penalty
+                                will be imposed. By this date, the payable VAT amount must be paid, otherwise an
+                                additional tax equal to ten per cent (10%) of the
+                                VAT payable amount will be imposed.
+                            </strong>
+                        </div>
+                        <br/>
+
+                        <div style="border-bottom: 1px solid black;margin-left:-7px;margin-right:7px;">
+                            <span style="font-size:10px;">
+                                After reading the instructions on the back page of this return, please complete all
+                                boxes using black or blue ink and state ''NIL'' where necessary. Do not use hyphens and
+                                do not
+                                leave any blank boxes. If no cents exist, please state ''00'' in the cent column. Do not
+                                include more than one amount in each box.
+                            </span>
+                        </div>
+                        <div class="row">
+                            <div class="offset-8 col-3 text-right">
+                                <span>euro</span>
+                            </div>
+                            <div class="col-1">
+                                cent
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3 col-left">
+                                <div style="margin-bottom:170px;">
+                                    <p>For official use</p>
+                                </div>
+                                <div style="border-top: 1px solid black;width:100%;">
+                                    <strong>Contact Details</strong>
+                                    <div class="text-left">
+                                        <span style="font-size:12px;">
+                                            Nicosia :22404615
+                                        </span>
+                                        <span style="font-size:12px;">
+                                            Nicosia :22404615
+                                        </span>
+                                        <span style="font-size:12px;">
+                                            Nicosia :22404615
+                                        </span>
+                                        <span style="font-size:12px;">
+                                            Nicosia :22404615
+                                        </span>
+                                        <span style="font-size:12px;">
+                                            Nicosia :22404615
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-9">
+
+                                <div class="row row-border">
+                                    <div class="col-8" style="border-right:1px solid #000;">
+                                        <p>VAT due on <strong>outputs</strong> of this period
+                                        </p>
+                                    </div>
+                                    <div class="col-1" style="border-right:1px solid #000;font-weight:bold;">
+                                        1
+                                    </div>
+                                    <div class="col-2 text-right" style="border-right:1px solid #000;">
+                                        <t t-esc="lines['1'][0]"/>
+                                    </div>
+                                    <div class="col-1">
+                                        <t t-esc="lines['1'][1]"/>
+                                    </div>
+
+                                </div>
+                                <div class="row row-border">
+                                    <div class="col-8" style="border-right:1px solid #000;">
+                                        <p>VAT due on acquisitions of goods from other EU Member States
+                                        </p>
+                                    </div>
+                                    <div class="col-1" style="border-right:1px solid #000;font-weight:bold;">
+                                        2
+                                    </div>
+                                    <div class="col-2 text-right" style="border-right:1px solid #000;">
+                                        <t t-esc="lines['2'][0]"/>
+                                    </div>
+                                    <div class="col-1">
+                                        <t t-esc="lines['2'][1]"/>
+                                    </div>
+
+                                </div>
+                                <div class="row row-border">
+                                    <div class="col-8" style="border-right:1px solid #000;">
+                                        <p>Total VAT due (total of boxes 1 and 2)</p>
+                                    </div>
+                                    <div class="col-1" style="border-right:1px solid #000;font-weight:bold;">
+                                        3
+                                    </div>
+                                    <div class="col-2 text-right" style="border-right:1px solid #000;">
+                                        <t t-esc="lines['3'][0]"/>
+                                    </div>
+                                    <div class="col-1">
+                                        <t t-esc="lines['3'][1]"/>
+                                    </div>
+
+                                </div>
+                                <div class="row row-border">
+                                    <div class="col-8" style="border-right:1px solid #000;">
+                                        <p style="font-size:13px;">Deductible VAT for this period on purchases and other <strong>outputs</strong>
+                                        (including the acquisition of goods from other EU Member States)
+                                        </p>
+                                    </div>
+                                    <div class="col-1" style="border-right:1px solid #000;font-weight:bold;">
+                                        4
+                                    </div>
+                                    <div class="col-2 text-right" style="border-right:1px solid #000;">
+                                        <t t-esc="lines['4'][0]"/>
+                                    </div>
+                                    <div class="col-1">
+                                        <t t-esc="lines['4'][1]"/>
+                                    </div>
+
+                                </div>
+                                <div class="row row-border">
+                                    <div class="col-8" style="border-right:1px solid #000;background-color:#BEC2C3;">
+                                        <p>Total VAT payable or refundable (Difference between box 3 and 4)
+                                        </p>
+                                    </div>
+                                    <div class="col-1" style="border-right:1px solid #000;font-weight:bold;">
+                                        5
+                                    </div>
+                                    <div class="col-2 text-right" style="border-right:1px solid #000;">
+                                        <t t-esc="lines['5'][0]"/>
+                                    </div>
+                                    <div class="col-1">
+                                        <t t-esc="lines['5'][1]"/>
+                                    </div>
+
+                                </div>
+                                <div class="row row-border">
+                                    <div class="col-8" style="border-right:1px solid #000;">
+                                        <p>Total value of outputs (net of VAT)<br/> <strong>(including the amounts in boxes 8A, 8B, 9, 10 and 11B)</strong>
+                                        </p>
+                                    </div>
+                                    <div class="col-1" style="border-right:1px solid #000;font-weight:bold;">
+                                        6
+                                    </div>
+                                    <div class="col-2 text-right" style="border-right:1px solid #000;">
+                                        <t t-esc="lines['6'][0]"/>
+                                    </div>
+                                    <div class="col-1">
+                                        <t t-esc="lines['6'][1]"/>
+                                    </div>
+
+                                </div>
+                                <div class="row row-border">
+                                    <div class="col-8" style="border-right:1px solid #000;">
+                                        <p style="font-size:13px;">Total value of inputs (net of VAT)<br/> <strong>(Including the amounts in boxes 11A and 11B)</strong>
+                                        </p>
+                                    </div>
+                                    <div class="col-1" style="border-right:1px solid #000;font-weight:bold;">
+                                        7
+                                    </div>
+                                    <div class="col-2 text-right" style="border-right:1px solid #000;">
+                                        <t t-esc="lines['7'][0]"/>
+                                    </div>
+                                    <div class="col-1">
+                                        <t t-esc="lines['7'][1]"/>
+                                    </div>
+
+                                </div>
+                                <div class="row row-border">
+                                    <div class="col-8" style="border-right:1px solid #000;">
+                                        <p>Total value of supplies of goods and directly related services to other EU Member States (net of VAT)
+                                        </p>
+                                    </div>
+                                    <div class="col-1" style="border-right:1px solid #000;font-weight:bold;">
+                                        8A
+                                    </div>
+                                    <div class="col-2 text-right" style="border-right:1px solid #000;">
+                                        <t t-esc="lines['8a'][0]"/>
+                                    </div>
+                                    <div class="col-1">
+                                        <t t-esc="lines['8a'][1]"/>
+                                    </div>
+
+                                </div>
+                                <div class="row row-border">
+                                    <div class="col-8" style="border-right:1px solid #000;">
+                                        <p>Total value of services provided to VAT registered persons in other EU Member States
+                                        </p>
+                                    </div>
+                                    <div class="col-1" style="border-right:1px solid #000;font-weight:bold;">
+                                        8B
+                                    </div>
+                                    <div class="col-2 text-right" style="border-right:1px solid #000;">
+                                        <t t-esc="lines['8b'][0]"/>
+                                    </div>
+                                    <div class="col-1">
+                                        <t t-esc="lines['8b'][1]"/>
+                                    </div>
+
+                                </div>
+                                <div class="row row-border">
+                                    <div class="col-8" style="border-right:1px solid #000;">
+                                        <p>Total value of outputs subject to VAT at 0% <strong>(other than those included in box 8A)</strong>
+                                        </p>
+                                    </div>
+                                    <div class="col-1" style="border-right:1px solid #000;font-weight:bold;">
+                                        9
+                                    </div>
+                                    <div class="col-2 text-right" style="border-right:1px solid #000;">
+                                        <t t-esc="lines['9'][0]"/>
+                                    </div>
+                                    <div class="col-1">
+                                        <t t-esc="lines['9'][1]"/>
+                                    </div>
+
+                                </div>
+                                <div class="row row-border">
+                                    <div class="col-8" style="border-right:1px solid #000;">
+                                        <p>Total value of sales outside the scope with the right to recover input VAT <strong>(other than those included in box 8B)</strong>
+                                        </p>
+
+                                    </div>
+                                    <div class="col-1" style="border-right:1px solid #000;font-weight:bold;">
+                                        10
+                                    </div>
+                                    <div class="col-2 text-right" style="border-right:1px solid #000;">
+                                        <t t-esc="lines['10'][0]"/>
+                                    </div>
+                                    <div class="col-1">
+                                        <t t-esc="lines['10'][1]"/>
+                                    </div>
+
+                                </div>
+
+                                <div class="row row-border">
+                                    <div class="col-8" style="border-right:1px solid #000;">
+                                        <p>Total value of acquisitions of goods and related services from other EU Member States (net of VAT)
+                                        </p>
+                                    </div>
+                                    <div class="col-1" style="border-right:1px solid #000;font-weight:bold;">
+                                        11A
+                                    </div>
+                                    <div class="col-2 text-right" style="border-right:1px solid #000;">
+                                        <t t-esc="lines['11a'][0]"/>
+                                    </div>
+                                    <div class="col-1">
+                                        <t t-esc="lines['11a'][1]"/>
+                                    </div>
+
+                                </div>
+
+                                <div class="row row-border">
+                                    <div class="col-8" style="border-right:1px solid #000;">
+                                        <p>Total value of services received by VAT registered persons in other EU Member States
+                                        </p>
+                                    </div>
+                                    <div class="col-1" style="border-right:1px solid #000;font-weight:bold;">
+                                        11B
+                                    </div>
+                                    <div class="col-2 text-right" style="border-right:1px solid #000;">
+                                        <t t-esc="lines['11b'][0]"/>
+                                    </div>
+                                    <div class="col-1">
+                                        <t t-esc="lines['11b'][1]"/>
+                                    </div>
+
+                                </div>
+                                <br/>
+                                <div class="row row-border">
+                                    <strong style="border:1px solid #000;font-size:18px;margin:2px">DECLARATION</strong>
+                                    <span>I hereby declare that all the details included in this return are correct and
+                                        true
+                                    </span>
+                                    <br/>
+                                    <span>Name and surname of signatory:....................................</span>
+                                    <br/>
+                                    <span>Capacity of signatory: (self-employed/partner/director/authorised person -
+                                        delete as appropriate)
+                                    </span>
+                                    <br/>
+                                    <span>Signature ....................................................................   Date ......................................................</span>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+
+                        <div class="row-border" style="margin-left:-12px;margin-right:10px;">
+                          <div class="row" style="margin:3px;">
+                          <div class="col-4" style="border:1px solid #000;">
+                            <strong style="font-size:18px;">PAYMENT RECEIPT</strong>
+                          </div>
+                          <div class="offset-4 col-3 text-center text-bottom">
+                              <span>euro</span>
+                          </div>
+                          <div class="col-1">
+                                cent
+                            </div>
+                            </div>
+
+                          <div class="row" style="margin:4px;">
+                              <div class="col-8" style="border-right:1px solid #000;">
+                              <p>Payable Amount (written in full) .............................................................................</p>
+                            </div>
+                            <div class="col-3 text-right" style="border:1px solid #000;">
+                              0
+                            </div>
+                            <div class="col-1" style="border:1px solid #000;">
+                              00
+                            </div>
+                            </div>
+
+                          <div class="row">
+                              <div class="col-8">
+                                ............................................................................................................................................................................................
+                              </div>
+                              <div class="col-4 text-right">
+                                <span>Bank Stamp</span>
+                              </div>
+                            </div>
+
+                          <div class="row">
+                              <div class="col-4" style="padding-bottom:10px;margin-left:2px;">
+                                <span>For official use</span>
+                                <div class="row-border" style="height:140px;padding: 1px 8px;">
+                                  <span>Date of payment</span>
+                                  <div class="row-border" style="height:40px;"/>
+                                  <span>Code number</span>
+                                  <div class="row-border" style="height:40px;"/>
+                                </div>
+                              </div>
+                              <div class="col-4">
+                                <span>VAT Code</span>
+                                  <div class="row-border" style="height:40px;"/>
+                                  <span>VAT Account Number</span>
+                                  <div class="row-border" style="height:40px;"/>
+                              </div>
+                              <div class="col-4" style="margin-right:2px;">
+                                <div class="row-border" style="height:160px;margin-right:2px;"/>
+                              </div>
+                            </div>
+                          </div>
+                    </div>
+                </body>
+            </html>
+
+
+        </template>
+    </data>
+</odoo>
