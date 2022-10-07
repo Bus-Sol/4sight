@@ -23,7 +23,7 @@ ActionManager.include({
      * @returns {Promise} resolved when the report has been downloaded ;
      *   rejected if an error occurred during the report generation
      */
-    _executeVatDownloadAction: function (action) {
+    _executeVatCyDownloadAction: function (action) {
         var self = this;
         framework.blockUI();
         return new Promise(function (resolve, reject) {
@@ -47,7 +47,7 @@ ActionManager.include({
      */
     _handleAction: function (action, options) {
         if (action.type === 'ir_actions_vat_report_cy_download') {
-            return this._executeVatDownloadAction(action, options);
+            return this._executeVatCyDownloadAction(action, options);
         }
         return this._super.apply(this, arguments);
     },
