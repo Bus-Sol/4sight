@@ -31,6 +31,7 @@
         'views/view_helpdesk_ticket.xml',
         'views/view_project_task.xml',
         'views/view_jobsheet_report.xml',
+        'report/task_timesheet_report.xml',
     ],
     'demo': [
     ],
