@@ -263,7 +263,7 @@ class JobSheet(models.Model):
                                                 ('product_id', '=', self.service_id.product_variant_id.id),
                                                 ('state', '=', 'sale')])
         task = ProjectTask.search(
-            [('sale_line_id', 'in', sale_order_line.ids), ('id', '!=', self.task_id.id), ('remaining_hours', '>', 0)],
+            [('sale_line_id', 'in', sale_order_line.ids), ('id', '!=', self.task_id.id), ('progress', '<', 99.5)],
             limit=1)
 
         if not task:
