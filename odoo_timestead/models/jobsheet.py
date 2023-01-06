@@ -223,6 +223,9 @@ class JobSheet(models.Model):
     def create_invoice_from_job(self, buffer):
         service = self.partner_id.service_ids.filtered(
             lambda s: s.product_id == self.task_id.sale_line_id.product_id.product_tmpl_id)[0]
+        narration = ''
+        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
+            narration = self.company_id.invoice_terms or self.env.company.invoice_terms
         invoice_id = self.env['account.move'].sudo().create({
             'partner_id': self.partner_id.id,
             'job_ids': [(6, 0, self.ids)],
@@ -231,6 +234,7 @@ class JobSheet(models.Model):
             'user_id': self.company_id.jobsheet_manager.id if not self.env.user.has_group(
                 'odoo_timestead.group_jobsheet_manager') else self.env.uid,
             'partner_bank_id': self.company_id.partner_id.bank_ids[:1].id,
+            'narration': narration,
             'invoice_line_ids': [[0, 0, {
                 "name": self.name,
                 "quantity": buffer,
@@ -614,6 +618,9 @@ class JobSheet(models.Model):
         }
 
     def _prepare_invoice(self, ref):
+        narration = ''
+        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
+            narration = self.company_id.invoice_terms or self.env.company.invoice_terms
         invoice_vals = {
             'ref': ref if ref else self.name or '',
             'move_type': 'out_invoice',
@@ -622,6 +629,7 @@ class JobSheet(models.Model):
             'invoice_user_id': self.company_id.jobsheet_manager.id,
             'invoice_origin': ref if ref else self.name or '',
             'partner_bank_id': self.company_id.partner_id.bank_ids[:1].id,
+            'narration': narration,
             'invoice_line_ids': [],
         }
 
