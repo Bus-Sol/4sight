@@ -37,7 +37,7 @@ class ResCompany(models.Model):
 
         # Compute period dates depending on the date
         period_start, period_end = self._get_tax_closing_period_boundaries(in_period_date)
-        print(in_period_date, period_start, period_end)
+        print(self._context)
         activity_deadline = period_end + relativedelta(days=self.account_tax_periodicity_reminder_day)
 
         # Search for an existing tax closing move
@@ -61,14 +61,16 @@ class ResCompany(models.Model):
             tax_closing_move.date = period_end
             tax_closing_move.ref = ref
             tax_closing_move.tax_closing_end_date = period_end
-            tax_closing_move.tax_closing_start_date = period_start
+            tax_closing_move.tax_closing_date_from = self._context.get('date_from', False)
+            tax_closing_move.tax_closing_date_to = self._context.get('date_to', False)
         else:
             # Create a new, empty, tax closing move
             tax_closing_move = self.env['account.move'].create({
                 'journal_id': self.account_tax_periodicity_journal_id.id,
                 'date': period_end,
                 'tax_closing_end_date': period_end,
-                'tax_closing_start_date': period_start,
+                'tax_closing_date_from': self._context.get('date_from', False),
+                'tax_closing_date_to': self._context.get('date_to', False),
                 'ref': ref,
             })
             advisor_user = self.env['res.users'].search(
