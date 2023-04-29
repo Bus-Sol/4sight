@@ -162,7 +162,7 @@ class JobSheet(models.Model):
                     task_id = tasks.id
 
                 elif len(tasks) > 1:
-                    inprogress_task = tasks.filtered(lambda t: 0 < round(t.progress) < 100)
+                    inprogress_task = tasks.filtered(lambda t: 0 < t.progress < 100)
                     if inprogress_task:
                         task_id = inprogress_task[0].id
                     else:
