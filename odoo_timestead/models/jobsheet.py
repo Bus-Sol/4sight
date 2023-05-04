@@ -639,13 +639,15 @@ class JobSheet(models.Model):
         self.ensure_one()
         current_service = self.partner_id.service_ids.filtered(
             lambda s: s.product_id == self.service_id)[0]
+
+        fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id)
+        tax = fiscal_position_id.map_tax(self.service_id.taxes_id, partner=self.partner_id)
         res = {
             'name': '%s' % (self.name),
-            # 'product_id': product_service.id,
             'product_uom_id': self.env.ref('uom.product_uom_hour').id,
             'quantity': self.effective_hours,
             'price_unit': current_service.hour,
-            'tax_ids': [(6, 0, self.service_id.taxes_id.ids)],
+            'tax_ids': [(6, 0, tax.ids)],
         }
         return res
 
