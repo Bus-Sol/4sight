@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_jobsheet.type,access.jobsheet.type,model_jobsheet_type,odoo_timestead.group_jobsheet_manager,1,1,1,1
+access_restrict_jobsheet.type,access.restrict.jobsheet.type,model_jobsheet_type,odoo_timestead.group_jobsheet_user,1,0,0,0
+access_client.designation,access.client.designation,model_client_designation,,1,1,1,1
+access_client.jobsheet,access.client.jobsheet,model_client_jobsheet,,1,1,1,1
+access_jobsheet_line,access_jobsheet_line,model_jobsheet_line,,1,1,1,1
+access_jobsheet_invoice,access_jobsheet_invoice,model_jobsheet_invoice,,1,1,1,1
+access_jobsheet_tags,access_jobsheet_tags,model_jobsheet_tags,,1,1,1,1
+access_jobsheet.service,access.jobsheet.service,model_jobsheet_service,,1,1,1,1
