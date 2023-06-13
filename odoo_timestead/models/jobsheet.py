@@ -323,6 +323,8 @@ class JobSheet(models.Model):
                     lambda s: s.product_id.product_tmpl_id == self.service_id).sudo().order_id
                 if sale_order:
                     self.sudo().sale_order_id = sale_order[0]
+                else:
+                    self.create_sale_order_from_job(self)
         ###########"
         if last_progress >= 75:
             if remaining_hour < 0:
