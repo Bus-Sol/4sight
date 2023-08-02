@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <template id="inherit_external_layout_background" inherit_id="web.external_layout_striped">
+
+        <div class="text-center" position="before">
+            <div class="not-last-page" style="margin-bottom: 15px;">Continued...</div>
+        </div>
+    </template>
+
+    <template id="line_template_followup_report_inherit" inherit_id="account_reports.line_template" primary="True">
+
+        <xpath expr="//tr" position="after">
+            <t t-if="context.get('print_mode') and line.get('class') and 'total_due' in line.get('class')">
+                <tr>
+                    <td colspan="5" style="height: 30px !important; background-color: #FFFFFF;"/>
+                </tr>
+            </t>
+        </xpath>
+    </template>
+</odoo>
