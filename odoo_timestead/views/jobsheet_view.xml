@@ -397,7 +397,6 @@
         </field>
     </record>
 
-
     <record id="view_jobsheet_tags_form" model="ir.ui.view">
         <field name="name">Jobsheet Tags</field>
         <field name="model">jobsheet.tags</field>
@@ -459,7 +458,6 @@
         </field>
     </record>
 
-
     <record id="jobsheet_view_dashboard" model="ir.ui.view">
         <field name="name">client.jobsheet.view.dashboard</field>
         <field name="model">client.jobsheet</field>
@@ -485,5 +483,16 @@
         <field name="view_mode">dashboard</field>
         <field name="view_id" ref="jobsheet_view_dashboard"/>
         <!--        <field name="search_view_id" ref="view_jobsheet_filter"/>-->
+    </record>
+
+    <record id="product_template_form_view_invoice_policy_inh" model="ir.ui.view">
+        <field name="name">product.template.form.inh</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="sale.product_template_form_view_invoice_policy"/>
+        <field name="arch" type="xml">
+            <field name="invoice_policy" position="after">
+                <field name="is_Jobsheets"/>
+            </field>
+        </field>
     </record>
 </odoo>
