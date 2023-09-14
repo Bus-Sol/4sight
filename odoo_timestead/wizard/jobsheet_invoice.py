@@ -23,18 +23,18 @@ class JobsheetInvoice(models.Model):
         invoice_vals_list = []
         customer_ref = ' '.join(label for label in jobsheets.mapped('name') if label)
         invoice_vals = []
-        if any(jobsheets.mapped('jobsheet_line').filtered(lambda line: line.product_id.is_Jobsheets) or
-               jobsheets.filtered(lambda order: order.service_id.is_Jobsheets)):
+        if any(jobsheets.mapped('jobsheet_line').filtered(lambda line: line.product_id.is_jobsheets) or
+               jobsheets.filtered(lambda order: order.service_id.is_jobsheets)):
             invoice_vals = jobsheets._prepare_invoice(ref=customer_ref)
         for order in jobsheets:
             if order.status == 'created' and order.company_id.inv_after_sign:
                 raise UserError(_("Only signed jobsheets are ready to be invoiced."))
             if order.status == 'invoiced':
                 raise UserError(_("Some jobsheets are already invoiced."))
-            if order.service_id.is_Jobsheets:
+            if order.service_id.is_jobsheets:
                 invoice_vals['invoice_line_ids'].append((0, 0, order._prepare_account_move_line_from_rate()))
             for line in order.jobsheet_line:
-                if line.product_id.is_Jobsheets:
+                if line.product_id.is_jobsheets:
                     invoice_vals['invoice_line_ids'].append((0, 0, line._prepare_account_move_line()))
         # invoice_vals_list.append(invoice_vals)
         AccountMove = self.env['account.move'].with_context(default_move_type='out_invoice')

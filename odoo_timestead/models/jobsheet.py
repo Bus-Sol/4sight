@@ -99,14 +99,14 @@ class JobSheet(models.Model):
     @api.depends('partner_id')
     def compute_service_domain(self):
         domain = [('id', 'in', self.partner_id.service_ids.mapped(
-            'product_id').ids), ('is_Jobsheets', '=', True)] if self.partner_id and self.partner_id.service_ids else [('id', '=', False)]
+            'product_id').ids), ('is_jobsheets', '=', True)] if self.partner_id and self.partner_id.service_ids else [('id', '=', False)]
         self.service_domain = self.env['product.template'].search(domain)
 
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         if self.timesheet_ids and self._origin.partner_id.jobsheet_type == 'prepaid':
             raise UserError(_('You cannot change customer once you filled in a timesheet.'))
-        service_ids = self.partner_id.service_ids.filtered(lambda ser: ser.product_id.is_Jobsheets)
+        service_ids = self.partner_id.service_ids.filtered(lambda ser: ser.product_id.is_jobsheets)
         self.service_id = service_ids[0].product_id.id if service_ids else False
         self.project_id = self.service_id.project_id.id
         if self.partner_id.jobsheet_type == 'prepaid':
@@ -159,7 +159,7 @@ class JobSheet(models.Model):
                     ('order_partner_id', '=', job.partner_id.id),
                     ('product_id', '=', self.service_id.product_variant_id.id),
                     ('state', '=', 'sale')
-                ]).filtered(lambda line: line.product_id.is_Jobsheets)
+                ]).filtered(lambda line: line.product_id.is_jobsheets)
                 _logger.info('sale_order_line: %s', sale_order_line)
                 tasks = ProjectTask.search([('sale_line_id', 'in', sale_order_line.ids)])
                 _logger.info('tasks: %s', tasks)
@@ -223,7 +223,7 @@ class JobSheet(models.Model):
 
     def create_invoice_from_job(self, buffer):
         service = self.partner_id.service_ids.filtered(
-            lambda s: s.product_id == self.task_id.sale_line_id.product_id.product_tmpl_id and s.product_id.is_Jobsheets)[0]
+            lambda s: s.product_id == self.task_id.sale_line_id.product_id.product_tmpl_id and s.product_id.is_jobsheets)[0]
         invoice_id = self.env['account.move'].sudo().create({
             'partner_id': self.partner_id.id,
             'job_ids': [(6, 0, self.ids)],
@@ -256,7 +256,7 @@ class JobSheet(models.Model):
         if res:
             self = res
         service = self.partner_id.service_ids.filtered(
-            lambda s: s.product_id == self.task_id.sale_line_id.product_id.product_tmpl_id and s.product_id.is_Jobsheets)[0]
+            lambda s: s.product_id == self.task_id.sale_line_id.product_id.product_tmpl_id and s.product_id.is_jobsheets)[0]
 
         SaleOrderLine = self.env['sale.order.line']
         ProjectTask = self.env['project.task']
@@ -264,12 +264,12 @@ class JobSheet(models.Model):
             ('order_partner_id', '=', self.partner_id.id),
             ('product_id', '=', self.service_id.product_variant_id.id),
             ('state', '=', 'sale')
-        ]).filtered(lambda line: line.product_id.is_Jobsheets)
+        ]).filtered(lambda line: line.product_id.is_jobsheets)
         task = ProjectTask.search(
             [('sale_line_id', 'in', sale_order_line.ids), ('id', '!=', self.task_id.id), ('remaining_hours', '>', 0)],
             limit=1)
 
-        if not task and service.product_id.is_Jobsheets:
+        if not task and service.product_id.is_jobsheets:
             order_id = self.env['sale.order'].sudo().create({
                 'partner_id': self.partner_id.id,
                 "user_id": self.company_id.jobsheet_manager.id if not self.env.user.has_group(
@@ -319,7 +319,7 @@ class JobSheet(models.Model):
                 [('partner_id', '=', self.partner_id.id), ('state', '=', 'sent')]).order_line
             if order_lines:
                 sale_order = order_lines.sudo().filtered(
-                    lambda s: s.product_id.product_tmpl_id == self.service_id and s.product_id.is_Jobsheets).sudo().order_id
+                    lambda s: s.product_id.product_tmpl_id == self.service_id and s.product_id.is_jobsheets).sudo().order_id
                 if sale_order:
                     self.sudo().sale_order_id = sale_order[0]
         ###########"
@@ -348,7 +348,7 @@ class JobSheet(models.Model):
                 ('order_partner_id', '=', self.partner_id.id),
                 ('product_id', '=', self.service_id.product_variant_id.id),
                 ('state', '=', 'sale')
-            ]).filtered(lambda line: line.product_id.is_Jobsheets)
+            ]).filtered(lambda line: line.product_id.is_jobsheets)
             task = ProjectTask.search([('sale_line_id', 'in', sale_order_line.ids), ('id', '!=', self.task_id.id),
                                        ('remaining_hours', '>', 0)], limit=1)
             if task:
@@ -420,7 +420,7 @@ class JobSheet(models.Model):
                 raise UserError(_('No task found to allocate hours.'))
             last_progress = res.task_id.progress
             current_service = res.partner_id.service_ids.filtered(
-                lambda s: s.product_id == res.service_id and s.product_id.is_Jobsheets)[0]
+                lambda s: s.product_id == res.service_id and s.product_id.is_jobsheets)[0]
             res.create_account_analytic_line(values)
             if res.type == 'prepaid':
                 res.trigger_send_quotation(last_progress, res.task_id.progress, res.remaining_hours, current_service)
@@ -654,12 +654,12 @@ class JobSheet(models.Model):
             if order.type == 'prepaid':
                 raise UserError(_("You can only invoice Postpaid Type."))
             invoice_vals = []
-            if order.jobsheet_line.filtered(lambda line: line.product_id.is_Jobsheets) or order.service_id.is_Jobsheets:
+            if order.jobsheet_line.filtered(lambda line: line.product_id.is_jobsheets) or order.service_id.is_jobsheets:
                 invoice_vals = order._prepare_invoice(ref=False)
-            if order.service_id.is_Jobsheets:
+            if order.service_id.is_jobsheets:
                 invoice_vals['invoice_line_ids'].append((0, 0, order.sudo()._prepare_account_move_line_from_rate()))
             for line in order.jobsheet_line:
-                if line.product_id.is_Jobsheets:
+                if line.product_id.is_jobsheets:
                     invoice_vals['invoice_line_ids'].append((0, 0, line._prepare_account_move_line()))
             if invoice_vals:
                 invoice_vals_list.append(invoice_vals)
