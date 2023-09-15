@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import json
 import logging
 import base64
@@ -10,19 +12,22 @@ from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
+
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     order_code = fields.Char('Order Code')
+
     def request_token(self):
 
-        base64string = base64.encodebytes(bytes('%s:%s' % (self.acquirer_id.viva_client_public, self.acquirer_id.viva_client_secret), 'ascii'))
+        base64string = base64.encodebytes(
+            bytes('%s:%s' % (self.acquirer_id.viva_client_public, self.acquirer_id.viva_client_secret), 'ascii'))
         decode_credentials = base64string.decode('ascii').replace('\n', '')
         headers = {'Content-Type': 'application/x-www-form-urlencoded',
                    "Authorization": "Basic %s" % decode_credentials
                    }
         grant_type = {'grant_type': 'client_credentials'}
-        url_token = 'https://accounts.vivapayments.com/connect/token' if self.state == 'enabled' else\
+        url_token = 'https://accounts.vivapayments.com/connect/token' if self.state == 'enabled' else \
             'https://demo-accounts.vivapayments.com/connect/token'
         response = requests.post(
             url=url_token,
@@ -41,7 +46,7 @@ class PaymentTransaction(models.Model):
         headers = {'Content-type': 'application/json'}
         headers['Authorization'] = "Bearer %s" % token
         payload = {
-            'amount': self.amount *100,
+            'amount': self.amount * 100,
             'customerTrns': self.reference,
             'customer': {
                 'email': self.partner_email,

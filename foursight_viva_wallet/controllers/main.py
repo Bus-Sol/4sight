@@ -1,10 +1,14 @@
+# -*- coding: utf-8 -*-
+
 import logging
 
 import pprint
 from odoo import _, http
 from odoo.http import request
 import requests
+
 _logger = logging.getLogger(__name__)
+
 
 class VivaController(http.Controller):
     _return_url = '/viva/return'
@@ -22,7 +26,6 @@ class VivaController(http.Controller):
         return request.redirect('/payment/status')
 
     def check_transaction(self, data):
-
         order_code = data.get('s', False)
         transaction_id = data.get('t', False)
         tx = False
@@ -32,7 +35,7 @@ class VivaController(http.Controller):
             access_token = tx.request_token()
             headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
             headers['Authorization'] = "Bearer %s" % access_token
-            viva_url =  'https://api.vivapayments.com/checkout/v2/transactions/' if tx.acquirer_id.state == 'enabled' else 'https://demo-api.vivapayments.com/checkout/v2/transactions/'
+            viva_url = 'https://api.vivapayments.com/checkout/v2/transactions/' if tx.acquirer_id.state == 'enabled' else 'https://demo-api.vivapayments.com/checkout/v2/transactions/'
             _logger.info('viva_url: %s' % viva_url)
             try:
                 urequest = requests.get(url=viva_url + transaction_id, headers=headers)
