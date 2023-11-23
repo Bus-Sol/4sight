@@ -18,7 +18,7 @@ class AccountAnalyticLineInherits(models.Model):
                 str_unit_amount_before_float = split_unit_amount[0]
                 str_unit_amount_after_float = split_unit_amount[1]
 
-                if int(str_unit_amount_after_float) < 10:
+                if int(str_unit_amount_after_float) < 10 and '0' not in str_unit_amount_after_float:
                     str_unit_amount_after_float = str_unit_amount_after_float + '0'
 
                 int_unit_amount_before_float = int(str_unit_amount_before_float)
@@ -65,7 +65,7 @@ class AccountAnalyticLineInherits(models.Model):
                     str_unit_amount_before_float = split_unit_amount[0]
                     str_unit_amount_after_float = split_unit_amount[1]
 
-                    if int(str_unit_amount_after_float) < 10:
+                    if int(str_unit_amount_after_float) < 10 and '0' not in str_unit_amount_after_float:
                         str_unit_amount_after_float = str_unit_amount_after_float + '0'
 
                     int_unit_amount_before_float = int(str_unit_amount_before_float)
