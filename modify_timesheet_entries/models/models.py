@@ -12,14 +12,16 @@ class ClientJobSheetInherits(models.Model):
         x_unit_amount = values.get('hours')
         x_str_unit_amount = str(x_unit_amount)
         x_split_unit_amount = x_str_unit_amount.split('.', 1)
-        x_str_unit_amount_after_float = x_split_unit_amount[1]
 
-        if int(x_str_unit_amount_after_float) < 10 and '0' not in x_str_unit_amount_after_float:
-            x_str_unit_amount_after_float = x_str_unit_amount_after_float + '0'
+        if len(x_split_unit_amount) > 1:
+            x_str_unit_amount_after_float = x_split_unit_amount[1]
 
-        x_int_unit_amount_after_float = int(x_str_unit_amount_after_float)
-        if x_int_unit_amount_after_float > 60:
-            raise ValidationError("Not Allowed To Enter Minutes Greater Then 60!")
+            if int(x_str_unit_amount_after_float) < 10 and '0' not in x_str_unit_amount_after_float:
+                x_str_unit_amount_after_float = x_str_unit_amount_after_float + '0'
+
+            x_int_unit_amount_after_float = int(x_str_unit_amount_after_float)
+            if x_int_unit_amount_after_float > 60:
+                raise ValidationError("Not Allowed To Enter Minutes Greater Then 60!")
 
         res = super().create(values)
         for rec in res:
@@ -128,14 +130,16 @@ class AccountAnalyticLineInherits(models.Model):
         x_unit_amount = values.get('unit_amount')
         x_str_unit_amount = str(x_unit_amount)
         x_split_unit_amount = x_str_unit_amount.split('.', 1)
-        x_str_unit_amount_after_float = x_split_unit_amount[1]
 
-        if int(x_str_unit_amount_after_float) < 10 and '0' not in x_str_unit_amount_after_float:
-            x_str_unit_amount_after_float = x_str_unit_amount_after_float + '0'
+        if len(x_split_unit_amount) > 1:
+            x_str_unit_amount_after_float = x_split_unit_amount[1]
 
-        x_int_unit_amount_after_float = int(x_str_unit_amount_after_float)
-        if x_int_unit_amount_after_float > 60:
-            raise ValidationError("Not Allowed To Enter Minutes Greater Then 60!")
+            if int(x_str_unit_amount_after_float) < 10 and '0' not in x_str_unit_amount_after_float:
+                x_str_unit_amount_after_float = x_str_unit_amount_after_float + '0'
+
+            x_int_unit_amount_after_float = int(x_str_unit_amount_after_float)
+            if x_int_unit_amount_after_float > 60:
+                raise ValidationError("Not Allowed To Enter Minutes Greater Then 60!")
 
         res = super().create(values)
         for rec in res:
