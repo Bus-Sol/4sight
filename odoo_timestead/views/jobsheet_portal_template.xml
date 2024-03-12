@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_home_menu_jobsheet" name="Portal layout : JobSheet List"
+              inherit_id="portal.portal_breadcrumbs" priority="50">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'jobsheet' or jobsheet"
+                t-attf-class="breadcrumb-item #{'active ' if not jobsheet else ''}">
+                <a t-if="jobsheet" t-attf-href="/my/jobsheets?{{ keep_query() }}">Jobsheets</a>
+                <t t-else="">Jobsheets</t>
+            </li>
+            <li t-if="jobsheet" class="breadcrumb-item active">
+                <t t-esc="jobsheet.name"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_jobsheet_template" name="Show Jobsheets" customize_show="True"
+              inherit_id="portal.portal_my_home" priority="50">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Jobsheets</t>
+                <t t-set="url" t-value="'/my/jobsheets'"/>
+                <t t-set="placeholder_count" t-value="'jobsheet_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_jobsheets" name="My Jobsheets">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Jobsheets</t>
+            </t>
+            <t t-if="not jobsheets">
+                <p>There are currently no jobsheets your account.</p>
+            </t>
+            <t t-if="jobsheets" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Jobsheet #</th>
+                        <th>Date</th>
+                        <th/>
+                        <th class="text-right">Hours Spent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="jobsheets" t-as="jobsheet">
+                        <tr>
+                            <td>
+                                <a t-att-href="jobsheet.get_portal_url()" t-att-title="jobsheet.name">
+                                    <t t-esc="jobsheet.name"/>
+                                </a>
+                            </td>
+                            <td>
+                                <span t-field="jobsheet.date_order" t-options="{'widget': 'date'}"/>
+                            </td>
+                            <td class="tx_status">
+                                <t t-if="jobsheet.status == 'created'">
+                                    <span class="badge badge-pill badge-light">
+                                        <span class="d-none d-md-inline">Created</span>
+                                    </span>
+                                </t>
+                                <t t-if="jobsheet.status == 'signed'">
+                                    <span class="badge badge-pill badge-info">
+                                        <i class="fa fa-fw fa-pencil-square-o" aria-label="Signed" title="Signed"
+                                           role="img"/>
+                                        <span class="d-none d-md-inline">Signed</span>
+                                    </span>
+                                </t>
+                                <t t-if="jobsheet.status == 'invoiced'">
+                                    <span class="badge badge-pill badge-success">
+                                        <i class="fa fa-fw fa-check" aria-label="Paid" title="Paid"
+                                           role="img"/>
+                                        <span class="d-none d-md-inline">Invoiced</span>
+                                    </span>
+                                </t>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="jobsheet.hours" t-options='{"widget": "float_time"}'/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_my_jobsheets_add_style" name="My Jobsheet Style"
+              inherit_id="portal.portal_table">
+        <xpath expr="//div" position="replace">
+            <div t-attf-class="table-responsive border rounded border-top-0 #{classes if classes else ''}"
+                 style="font-size: 1rem !important;">
+                <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                    <t t-raw="0"/>
+                </table>
+            </div>
+        </xpath>
+    </template>
+
+
+    <template id="portal_jobsheet_page" name="Jobsheet Portal Template" inherit_id="portal.portal_sidebar"
+              primary="True">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <t t-set="o_portal_fullwidth_alert"
+               groups="sales_team.group_sale_salesman,account.group_account_invoice,account.group_account_readonly">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url"
+                       t-value="'/web#model=client.jobsheet&amp;id=%s&amp;action=%s&amp;view_type=form' % (jobsheet.id, jobsheet.env.ref('odoo_timestead.view_client_jobsheet_form').id)"/>
+                </t>
+            </t>
+
+            <div class="row mt16 o_portal_invoice_sidebar">
+                <!-- Sidebar -->
+                <t t-call="portal.portal_record_sidebar">
+                    <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
+                    <t t-set="title">
+                        <!--                        <h2 class="mb-0">-->
+                        <!--                            <b t-if="invoice.amount_residual > 0" t-field="invoice.amount_residual"/>-->
+                        <!--                            <b t-else="1" t-field="invoice.amount_total"/>-->
+                        <!--                        </h2>-->
+                        <!--                        <div class="small" t-if="invoice.payment_state not in ('paid', 'in_payment') and invoice.move_type == 'out_invoice'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.invoice_date_due"/></div>-->
+                    </t>
+
+                    <t t-set="entries">
+                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                            <li class="list-group-item flex-grow-1">
+                                <a t-if="jobsheet.status in ['created','sent']" role="button" id="o_sale_portal_paynow"
+                                   class="btn btn-primary btn-block mb8" data-toggle="modal" data-target="#modalaccept"
+                                   href="#">
+                                    <i class="fa fa-check"/>
+                                    <span>Accept &amp; Sign</span>
+                                </a>
+                                <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                    <div class="btn-group  flex-grow-1 mr-1 mb-1">
+                                        <a class="btn btn-secondary btn-block o_download_btn"
+                                           t-att-href="jobsheet.get_portal_url(report_type='pdf', download=True)"
+                                           title="Download">
+                                            <i class="fa fa-download"/>
+                                            Download
+                                        </a>
+                                    </div>
+                                    <div class="btn-group flex-grow-1 mb-1">
+                                        <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print"
+                                           t-att-href="jobsheet.get_portal_url(report_type='pdf')"
+                                           id="print_invoice_report" title="Print" target="_blank">
+                                            <i class="fa fa-print"/>
+                                            Print
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li t-if="jobsheet.create_uid" class="list-group-item flex-grow-1">
+                                <div class="small mb-1">
+                                    <strong class="text-muted">
+                                        Issued By
+                                    </strong>
+                                </div>
+                                <div class="row">
+                                    <div class="col flex-grow-0 pr-2">
+                                        <img t-if="jobsheet.create_uid.image_1024"
+                                             class="rounded-circle mt-1 o_portal_contact_img"
+                                             t-att-src="image_data_uri(jobsheet.create_uid.image_1024)" alt="Contact"/>
+                                        <img t-else="" class="rounded-circle mt-1 o_portal_contact_img"
+                                             src="/web/static/src/img/user_menu_avatar.png" alt="Contact"/>
+                                    </div>
+                                    <div class="col pl-0">
+                                        <span t-field="jobsheet.create_uid"
+                                              t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
+                                        <a href="#discussion" class="small">
+                                            <i class="fa fa-fw fa-comments"/>
+                                            <b>Send message</b>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </t>
+                </t>
+
+                <!-- Page Content -->
+                <div id="jobsheet_content" class="col-12 col-lg">
+                    <!-- Modal for confirmation jobsheet -->
+                    <div role="dialog" class="modal fade" id="modalaccept">
+                        <div class="modal-dialog">
+                            <form id="accept" method="POST" t-att-data-order-id="jobsheet.id"
+                                  t-att-data-token="jobsheet.access_token"
+                                  class="js_accept_json modal-content js_website_submit_form">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <header class="modal-header">
+                                    <h4 class="modal-title">Validate Order</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×
+                                    </button>
+                                </header>
+                                <main class="modal-body" id="sign-dialog">
+                                    <p>
+                                        <span>By signing this proposal, I agree to the following terms:</span>
+                                        <ul>
+                                            <li>
+                                                <span>Accepted on the behalf of:</span>
+                                                <b t-field="jobsheet.partner_id.commercial_partner_id"/>
+                                            </li>
+                                            <li>
+                                                <span>For an amount of:</span>
+                                                <b data-id="total_amount" t-field="jobsheet.hours"/>
+                                            </li>
+                                            <!--                                            <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id.note"/></li>-->
+                                        </ul>
+                                    </p>
+                                    <t t-call="portal.signature_form">
+                                        <t t-set="call_url" t-value="jobsheet.get_portal_url(suffix='/accept')"/>
+                                        <t t-set="default_name" t-value="jobsheet.partner_id.name"/>
+                                    </t>
+                                </main>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="o_portal_html_view shadow p-3">
+                        <div class="o_portal_html_loader text-center">
+                            <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw text-black-50"/>
+                        </div>
+                        <iframe id="invoice_html" class="mt8 mb8" width="100%" height="100%" frameborder="0"
+                                scrolling="no" t-att-src="jobsheet.get_portal_url(report_type='html')"/>
+                    </div>
+
+                    <!-- Button actions -->
+                    <t t-if="jobsheet.status in ['created','sent']">
+                        <div class="row justify-content-center text-center d-print-none pt-1 pb-4">
+                            <div class="col-sm-auto mt8">
+                                <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept"
+                                   href="#">
+                                    <i class="fa fa-check"/>
+                                    <span>Accept &amp; Sign</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-auto mt8">
+                                <a role="button" class="btn btn-secondary" href="#discussion">
+                                    <i class="fa fa-comment"/>
+                                    Feedback
+                                </a>
+                            </div>
+                        </div>
+                    </t>
+                    <!-- chatter -->
+                    <div id="invoice_communication" class="mt-4">
+                        <h2>History</h2>
+                        <t t-call="portal.message_thread">
+                            <t t-set="object" t-value="jobsheet"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

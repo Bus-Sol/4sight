@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="custom_view_partner_form">
+            <field name="name">custom.view.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" type="object"
+                            name="action_open_jobsheet" context="{'default_partner_id': active_id}" icon="fa-tasks"
+                            attrs="{'invisible': [('job_count', '=', 0)]}">
+                        <div class="o_stat_info">
+                            <field name="job_count" class="o_stat_value"/>
+                            <span class="o_stat_text">Jobsheets</span>
+                        </div>
+                    </button>
+                </div>
+                <xpath expr="//page/field[@name='child_ids']/form//group/group/field[@name='email']" position="after">
+                    <field name="receive_jobsheet" attrs="{'invisible': [('type', '!=', 'jobsheet')]}"/>
+                    <field name="receive_invoice" attrs="{'invisible': [('type', '!=', 'jobsheet')]}"/>
+                </xpath>
+                <field name="vat" position="after">
+                    <field name="jobsheet_type"/>
+                </field>
+                <xpath expr="//page[@name='contact_addresses']" position="after">
+                    <page string="List of Services" name="partner_services">
+                        <field name="service_ids" widget="one2many" options="{'no_create': True}">
+                            <tree string="Services" editable="bottom">
+                                <field name="product_id"/>
+                                <field name="jobsheet_type"/>
+                                <field name="quantity"
+                                       attrs="{'column_invisible': [('parent.jobsheet_type', '=', 'contract_postpaid')]}"/>
+                                <field name="buffer" groups="odoo_timestead.group_jobsheet_manager"
+                                       attrs="{'column_invisible': [('parent.jobsheet_type', '=', 'contract_postpaid')]}"/>
+                                <field name="extra_hour" force_save="1" widget="timesheet_uom_no_toggle"
+                                       groups="odoo_timestead.group_jobsheet_manager"
+                                       attrs="{'column_invisible': [('parent.jobsheet_type', '=', 'contract_postpaid')]}"/>
+                                <field name="hour" groups="odoo_timestead.group_jobsheet_manager"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

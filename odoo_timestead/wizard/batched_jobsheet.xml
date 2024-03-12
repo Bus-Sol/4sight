@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_jobsheet_invoice" model="ir.ui.view">
+            <field name="name">Invoice From Jobsheets</field>
+            <field name="model">jobsheet.invoice</field>
+            <field name="arch" type="xml">
+                <form string="Invoice Sales Order">
+                    <p class="oe_grey">
+                        Invoices will be created in draft so that you can review
+                        them before validation.
+                    </p>
+                    <group>
+                        <field name="count" attrs="{'invisible': [('count','=', 1)]}" readonly="True"/>
+                    </group>
+                    <footer>
+                        <button name="create_invoices" id="create_invoice_open" string="Create and View Invoice" type="object"
+                            context="{'open_invoices': True}" class="btn-primary"/>
+                        <button name="create_invoices" id="create_invoice" string="Create Invoice" type="object"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_jobsheet_invoice" model="ir.actions.act_window">
+            <field name="name">Create invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">jobsheet.invoice</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="odoo_timestead.model_client_jobsheet" />
+            <field name="binding_view_types">list</field>
+        </record>
+    </data>
+</odoo>

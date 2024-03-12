@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_inherit_jobsheet" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='informations']/div[@name='origin']" position="replace">
+<!--            There are some changes here to get from prod-->
+            <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_origin" name="origin">
+                <strong>Source:</strong>
+                <br/>
+                <t t-if="len(o.job_ids) == 1">
+                    <p class="m-0" t-field="o.invoice_origin"/>
+                </t>
+                <t t-if="len(o.job_ids) == 2">
+                    <p class="m-0" t-field="o.job_ids[0].name"/>
+                    and
+                    <p class="m-0" t-field="o.job_ids[1].name"/>
+                </t>
+                <t t-if="len(o.job_ids) > 2">
+                    <t t-set="first_jobsheet" t-value="o.job_ids.sorted(key=lambda p: p.create_date)[0].name"/>
+                    <t t-set="last_jobsheet" t-value="o.job_ids.sorted(key=lambda p: p.create_date)[-1].name"/>
+                    From
+                    <t t-esc="first_jobsheet"/>
+                    To
+                    <t t-esc="last_jobsheet"/>
+                </t>
+                <t t-if="not o.job_ids">
+                  <p class="m-0" t-field="o.invoice_origin"/>
+                </t>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@id='informations']/div[@name='reference']" position="replace">
+            <div class="col-auto col-3 mw-100 mb-2" t-if="o.ref" name="reference">
+                <strong>Reference:</strong>
+                <br/>
+                <t t-if="len(o.job_ids) == 1">
+                    <p class="m-0" t-field="o.ref"/>
+                </t>
+                <t t-if="len(o.job_ids) == 2">
+                    <p class="m-0" t-field="o.job_ids[0].create_date" t-options="{'widget': 'date'}"/>
+                    and
+                    <p class="m-0" t-field="o.job_ids[1].create_date" t-options="{'widget': 'date'}"/>
+                </t>
+                <t t-if="len(o.job_ids) > 2">
+                    <t t-set="first_jobsheet" t-value="o.job_ids.sorted(key=lambda p: p.create_date)[0].create_date"/>
+                    <t t-set="last_jobsheet" t-value="o.job_ids.sorted(key=lambda p: p.create_date)[-1].create_date"/>
+                    From
+                    <t t-esc="first_jobsheet.strftime('%Y-%m-%d')"/>
+                    To
+                    <t t-esc="last_jobsheet.strftime('%Y-%m-%d')"/>
+                </t>
+                <t t-if="not o.job_ids">
+                  <p class="m-0" t-field="o.ref"/>
+                </t>
+            </div>
+            <t t-set="i" t-value="0"/>
+        </xpath>
+
+        <xpath expr="//tbody[hasclass('invoice_tbody')]//tr//td[@name='account_invoice_line_name']" position="replace">
+            <t t-if="report_type == 'html'">
+                <td name="account_invoice_line_name">
+                    <t t-if="line.move_id.job_ids">
+                        <a t-attf-href="/my/jobsheets/#{line.move_id.job_ids[i].id}" target="_blank">
+                        <span t-field="line.name" t-options="{'widget': 'text'}"/>
+                    </a>
+                    </t>
+                    <t t-else="">
+                        <span t-field="line.name" t-options="{'widget': 'text'}"/>
+                    </t>
+
+                </td>
+                <t t-set="i" t-value="i+1"/>
+            </t>
+            <t t-else="">
+                <td name="account_invoice_line_name">
+                    <span t-field="line.name" t-options="{'widget': 'text'}"/>
+                </td>
+            </t>
+        </xpath>
+    </template>
+</odoo>

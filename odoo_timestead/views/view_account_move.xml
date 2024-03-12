@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="custom_view_move_form">
+            <field name="name">custom.account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="job_ids" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button name="action_view_jobsheets" type="object" class="oe_stat_button"
+                            icon="fa-pencil-square-o" attrs="{'invisible': [('job_count', '=', 0)]}">
+                        <field name="job_count" widget="statinfo" string="Jobsheets"/>
+                        <field name='job_ids' invisible="1"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

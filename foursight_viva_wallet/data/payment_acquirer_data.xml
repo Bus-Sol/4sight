@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <record id="payment_provider_viva" model="payment.provider">
+        <field name="code">viva</field>
+        <field name="name">Viva Wallet</field>
+        <field name="display_as">Credit Card (powered by Viva Wallet)</field>
+        <field name="image_128" type="base64" file="foursight_viva_wallet/static/src/img/viva_icon.png"/>
+        <field name="module_id" ref="base.module_foursight_viva_wallet"/>
+        <field name="redirect_form_view_id" ref="redirect_form"/>
+    </record>
+</odoo>

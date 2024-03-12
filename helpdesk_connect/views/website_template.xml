@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="login_helpdesk" name="Login Helpdesk">
+            <title>Portal Register</title>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+            <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+            <link rel="stylesheet" href="/web/static/lib/bootstrap/dist/css/bootstrap.css"/>
+<!--            <link rel="stylesheet" type="text/css" href="/web/static/src/libs/fontawesome/css/font-awesome.css"/>-->
+            <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>
+            <script type="text/javascript" src="/helpdesk_connect/static/src/js/submit_button.js"/>
+            <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <nav class="navbar navbar-light" style="background-color: white;">
+                <a class="navbar-brand" href="https://4sight.mt/" target="_blank">
+                    <img src="/helpdesk_connect/static/src/img/4Sight.png" width="100px" alt="Sight Group"/>
+                </a>
+            </nav>
+
+            <div class="bg-color">
+                <br/>
+                <br/>
+                <div class="text-center col-12">
+                    <h1 style="color:white">Welcome to the Help Desk.</h1>
+                </div>
+                <div class="col-12" style=" display: flex;justify-content: center; margin-top:66px;">
+                    <form class="container-form form oc_create_instance" t-if="not message">
+                        <label for="login"
+                               style="line-height: 2rem!important;font-size: 1.5rem;font-weight: 400!important;">
+                            Enter your email address
+                        </label>
+                        <input type="email" name="login" id="login"
+                               class="form-control form-control-sm"
+                               autocapitalize="off" required="required"/>
+
+
+                        <div class="oe_login_buttons pt-3">
+                            <button class="btn oc_btn_create"
+                                    style="background-color: #2099bd !important;color:white;">Proceed
+                            </button>
+                        </div>
+                        <div class="success_send_mail alert alert-success d-none" role="alert"
+                             style="margin-top: 12px; padding-top: 5px; padding-bottom: 5px;"></div>
+                        <div class="error_send_mail alert alert-danger d-none" role="alert"
+                             style="margin-top: 12px;padding-top: 5px; padding-bottom: 5px;"></div>
+                    </form>
+                </div>
+
+            </div>
+            <style>
+
+                body {
+                background-color: #e9ecef;
+                }
+
+                .form {
+                border-radius: 0.2rem;
+                }
+
+                .row {
+                display: block;
+                }
+
+                .bg-color {
+                /* The image used */
+                background: linear-gradient(29deg,#2099bd,#0f3a8e);
+                background-image: linear-gradient(29deg, rgb(15, 58, 142), rgb(32, 153, 189));
+                background-position-x: initial;
+                background-position-y: initial;
+                background-size: initial;
+                background-repeat-x: initial;
+                background-repeat-y: initial;
+                background-attachment: initial;
+                background-origin: initial;
+                background-clip: initial;
+                background-color: initial;
+
+                min-height: 235px;
+
+                /* Center and scale the image nicely */
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                position: relative;
+
+                }
+                #wrapwrap {
+                background-color: #edf0f1;
+                }
+
+                /* Add styles to the form container */
+                .container-form {
+                position: absolute;
+                width: 27%;
+                padding: 16px;
+                background-color: white;
+                }
+
+
+                .btn:hover {
+                opacity: 1;
+                }
+            </style>
+    </template>
+
+    <template id="helpdesk_portal" name="helpdesk portal">
+        <div class="container">
+            <div class="row">
+                <div class="offset-2 col-md-6 col-lg-6">
+                    <h1 class="text-center">Welcome to Portal Helpdesks</h1>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

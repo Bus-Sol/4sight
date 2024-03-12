@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_jobsheet_document">
+        <t t-call="web.external_layout">
+            <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
+            <t t-set="address">
+                <div t-field="doc.partner_id"
+                     t-options='{"widget": "contact", "fields": ["address", "name","phone","email"], "no_marker": True}'/>
+                <p t-if="doc.partner_id.vat">
+                    <t t-esc="'VAT '"/>
+                    <span t-field="doc.partner_id.vat"/>
+                </p>
+            </t>
+
+            <div class="page">
+                <div class="oe_structure"/>
+
+                <h2 class="mt16" style="color:#F11256;font-size: 32px;">
+                    <span t-field="doc.name"/>
+                </h2>
+                <br/>
+
+                <div class="row mt32 mb32" id="informations">
+                    <div class="col-auto col-2 mw-100 mb-2">
+                        <strong>From:</strong>
+                        <p class="m-0" t-field="doc.start_date"/>
+                    </div>
+                    <div class="col-auto col-2 mw-100 mb-2">
+                        <strong>To:</strong>
+                        <p class="m-0" t-field="doc.end_date"/>
+                    </div>
+                    <div class="col-auto col-2 mw-100 mb-2">
+                        <strong>Type:</strong>
+                        <p class="m-0" t-field="doc.jobsheet_type_id.name"/>
+                    </div>
+                    <div class="col-auto col-2 mw-100 mb-2">
+                        <strong>Status:</strong>
+                        <p>
+                            <t t-if="doc.status == 'created'">
+                                <span class="badge badge-pill badge-light">
+                                    <span class="">Created</span>
+                                </span>
+                            </t>
+                            <t t-if="doc.status == 'signed'">
+                                <span class="badge badge-pill badge-info">
+                                    <i class="fa fa-fw fa-pencil-square-o" aria-label="Signed" title="Signed"
+                                       role="img"/>
+                                    <span class="">Signed</span>
+                                </span>
+                            </t>
+                            <t t-if="doc.status == 'invoiced'">
+                                <span class="badge badge-pill badge-success">
+                                    <i class="fa fa-fw fa-check" aria-label="Paid" title="Paid"
+                                       role="img"/>
+                                    <span class="">Invoiced</span>
+                                </span>
+                            </t>
+                        </p>
+
+                    </div>
+                    <div class="col-auto col-3 mw-100 mb-2">
+                        <strong>Issued By:</strong>
+                        <p class="m-0" t-field="doc.create_uid"/>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+
+                <table class="table table-sm o_main_table">
+                    <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                    <thead style="display: table-row-group">
+                        <tr>
+                            <th name="th_brief" class="text-left col-8">Brief:
+                                <t t-esc="doc.brief"/>
+                            </th>
+                            <th name="th_hours" class="text-center">Hours Spent</th>
+                        </tr>
+                    </thead>
+                    <tbody class="details_tbody">
+                        <tr>
+                            <td name="td_details" class="text-left col-8">
+                                <span>Details:
+                                    <t t-esc="doc.details"/>
+                                </span>
+                            </td>
+                            <td name="td_hours" class="text-center">
+                                <span>
+                                    <span t-esc="doc.effective_hours" t-options='{"widget": "float_time"}'/>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br/>
+                <t t-if="doc.type not in ['postpaid','contract'] and doc.move_ids">
+                    <small class="font-italic">
+                        In this Jobsheet we went
+                        <span t-esc="abs(doc.remaining_hours)" t-options='{"widget": "float_time"}'/>
+                        above the initial hours,
+                        An invoice
+                        <span t-field="doc.move_ids[0].name"/>
+                        has been generated and sent.
+                    </small>
+                </t>
+                <br/>
+                <t t-if="doc.jobsheet_line">
+                    <table class="table table-sm o_main_table">
+                        <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                        <thead style="display: table-row-group">
+                            <tr>
+                                <th name="th_item" class="text-left">Item</th>
+                                <th name="th_description" class="text-left">Description</th>
+                                <th name="th_quantity" class="text-center">Quantity</th>
+                                <th name="th_priceunit" class="text-right">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody class="sale_tbody">
+                            <t t-foreach="doc.jobsheet_line" t-as="line">
+                                <tr>
+                                    <td name="td_product">
+                                        <span t-field="line.product_id.name"/>
+                                    </td>
+                                    <td name="td_name">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td name="td_quantity" class="text-center">
+                                        <span t-field="line.product_uom_qty"/>
+                                    </td>
+                                    <td name="td_priceunit" class="text-right">
+                                        <span t-field="line.price_unit"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+
+                <t t-if="doc.amount_total">
+                    <div class="clearfix" name="so_total_summary">
+                        <div id="total" class="row" name="total">
+                            <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
+                                <table class="table table-sm">
+
+                                    <tr class="border-black o_total">
+                                        <td name="td_amount_total_label">
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td name="td_amount_total" class="text-right">
+                                            <span t-field="doc.amount_total"
+                                                  t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <div t-if="doc.signature" class="mt32 ml64 mr4" name="signature">
+                    <div class="offset-8">
+                        <strong>Signature</strong>
+                    </div>
+                    <div class="offset-8">
+                        <img t-att-src="image_data_uri(doc.signature)" style="max-height: 4cm; max-width: 8cm;"/>
+                    </div>
+                    <div class="offset-8 text-center">
+                        <p t-field="doc.signee"/>
+                    </div>
+                </div>
+
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+
+
+    <template id="report_jobsheet">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="odoo_timestead.report_jobsheet_document" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>

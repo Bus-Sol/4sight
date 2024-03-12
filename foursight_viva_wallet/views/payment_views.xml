@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="4sight_payment_provider_form" model="ir.ui.view">
+        <field name="name">VivaWallet Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position="inside">
+                <group attrs="{'invisible': [('code', '!=', 'viva')]}">
+                    <field name="viva_client_public"
+                           attrs="{'required':[('code', '=', 'viva'), ('state', '!=', 'disabled')]}"/>
+                    <field name="viva_client_secret" password="True"
+                           attrs="{'required':[('code', '=', 'viva'), ('state', '!=', 'disabled')]}"/>
+                    <a href="https://www.vivawallet.com/"
+                       target="_blank"
+                       colspan="2">
+                        Get to know Viva Wallet
+                    </a>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="4sight_payment_transaction_form" model="ir.ui.view">
+        <field name="name">VivaWallet Transaction Form</field>
+        <field name="model">payment.transaction</field>
+        <field name="inherit_id" ref="payment.payment_transaction_form"/>
+        <field name="arch" type="xml">
+            <field name="provider_reference" position="after">
+                <field name="order_code"
+                       readonly="1"
+                       attrs="{'invisible': [('provider_code', '!=', 'viva')]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>
