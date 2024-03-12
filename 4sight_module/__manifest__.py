@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': '4Sight - Module',
-    'version': '17.0',
+    'version': '17.0.0',
     'category': '',
     'description': """
     """,
