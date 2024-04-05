@@ -58,7 +58,7 @@ class JobSheet(models.Model):
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True,
                                    help="Time spent on this task, excluding its sub-tasks.")
     task_id = fields.Many2one('project.task', compute='compute_task_id', store=True)
-    planned_hours = fields.Float(related='task_id.planned_hours')
+    planned_hours = fields.Float(string='planned hours') # changed related='task_id.planned_hours'
     remaining_hours = fields.Float(related='task_id.remaining_hours')
     progress = fields.Float(related='task_id.progress')
     sale_order_id = fields.Many2one('sale.order', string='Next Sale Order',
@@ -724,7 +724,7 @@ class JobSheetline(models.Model):
     product_id = fields.Many2one(
         'product.product', string='Product',
         domain="[('sale_ok', '=', True),('type', '=', 'consu')]",
-        change_default=True, ondelete='restrict', check_company=True)
+        change_default=True, ondelete='restrict') # , check_company=True
     product_uom_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True, default=1.0)
 
     def _prepare_account_move_line(self):

@@ -1,80 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="view_report_jobsheet" model="ir.ui.view">
-            <field name="name">client.jobsheet.report.tree</field>
-            <field name="model">client.jobsheet</field>
-            <field name="arch" type="xml">
-                <tree create="false" delete="false" edit="false">
-                    <field name="jobsheet_start"/>
-                    <field name="start_date"/>
-                    <field name="end_date"/>
-                    <field name="hours_overtime" widget="timesheet_uom" string="Overtime hours"/>
-                    <field name="user_id" string="Technican" optional="hide"/>
-                    <field name="partner_id"/>
-                    <field name="task_id" optional="hide"/>
-                    <field name="name" string="Jobsheet Number"/>
-                    <field name="company_id" invisible="1"/>
-                </tree>
-            </field>
-        </record>
+<!--        <record id="view_report_jobsheet" model="ir.ui.view">-->
+<!--            <field name="name">client.jobsheet.report.tree</field>-->
+<!--            <field name="model">client.jobsheet</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <tree create="false" delete="false" edit="false">-->
+<!--                    <field name="jobsheet_start"/>-->
+<!--                    <field name="start_date"/>-->
+<!--                    <field name="end_date"/>-->
+<!--                    <field name="hours_overtime" widget="timesheet_uom" string="Overtime hours"/>-->
+<!--                    <field name="user_id" string="Technican" optional="hide"/>-->
+<!--                    <field name="partner_id"/>-->
+<!--                    <field name="task_id" optional="hide"/>-->
+<!--                    <field name="name" string="Jobsheet Number"/>-->
+<!--                    <field name="company_id" invisible="1"/>-->
+<!--                </tree>-->
+<!--            </field>-->
+<!--        </record>-->
 
-        <record id="action_report_jobsheets" model="ir.actions.act_window">
-            <field name="name">Jobsheets Report</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">client.jobsheet</field>
-            <field name="view_id" ref="view_report_jobsheet"/>
-            <field name="domain">[('overtime', '=', True)]</field>
-            <field name="view_mode">tree</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No Jobsheet with overtime, yet.
-                </p>
-            </field>
-        </record>
+<!--        <record id="action_report_jobsheets" model="ir.actions.act_window">-->
+<!--            <field name="name">Jobsheets Report</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">client.jobsheet</field>-->
+<!--            <field name="view_id" ref="view_report_jobsheet"/>-->
+<!--            <field name="domain">[('overtime', '=', True)]</field>-->
+<!--            <field name="view_mode">tree</field>-->
+<!--            <field name="help" type="html">-->
+<!--                <p class="o_view_nocontent_smiling_face">-->
+<!--                    No Jobsheet with overtime, yet.-->
+<!--                </p>-->
+<!--            </field>-->
+<!--        </record>-->
 
-        <record id="view_report_oob_jobsheet_filter" model="ir.ui.view">
-            <field name="name">project.task.list.oob</field>
-            <field name="model">project.task</field>
-            <field name="priority" eval="15"/>
-            <field name="arch" type="xml">
-                <search string="Search Customer">
-                    <field name="name"/>
-                    <group expand="1" string="Group By">
-                        <filter string="Check Balance" name="group_by_balance" context="{'group_by': 'check_balance'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
+<!--        <record id="view_report_oob_jobsheet_filter" model="ir.ui.view">-->
+<!--            <field name="name">project.task.list.oob</field>-->
+<!--            <field name="model">project.task</field>-->
+<!--            <field name="priority" eval="15"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <search string="Search Customer">-->
+<!--                    <field name="name"/>-->
+<!--                    <group expand="1" string="Group By">-->
+<!--                        <filter string="Check Balance" name="group_by_balance" context="{'group_by': 'check_balance'}"/>-->
+<!--                    </group>-->
+<!--                </search>-->
+<!--            </field>-->
+<!--        </record>-->
 
-        <record id="view_report_oob_jobsheet" model="ir.ui.view">
-            <field name="name">res.partner.report.oob.tree</field>
-            <field name="model">project.task</field>
-            <field name="arch" type="xml">
-                <tree create="false" delete="false" edit="false" default_order="partner_id asc" expand="1">
-                    <field name="name" groups="odoo_timestead.group_jobsheet_manager"/>
-                    <field name="partner_id"/>
-                    <field name="planned_hours" string="Hours Paid" widget="timesheet_uom"/>
-                    <field name="effective_hours" string="Hours Consumed" widget="timesheet_uom"/>
-                    <field name="remaining_hours" string="Remaining Hours" widget="timesheet_uom"
-                           decoration-danger="progress &gt;= 100"
-                           decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
-                    <field name="progress" invisible="1"/>
-                    <field name="jobsheet_type" invisible="1"/>
-                    <field name="check_balance" invisible="1"/>
-                </tree>
-            </field>
-        </record>
+<!--        <record id="view_report_oob_jobsheet" model="ir.ui.view">-->
+<!--            <field name="name">res.partner.report.oob.tree</field>-->
+<!--            <field name="model">project.task</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <tree create="false" delete="false" edit="false" default_order="partner_id asc" expand="1">-->
+<!--                    <field name="name" groups="odoo_timestead.group_jobsheet_manager"/>-->
+<!--                    <field name="partner_id"/>-->
+<!--                    <field name="planned_hours" string="Hours Paid" widget="timesheet_uom"/>-->
+<!--                    <field name="effective_hours" string="Hours Consumed" widget="timesheet_uom"/>-->
+<!--                    <field name="remaining_hours" string="Remaining Hours" widget="timesheet_uom"-->
+<!--                           decoration-danger="progress &gt;= 100"-->
+<!--                           decoration-warning="progress &gt;= 80 and progress &lt; 100"/>-->
+<!--                    <field name="progress" invisible="1"/>-->
+<!--                    <field name="jobsheet_type" invisible="1"/>-->
+<!--                    <field name="check_balance" invisible="1"/>-->
+<!--                </tree>-->
+<!--            </field>-->
+<!--        </record>-->
 
-        <record id="action_report_balance_jobsheets" model="ir.actions.act_window">
-            <field name="name">Prepaid Balance Report</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">project.task</field>
-            <field name="view_id" ref="view_report_oob_jobsheet"/>
-            <field name="domain">[('jobsheet_type','=','prepaid')]</field>
-            <field name="context">{'search_default_group_by_balance':1,'group_by_balance':1, 'expand': 1}</field>
-            <field name="view_mode">tree</field>
-        </record>
+<!--        <record id="action_report_balance_jobsheets" model="ir.actions.act_window">-->
+<!--            <field name="name">Prepaid Balance Report</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">project.task</field>-->
+<!--            <field name="view_id" ref="view_report_oob_jobsheet"/>-->
+<!--            <field name="domain">[('jobsheet_type','=','prepaid')]</field>-->
+<!--            <field name="context">{'search_default_group_by_balance':1,'group_by_balance':1, 'expand': 1}</field>-->
+<!--            <field name="view_mode">tree</field>-->
+<!--        </record>-->
 
 <!--        <template id="template_jobsheet_balance_report" inherit_id="account_reports.main_template" primary="True">-->
 <!--            <xpath expr="//table" position="attributes">-->
@@ -82,65 +82,65 @@
 <!--            </xpath>-->
 <!--        </template>-->
 
-        <record id="jobsheet_balance_report" model="account.report">
-            <field name="name">Out of Balance Report</field>
-            <field name="filter_partner" eval="True"/>
-            <field name="filter_unfold_all" eval="False"/>
-            <field name="filter_unreconciled" eval="False"/>
-            <field name="filter_period_comparison" eval="False"/>
-            <field name="filter_multi_company">selector</field>
-            <field name="default_opening_date_filter">this_year</field>
-            <field name="search_bar" eval="True"/>
-            <field name="load_more_limit" eval="80"/>
-            <field name="custom_handler_model_id" ref="model_jobsheet_balance_report_handler"/>
-            <field name="main_template">account_reports.template_partner_ledger_report</field>
-            <field name="line_template">account_reports.line_template_partner_ledger_report</field>
-            <field name="load_more_limit" eval="80"/>
-            <field name="column_ids">
-                <record id="jobsheet_balance_report_service_name" model="account.report.column">
-                    <field name="name">Service</field>
-                    <field name="expression_label">name</field>
-                    <field name="figure_type">none</field>
-                </record>
-                <record id="jobsheet_balance_report_planned_hours_name" model="account.report.column">
-                    <field name="name">Planned Hours</field>
-                    <field name="expression_label">name</field>
-                    <field name="figure_type">none</field>
-                </record>
-                <record id="jobsheet_balance_report_hours_consumed" model="account.report.column">
-                    <field name="name">Hours Consumed</field>
-                    <field name="expression_label">name</field>
-                    <field name="figure_type">none</field>
-                </record>
-                <record id="jobsheet_balance_report_remainning_hours_name" model="account.report.column">
-                    <field name="name">Remaining Hours</field>
-                    <field name="expression_label">name</field>
-                    <field name="figure_type">none</field>
-                </record>
-                <record id="jobsheet_balance_report_status_name" model="account.report.column">
-                    <field name="name">Status</field>
-                    <field name="expression_label">name</field>
-                    <field name="figure_type">none</field>
-                </record>
-            </field>
-        </record>
+<!--        <record id="jobsheet_balance_report" model="account.report">-->
+<!--            <field name="name">Out of Balance Report</field>-->
+<!--            <field name="filter_partner" eval="True"/>-->
+<!--            <field name="filter_unfold_all" eval="False"/>-->
+<!--            <field name="filter_unreconciled" eval="False"/>-->
+<!--            <field name="filter_period_comparison" eval="False"/>-->
+<!--            <field name="filter_multi_company">selector</field>-->
+<!--            <field name="default_opening_date_filter">this_year</field>-->
+<!--            <field name="search_bar" eval="True"/>-->
+<!--            <field name="load_more_limit" eval="80"/>-->
+<!--            <field name="custom_handler_model_id" ref="model_jobsheet_balance_report_handler"/>-->
+<!--            <field name="main_template">account_reports.template_partner_ledger_report</field>-->
+<!--            <field name="line_template">account_reports.line_template_partner_ledger_report</field>-->
+<!--            <field name="load_more_limit" eval="80"/>-->
+<!--            <field name="column_ids">-->
+<!--                <record id="jobsheet_balance_report_service_name" model="account.report.column">-->
+<!--                    <field name="name">Service</field>-->
+<!--                    <field name="expression_label">name</field>-->
+<!--                    <field name="figure_type">none</field>-->
+<!--                </record>-->
+<!--                <record id="jobsheet_balance_report_planned_hours_name" model="account.report.column">-->
+<!--                    <field name="name">Planned Hours</field>-->
+<!--                    <field name="expression_label">name</field>-->
+<!--                    <field name="figure_type">none</field>-->
+<!--                </record>-->
+<!--                <record id="jobsheet_balance_report_hours_consumed" model="account.report.column">-->
+<!--                    <field name="name">Hours Consumed</field>-->
+<!--                    <field name="expression_label">name</field>-->
+<!--                    <field name="figure_type">none</field>-->
+<!--                </record>-->
+<!--                <record id="jobsheet_balance_report_remainning_hours_name" model="account.report.column">-->
+<!--                    <field name="name">Remaining Hours</field>-->
+<!--                    <field name="expression_label">name</field>-->
+<!--                    <field name="figure_type">none</field>-->
+<!--                </record>-->
+<!--                <record id="jobsheet_balance_report_status_name" model="account.report.column">-->
+<!--                    <field name="name">Status</field>-->
+<!--                    <field name="expression_label">name</field>-->
+<!--                    <field name="figure_type">none</field>-->
+<!--                </record>-->
+<!--            </field>-->
+<!--        </record>-->
 
 
-        <record id="action_report_balance" model="ir.actions.client">
-            <field name="name">Out of Balance Report</field>
-            <field name="tag">account_report</field>
-            <field name="context" eval="{'report_id': ref('odoo_timestead.jobsheet_balance_report')}"/>
-        </record>
+<!--        <record id="action_report_balance" model="ir.actions.client">-->
+<!--            <field name="name">Out of Balance Report</field>-->
+<!--            <field name="tag">account_report</field>-->
+<!--            <field name="context" eval="{'report_id': ref('odoo_timestead.jobsheet_balance_report')}"/>-->
+<!--        </record>-->
 
-        <menuitem id="job_menu_reporting" name="Reporting" parent="menu_jobsheets" sequence="8"/>
+<!--        <menuitem id="job_menu_reporting" name="Reporting" parent="menu_jobsheets" sequence="8"/>-->
 
-        <menuitem id="job_menu__overtime_reporting" name="Overtime" action="action_report_jobsheets"
-                  parent="job_menu_reporting" sequence="1"/>
+<!--        <menuitem id="job_menu__overtime_reporting" name="Overtime" action="action_report_jobsheets"-->
+<!--                  parent="job_menu_reporting" sequence="1"/>-->
 
-        <menuitem id="job_menu_oob_reporting" name="Out of Balance" action="action_report_balance_jobsheets"
-                  parent="job_menu_reporting" sequence="2"/>
+<!--        <menuitem id="job_menu_oob_reporting" name="Out of Balance" action="action_report_balance_jobsheets"-->
+<!--                  parent="job_menu_reporting" sequence="2"/>-->
 
-        <menuitem id="job_menu_balance_reporting" name="Out of Balance Report" action="action_report_balance"
-                  parent="job_menu_reporting" sequence="3"/>
+<!--        <menuitem id="job_menu_balance_reporting" name="Out of Balance Report" action="action_report_balance"-->
+<!--                  parent="job_menu_reporting" sequence="3"/>-->
     </data>
 </odoo>

@@ -67,6 +67,7 @@ class Task(models.Model):
                                      string='Check Balance', compute='compute_balanced_task', store=True)
     related_service_id = fields.Many2one('product.template', related='sale_line_id.product_id.product_tmpl_id',
                                          store=True)
+    planned_hours = fields.Float("Initially Planned Hours", help='Time planned to achieve this task (including its sub-tasks).', tracking=True)
 
     @api.depends('remaining_hours')
     def compute_balanced_task(self):

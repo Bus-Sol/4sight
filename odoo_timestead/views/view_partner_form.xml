@@ -7,9 +7,12 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
+<!--                                                attrs="{'invisible': [('job_count', '=', 0)]}"-->
                     <button class="oe_stat_button" type="object"
-                            name="action_open_jobsheet" context="{'default_partner_id': active_id}" icon="fa-tasks"
-                            attrs="{'invisible': [('job_count', '=', 0)]}">
+                            name="action_open_jobsheet" context="{'default_partner_id': active_id}"
+                            icon="fa-tasks"
+                            invisible = "job_count == 0"
+                    >
                         <div class="o_stat_info">
                             <field name="job_count" class="o_stat_value"/>
                             <span class="o_stat_text">Jobsheets</span>
@@ -17,8 +20,14 @@
                     </button>
                 </div>
                 <xpath expr="//page/field[@name='child_ids']/form//group/group/field[@name='email']" position="after">
-                    <field name="receive_jobsheet" attrs="{'invisible': [('type', '!=', 'jobsheet')]}"/>
-                    <field name="receive_invoice" attrs="{'invisible': [('type', '!=', 'jobsheet')]}"/>
+<!--                                               attrs="{'invisible': [('type', '!=', 'jobsheet')]}"-->
+                    <field name="receive_jobsheet"
+                           invisible = "type != 'jobsheet'"
+                    />
+<!--                                               attrs="{'invisible': [('type', '!=', 'jobsheet')]}"-->
+                    <field name="receive_invoice"
+                           invisible="type != 'jobsheet'"
+                    />
                 </xpath>
                 <field name="vat" position="after">
                     <field name="jobsheet_type"/>
@@ -29,13 +38,19 @@
                             <tree string="Services" editable="bottom">
                                 <field name="product_id"/>
                                 <field name="jobsheet_type"/>
+<!--                                                                       attrs="{'column_invisible': [('parent.jobsheet_type', '=', 'contract_postpaid')]}"-->
                                 <field name="quantity"
-                                       attrs="{'column_invisible': [('parent.jobsheet_type', '=', 'contract_postpaid')]}"/>
+                                       column_invisible = "parent.jobsheet_type == 'contract_postpaid'"
+                                />
+<!--                                                                       attrs="{'column_invisible': [('parent.jobsheet_type', '=', 'contract_postpaid')]}"-->
                                 <field name="buffer" groups="odoo_timestead.group_jobsheet_manager"
-                                       attrs="{'column_invisible': [('parent.jobsheet_type', '=', 'contract_postpaid')]}"/>
+                                       column_invisible = "parent.jobsheet_type == 'contract_postpaid'"
+                                />
+<!--                                 attrs="{'column_invisible': [('parent.jobsheet_type', '=', 'contract_postpaid')]}"-->
                                 <field name="extra_hour" force_save="1" widget="timesheet_uom_no_toggle"
                                        groups="odoo_timestead.group_jobsheet_manager"
-                                       attrs="{'column_invisible': [('parent.jobsheet_type', '=', 'contract_postpaid')]}"/>
+                                       column_invisible = "parent.jobsheet_type == 'contract_postpaid'"
+                                      />
                                 <field name="hour" groups="odoo_timestead.group_jobsheet_manager"/>
                             </tree>
                         </field>

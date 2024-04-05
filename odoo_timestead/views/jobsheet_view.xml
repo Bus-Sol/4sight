@@ -59,19 +59,32 @@
                                 groups="odoo_timestead.group_jobsheet_manager"
                                 confirm="Are you sure you want to invoice this jobsheet?" type="object"
                                 class="oe_highlight"
-                                attrs="{'invisible': ['|',('status', '=', 'invoiced'),('is_prepaid','=',True)]}"/>
+                                    invisible = "status =='invoices' or is_prepaid == True"
+                        />
+                        <!--                                attrs="{'invisible': ['|',('status', '=', 'invoiced'),('is_prepaid','=',True)]}"-->
                         <button name="mark_as_signed" string="Sign" type="object" class="oe_highlight"
-                                attrs="{'invisible': [('status', 'in', ['signed','invoiced','confirmed'])]}"/>
+                                invisible="status in ['signed','invoiced','confirmed']"
+                        />
+                        <!--                                attrs="{'invisible': [('status', 'in', ['signed','invoiced','confirmed'])]}"-->
                         <button name="action_jobsheet_send" string="Confirm by Email" type="object"
-                                attrs="{'invisible': [('status', '!=', 'created')]}"/>
+                                invisible="status != 'created'"
+                        />
+                        <!--                                attrs="{'invisible': [('status', '!=', 'created')]}"-->
+
                         <button name="action_jobsheet_confirm" string="Confirm" type="object" class="oe_highlight"
                                 confirm="You are confirming without the customer signature"
-                                attrs="{'invisible': [('status', '!=', 'created')]}"/>
+                                invisible="status != 'created'"
+                        />
+<!--                                    attrs="{'invisible': [('status', '!=', 'created')]}"-->
                         <button name="action_send_copy" string="Send a Copy" type="object"
-                                attrs="{'invisible': [('status', '=', 'created')]}"/>
+                                invisible="status == 'created'"
+                        />
+<!--                                                        attrs="{'invisible': [('status', '=', 'created')]}"-->
                         <button name="action_reset_tocreate" string="Unlock" type="object" class="oe_highlight"
                                 groups="odoo_timestead.group_jobsheet_admin"
-                                attrs="{'invisible': [('status', '=', 'created')]}"/>
+                                invisible="status == 'created'"
+                        />
+<!--                                                        attrs="{'invisible': [('status', '=', 'created')]}"-->
                         <field name="status" class="ml-4" widget="statusbar"
                                statusbar_visible="created,sent,signed,confirmed,invoiced"
                                readonly="1"/>
@@ -89,19 +102,24 @@
                             </button>
                             <button type="object" name="action_view_project_ids" class="oe_stat_button"
                                     icon="fa-puzzle-piece" string="Project"
-                                    attrs="{'invisible': [('project_id', '=', False)]}"
-                                    groups="project.group_project_manager">
+                                    invisible="project_id == False"
+                                    groups="project.group_project_manager"
+                            >
+<!--                                                                    attrs="{'invisible': [('project_id', '=', False)]}"-->
                                 <field name="project_id" invisible="1"/>
                             </button>
                             <button type="object" name="action_view_task_id" class="oe_stat_button"
                                     icon="fa-tasks" string="Task"
-                                    attrs="{'invisible': [('task_id', '=', False)]}"
+                                    invisible="task_id == False"
                                     groups="project.group_project_manager">
+<!--                                                                    attrs="{'invisible': [('task_id', '=', False)]}"-->
                                 <field name="task_id" invisible="1"/>
                             </button>
                             <button name="action_view_invoice" type="object" class="oe_stat_button"
-                                    icon="fa-pencil-square-o" attrs="{'invisible': [('move_count', '=', 0)]}"
+                                    icon="fa-pencil-square-o"
+                                    invisible = "move_count == 0"
                                     groups="odoo_timestead.group_jobsheet_manager">
+<!--                                                                    attrs="{'invisible': [('move_count', '=', 0)]}"-->
                                 <field name="move_count" widget="statinfo" string="Invoices"/>
                                 <field name='move_ids' invisible="1"/>
                             </button>
@@ -116,82 +134,130 @@
                                 <field name="service_domain" invisible="1"/>
                                 <field name="jobsheet_start" invisible="1"/>
                                 <field name="partner_id" widget="res_partner_many2one" required="1"
-                                       attrs="{'readonly': [('status', '!=', 'created')]}"
+                                       readonly="status != 'created'"
                                        context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}"
                                        options="{'always_reload': True,'no_create_edit': True, 'no_create': True}"/>
+<!--                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
                                 <field name="service_id" options="{'no_create_edit': True, 'no_create': True}"
-                                       attrs="{'readonly': [('status', '!=', 'created')]}" required="1"/>
+                                       readonly="status != 'created'"
+                                       required="1"/>
+<!--                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
                                 <field name="is_prepaid" invisible="1"/>
                                 <label for="start_date" string="Planned Date"/>
                                 <div class="w-100">
                                     <div class="o_row">
                                         <field name="start_date" widget="daterange" required="1"
-                                               attrs="{'readonly': [('status', '!=', 'created')]}"
+                                               readonly="status != 'created'"
                                                options='{"related_end_date": "end_date"}'/>
+<!--                                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
                                         <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon"
                                            title="Arrow"/>
                                         <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon"
                                            title="Arrow"
-                                           attrs="{'invisible': [('start_date', '=', False), ('end_date', '=', False)]}"/>
+                                           invisible = "start_date == False or end_date == False"
+                                        />
+<!--                                                                                   attrs="{'invisible': [('start_date', '=', False), ('end_date', '=', False)]}"-->
                                         <field name="end_date" widget="daterange" required="1"
-                                               attrs="{'readonly': [('status', '!=', 'created')]}"
+                                               readonly="status != 'created'"
                                                options='{"related_start_date": "start_date"}'/>
+<!--                                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
                                     </div>
                                 </div>
                                 <field name="category_id" widget="many2many_tags"
                                        options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."
-                                       attrs="{'readonly': [('status', '!=', 'created')]}"/>
+                                       readonly="status != 'created'"
+                                />
+<!--                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
                             </group>
                             <group>
                                 <field name="date_order" invisible="1"/>
-                                <field name="jobsheet_type_id" attrs="{'readonly': [('status', '!=', 'created')]}"/>
-                                <field name="brief" required="1" attrs="{'readonly': [('status', '!=', 'created')]}"/>
+                                <field name="jobsheet_type_id"
+                                       readonly="status != 'created'"
+                                />
+<!--                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
+                                <field name="brief" required="1"
+                                       readonly="status != 'created'"
+                                />
+<!--                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
                                 <label for="type" string="Jobsheet Type"/>
                                 <div name="type" class="o_row">
                                     <field name="type" force_save="1"/>
-                                    <div class="o_row oe_inline" attrs="{'invisible': [('type', '=', 'prepaid')]}">
+<!--                                         attrs="{'invisible': [('type', '=', 'prepaid')]}"-->
+                                    <div class="o_row oe_inline"
+                                         invisible="type == 'prepaid'"
+                                    >
                                         Tick for Out of Contract
                                         <field name="tick_postpaid"
-                                               attrs="{'readonly': [('status', '!=', 'created')]}"/>
+                                               readonly="status != 'created'"
+                                        />
+<!--                                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
                                     </div>
                                 </div>
                                 <label for="overtime" string="Overtime"/>
                                 <div name="overtime" class="o_row">
-                                    <field name="overtime" attrs="{'readonly': [('status', '!=', 'created')]}"/>
-                                    <div class="o_row oe_inline" attrs="{'invisible': [('overtime', '=', False)]}">
+                                    <field name="overtime"
+                                           readonly="status != 'created'"
+                                    />
+<!--                                                                               attrs="{'readonly': [('status', '!=', 'created')]}"-->
+<!--                                                                             attrs="{'invisible': [('overtime', '=', False)]}"-->
+<!--                                                                                   attrs="{'readonly': [('status', '!=', 'created')]}"-->
+                                    <div class="o_row oe_inline"
+                                         invisible="overtime == False"
+                                    >
                                         Please insert your overtime hours
                                         <field name="hours_overtime" class="oe_inline" widget="timesheet_uom"
-                                               attrs="{'readonly': [('status', '!=', 'created')]}"/>
+                                               readonly="status != 'created'"
+                                        />
                                     </div>
                                 </div>
+<!--                                                                       attrs="{'readonly': [('status', '!=', 'created')], 'invisible': [('type', '!=', 'prepaid')]}"-->
                                 <field name="sale_order_id" groups="odoo_timestead.group_jobsheet_manager"
-                                       attrs="{'readonly': [('status', '!=', 'created')], 'invisible': [('type', '!=', 'prepaid')]}"/>
+                                       readonly="status != 'created'"
+                                       invisible="type != 'prepaid'"
+                                />
                             </group>
                         </group>
                         <group>
-                            <field name="details" attrs="{'readonly': [('status', '!=', 'created')]}" required="1"/>
+<!--                                                               attrs="{'readonly': [('status', '!=', 'created')]}"-->
+                            <field name="details"
+                                   readonly="status != 'created'"
+                                   required="1"
+                            />
                             <field name="url_detail" widget="url"/>
                             <field name="invoice_amount" groups="odoo_timestead.group_jobsheet_manager"/>
                         </group>
 
                         <notebook>
+<!--                                                              attrs="{'readonly': [('status', '!=', 'created')]}"-->
                             <page string="Signature" name="signature"
-                                  attrs="{'readonly': [('status', '!=', 'created')]}">
+                                  readonly = "status != 'created'"
+                            >
                                 <group>
                                     <group>
+<!--                                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
                                         <field name="hours" string="Time (Hrs)"
-                                               attrs="{'readonly': [('status', '!=', 'created')]}"/>
+                                               readonly="status != 'created'"
+                                        />
+<!--                                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
                                         <field name="signee" placeholder="Name of Signee"
-                                               attrs="{'readonly': [('status', '!=', 'created')]}"/>
+                                               readonly="status != 'created'"
+                                        />
+<!--                                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
                                         <field name="signature" widget="signature"
-                                               attrs="{'readonly': [('status', '!=', 'created')]}"/>
+                                               readonly="status != 'created'"
+                                        />
+<!--                                                                                        attrs="{'invisible': [('status', 'in', ['signed','invoiced','confirmed'])]}"-->
                                         <button name="mark_as_signed" string="Sign" type="object"
-                                                attrs="{'invisible': [('status', 'in', ['signed','invoiced','confirmed'])]}"/>
+                                                invisible="status in ['signed','invoiced','confirmed']"
+                                        />
                                     </group>
                                 </group>
                             </page>
                             <page string="Timesheets" id="timesheets_tab">
-                                <group attrs="{'invisible': [('type', 'in', ['postpaid','contract'])]}">
+<!--                                                                        attrs="{'invisible': [('type', 'in', )]}"-->
+                                <group
+                                        invisible="type in ['postpaid','contract']"
+                                >
                                     <group>
                                         <div class="o_td_label">
                                             <label for="planned_hours" string="Initially Planned Hours"/>
@@ -202,8 +268,10 @@
                                         <field name="progress" widget="progressbar"/>
                                     </group>
                                 </group>
+<!--                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
                                 <field name="timesheet_ids" mode="tree,kanban"
-                                       attrs="{'readonly': [('status', '!=', 'created')]}">
+                                       readonly="status != 'created'"
+                                >
                                     <tree create="0" string="Timesheet Activities" default_order="date">
                                         <field name="date" invisible="1"/>
                                         <field name="user_id" invisible="1"/>
@@ -220,12 +288,17 @@
                                     </span>
                                     <field name="effective_hours" nolabel="1" widget="timesheet_uom"/>
                                     <span>
+<!--                                                                                       attrs="{'invisible': [('planned_hours', '=', 0.0)]}"-->
                                         <label class="font-weight-bold" for="remaining_hours" string="Remaining Hours"
-                                               attrs="{'invisible': [('planned_hours', '=', 0.0)]}"/>
+                                               invisible = "planned_hours == 0.0"
+                                        />
                                     </span>
+<!--                                                                               attrs="{'invisible' : [('planned_hours', '=', 0.0)]}"-->
                                     <field name="remaining_hours" widget="timesheet_uom"
                                            class="oe_subtotal_footer_separator"
-                                           attrs="{'invisible' : [('planned_hours', '=', 0.0)]}" nolabel="1"/>
+                                           invisible = "planned_hours == 0.0"
+                                           nolabel="1"
+                                    />
                                 </group>
                             </page>
                             <page string="Items" name="items_line">

@@ -8,14 +8,14 @@
         </div>
     </template>
 
-    <template id="line_template_followup_report_inherit" inherit_id="account_reports.line_template" primary="True">
+<!--    <template id="line_template_followup_report_inherit" inherit_id="account_reports.line_template" primary="True">-->
 
-        <xpath expr="//tr" position="after">
-            <t t-if="context.get('print_mode') and line.get('class') and 'total_due' in line.get('class')">
-                <tr>
-                    <td colspan="5" style="height: 30px !important; background-color: #FFFFFF;"/>
-                </tr>
-            </t>
-        </xpath>
-    </template>
+<!--        <xpath expr="//tr" position="after">-->
+<!--            <t t-if="context.get('print_mode') and line.get('class') and 'total_due' in line.get('class')">-->
+<!--                <tr>-->
+<!--                    <td colspan="5" style="height: 30px !important; background-color: #FFFFFF;"/>-->
+<!--                </tr>-->
+<!--            </t>-->
+<!--        </xpath>-->
+<!--    </template>-->
 </odoo>

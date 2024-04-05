@@ -11,8 +11,11 @@
                 </xpath>
 
                 <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+<!--                                                attrs="{'invisible': [('job_count', '=', 0)]}"-->
                     <button name="action_view_jobsheets" type="object" class="oe_stat_button"
-                            icon="fa-pencil-square-o" attrs="{'invisible': [('job_count', '=', 0)]}">
+                            icon="fa-pencil-square-o"
+                            invisible = "job_count == 0"
+                    >
                         <field name="job_count" widget="statinfo" string="Jobsheets"/>
                         <field name='job_ids' invisible="1"/>
                     </button>
