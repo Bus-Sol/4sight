@@ -8,7 +8,7 @@
         """
         """,
     'author': '4Sight Group',
-    'depends': ['base','website_helpdesk'],
+    'depends': ['base', 'website', 'website_helpdesk'],
     'data': [
         'data/connect_to_portal.xml',
         'views/helpdesk_form_view.xml',
