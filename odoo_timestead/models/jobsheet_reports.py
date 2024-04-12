@@ -40,9 +40,18 @@ class ReportJobsheetBalance(models.AbstractModel):
         prepaid_partners_with_services = self.env['res.partner'].search(
             [('jobsheet_type', '=', 'prepaid'), ('service_ids', '!=', False)], order='name')
         for partner in prepaid_partners_with_services:
-            for service in partner.service_ids:
-                tks = self.env['project.task'].search(
-                    [('partner_id', '=', partner.id), ('related_service_id', '=', service.product_id.id),('sale_line_id','!=',False),('sale_line_id.order_id.state','in',['sale','done']),('remaining_hours','>',0)],order='id desc')
+            for service in partner.service_ids:                
+                tks1 = self.env['project.task'].search(
+                    [('partner_id', '=', partner.id), 
+                     ('related_service_id', '=', service.product_id.id),
+                     ('sale_line_id','!=',False),
+                     ('sale_line_id.order_id.state','in',['sale','done'])],
+                    order='id desc')
+
+
+                tks = [task for task in tks1 if round(task.remaining_hours, 2) > 0]
+
+
                 planned = 0
                 effective = 0
                 remaining = 0

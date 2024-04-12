@@ -70,7 +70,7 @@ class Task(models.Model):
     def compute_balanced_task(self):
         for rec in self:
             check_balance = False
-            if rec.remaining_hours > 0 :
+            if round(rec.remaining_hours,2) > 0 :
                 check_balance = 'balanced'
             else:
                 check_balance = 'out_of_balance'
