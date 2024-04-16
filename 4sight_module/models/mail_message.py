@@ -8,11 +8,13 @@ class MAilMessage(models.Model):
     @api.model
     def create(self, vals):
         res = super(MAilMessage, self).create(vals)
+        initial_is_internal = res.is_internal
         if res.model == 'helpdesk.ticket':
             ticket_id = self.env['helpdesk.ticket'].browse(res.res_id)
             if ticket_id and vals.get('subtype_id') and vals.get('subtype_id') == self.env.ref('helpdesk.mt_ticket_new').id:
                 res.record_name = res.record_name + '- Created by: ' + ticket_id.partner_id.name if ticket_id.partner_id else ticket_id.partner_email
                 if ticket_id.description:
                     res.body = ticket_id.description
-
+        if not initial_is_internal and res.is_internal :
+            res.is_internal = False
         return res
