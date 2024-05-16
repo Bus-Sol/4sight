@@ -6,7 +6,7 @@ import base64
 from werkzeug import urls
 from odoo.exceptions import ValidationError
 from odoo import _, api, fields, models
-from odoo.addons.foursight_viva_wallet.controllers.main import VivaController
+from odoo.addons.sight_viva_wallet.controllers.main import VivaController
 import requests
 from odoo.http import request
 
