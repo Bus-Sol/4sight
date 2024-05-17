@@ -26,6 +26,7 @@ class PaymentProvider(models.Model):
 
     def _viva_get_api_url(self, api_key):
         self.ensure_one()
+
         if self.state == 'enabled':
             api_urls = {
                 'viva_form_url': 'https://www.vivapayments.com/web/newtransaction.aspx?ref=',
