@@ -15,9 +15,14 @@
     ],
     'data': [
         'report/vat_report_template.xml',
-        'views/assets.xml',
+        # 'views/assets.xml',
         'views/account_vat_report.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            # '/vat_report_mt/static/src/js/vat_report.js'
+        ]
+    },
     'qweb': [
         'static/src/xml/base.xml',
         ],

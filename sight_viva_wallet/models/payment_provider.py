@@ -39,8 +39,8 @@ class PaymentProvider(models.Model):
             }
         return api_urls
 
-    def _get_default_payment_method_id(self):
+    def _get_default_payment_method_id(self,code):
         self.ensure_one()
         if self.code != 'viva':
-            return super()._get_default_payment_method_id()
+            return super()._get_default_payment_method_id(code)
         return self.env.ref('foursight_viva_wallet.payment_method_viva').id

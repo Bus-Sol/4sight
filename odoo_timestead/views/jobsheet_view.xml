@@ -560,7 +560,7 @@
             <field name="name">Jobsheets analysis</field>
             <field name="res_model">client.jobsheet</field>
             <field name="view_mode">dashboard</field>
-            <field name="view_id" ref="jobsheet_view_dashboard"/>
+            <!-- <field name="view_id" ref="jobsheet_view_dashboard"/> -->
             <field name="search_view_id" ref="view_jobsheet_filter"/>
         </record>
     </data>

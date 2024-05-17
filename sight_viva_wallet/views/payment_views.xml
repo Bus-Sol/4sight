@@ -6,11 +6,11 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position="inside">
-                <group attrs="{'invisible': [('code', '!=', 'viva')]}">
+                <group invisible="code != 'viva'">
                     <field name="viva_client_public"
-                           attrs="{'required':[('code', '=', 'viva'), ('state', '!=', 'disabled')]}"/>
+                           required = "code == 'viva' and state != 'disabled'"/>
                     <field name="viva_client_secret" password="True"
-                           attrs="{'required':[('code', '=', 'viva'), ('state', '!=', 'disabled')]}"/>
+                           required = "code == 'viva' and state != 'disabled'"/>
                     <a href="https://www.vivawallet.com/"
                        target="_blank"
                        colspan="2">
@@ -29,7 +29,7 @@
             <field name="provider_reference" position="after">
                 <field name="order_code"
                        readonly="1"
-                       attrs="{'invisible': [('provider_code', '!=', 'viva')]}"/>
+                       invisible="provider_code != 'viva'"/>
             </field>
         </field>
     </record>
