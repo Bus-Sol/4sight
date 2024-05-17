@@ -35,12 +35,12 @@
     ],
     'demo': [],
     'qweb': [
-        'static/src/xml/digital_sign.xml',
+        # 'static/src/xml/digital_sign.xml',
     ],
     "assets": {
         "web.assets_backend": [
             # "odoo_timestead/static/src/js/digital_sign.js",
-            "odoo_timestead/static/src/css/jobsheet_customize_tickbox.css"
+            # "odoo_timestead/static/src/css/jobsheet_customize_tickbox.css"
         ]
     },
     'installable': True,

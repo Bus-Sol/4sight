@@ -24,7 +24,7 @@
         ]
     },
     'qweb': [
-        'static/src/xml/base.xml',
+        # 'static/src/xml/base.xml',
         ],
     'demo' : [
     ],

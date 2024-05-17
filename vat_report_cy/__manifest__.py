@@ -20,7 +20,7 @@
 
     'assets': {
         'web.assets_backend': [
-            'vat_report_cy/static/src/js/vat_report.js',
+            # 'vat_report_cy/static/src/js/vat_report.js',
         ],
     },
 }
