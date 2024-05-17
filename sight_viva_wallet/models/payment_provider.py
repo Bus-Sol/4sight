@@ -6,6 +6,7 @@ from odoo import _, api, fields, models
 _logger = logging.getLogger(__name__)
 
 
+
 class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
 
