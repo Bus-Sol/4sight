@@ -2,7 +2,7 @@
 
 {
     'name': 'VAT Report CY',
-    'version': '1.0',
+    'version': '17.0',
     'category': 'Accounting',
     'description': """
     Specific VAT Report for CY

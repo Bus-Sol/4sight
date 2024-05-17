@@ -2,7 +2,7 @@
 
 {
     'name': 'VAT Report MT',
-    'version': '1.0',
+    'version': '17.0',
     'category': 'Accounting',
     'description': """
     Specific VAT Report for MT
