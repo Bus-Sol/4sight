@@ -12,13 +12,13 @@ class AccountMoveLine(models.Model):
 
     @api.model
     def print_pdf(self, options):
-
         return {
             'type': 'ir_actions_vat_report_download',
-            'data': {'model': 'account.move.line',
-                     'options': json.dumps(options),
-                     'output_format': 'pdf',
-                     }
+            'data': {
+                'model': 'account.move.line',
+                'options': json.dumps(options),
+                'output_format': 'pdf',
+            }
         }
 
     def get_pdf(self, options, minimal_layout=True, **kwargs):
@@ -105,51 +105,50 @@ class AccountMoveLine(models.Model):
             values=dict(rcontext),
         )
 
-        if minimal_layout:
-            header = ''
-            footer = self.env['ir.actions.report']._render_template("web.internal_layout", values=rcontext)
-            spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
-            footer = self.env['ir.actions.report']._render_template("web.minimal_layout",
-                                                                    values=dict(rcontext, subst=True, body=footer))
-        else:
-            rcontext.update({
-                'css': '',
-                'o': self.env.user,
-                'res_company': self.env.company,
-            })
-            header = self.env['ir.actions.report']._render_template("web.external_layout", values=rcontext)
-            header = header.decode('utf-8')  # Ensure that headers and footer are correctly encoded
-            spec_paperformat_args = {}
-            # Default header and footer in case the user customized web.external_layout and removed the header/footer
-            headers = header.encode()
-            footer = b''
-            # parse header as new header contains header, body and footer
-            try:
-                root = lxml.html.fromstring(header)
-                match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
+        # if minimal_layout:
+        #     header = ''
+        #     footer = self.env['ir.actions.report']._render_template("web.internal_layout", values=rcontext)
+        #     spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
+        #     footer = self.env['ir.actions.report']._render_template("web.minimal_layout",
+        #                                                             values=dict(rcontext, subst=True, body=footer))
+        # else:
+        #     rcontext.update({
+        #         'css': '',
+        #         'o': self.env.user,
+        #         'res_company': self.env.company,
+        #     })
+        #     header = self.env['ir.actions.report']._render_template("web.external_layout", values=rcontext)
+        #     # header = header.decode('utf-8')  # Ensure that headers and footer are correctly encoded
+        #     spec_paperformat_args = {}
+        #     # Default header and footer in case the user customized web.external_layout and removed the header/footer
+        #     # headers = header.encode()
+        #     footer = b''
+        #     # parse header as new header contains header, body and footer
+        #     try:
+        #         root = lxml.html.fromstring(header)
+        #         match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
+        #
+        #         for node in root.xpath(match_klass.format('header')):
+        #             headers = lxml.html.tostring(node)
+        #             headers = self.env['ir.actions.report']._render_template("web.minimal_layout",
+        #                                                                      values=dict(rcontext, subst=True,
+        #                                                                                  body=headers))
+        #
+        #         for node in root.xpath(match_klass.format('footer')):
+        #             footer = lxml.html.tostring(node)
+        #             footer = self.env['ir.actions.report']._render_template("web.minimal_layout",
+        #                                                                     values=dict(rcontext, subst=True,
+        #                                                                                 body=footer))
+        #
+        #     except lxml.etree.XMLSyntaxError:
+        #         # headers = header.encode()
+        #         footer = b''
+        #     header = headers
 
-                for node in root.xpath(match_klass.format('header')):
-                    headers = lxml.html.tostring(node)
-                    headers = self.env['ir.actions.report']._render_template("web.minimal_layout",
-                                                                             values=dict(rcontext, subst=True,
-                                                                                         body=headers))
-
-                for node in root.xpath(match_klass.format('footer')):
-                    footer = lxml.html.tostring(node)
-                    footer = self.env['ir.actions.report']._render_template("web.minimal_layout",
-                                                                            values=dict(rcontext, subst=True,
-                                                                                        body=footer))
-
-            except lxml.etree.XMLSyntaxError:
-                headers = header.encode()
-                footer = b''
-            header = headers
-
-        landscape = False
-
+        spec_paperformat_args = {'data-report-margin-top': 10, 'data-report-header-spacing': 10}
         return self.env['ir.actions.report']._run_wkhtmltopdf(
             [body],
-            header=header, footer=footer,
+            header='',
             landscape=True,
             specific_paperformat_args=spec_paperformat_args
         )
