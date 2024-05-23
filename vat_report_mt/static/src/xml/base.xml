@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-
-
-<t t-extend="ListView.buttons" t-name="VatReport.buttons">
-    <t t-jquery="button.o_list_export_xlsx" t-operation="before">
-        <button type="button" action="print_pdf" class="btn btn-primary o_button_print_report">
-            Print report
-        </button>
+    <t t-name="vat_report_mt.buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <button type="button" class="btn btn-primary o_button_print_report" t-on-click="onVatReportClick">
+                Print report
+            </button>
+        </xpath>
     </t>
-</t>
-
 </templates>
