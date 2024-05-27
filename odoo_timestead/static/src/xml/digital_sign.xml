@@ -1,22 +1,48 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<templates id="template" xml:space="preserve">
-   <t t-name="FieldSignature">
-       <t t-if="widget.mode != 'readonly'">
-           <div class="panel panel-default mt16 mb0 oe_edit_only" id="drawsign">
-                <div class="panel-heading">
-                    <div class="pull-right">
-                        <a id="sign_clean" class="btn btn-xs oe_edit_only">Clear</a>
-                        <a class="oe_edit_only save_sign"></a>
-                    </div>
-                    <strong>Draw your signature</strong>
-                </div>
-                <div class="signature"></div>
-            </div>
-       </t>
-       <t t-if="widget.mode == 'readonly'">
-           <div class="panel panel-default mt16 mb0 " id="drawsign">
-                <div class="signature"></div>
-            </div>
-       </t>
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="odoo_timestead.SignatureField">
+        <NameAndSignature t-props="nameAndSignatureProps"/>
+<!--        <t t-if="value">-->
+<!--            <img class="o_signature img img-fluid"-->
+<!--                alt="Binary file"-->
+<!--                t-att-src="getUrl"-->
+<!--                t-att-name="props.name"-->
+<!--                t-att-style="sizeStyle"-->
+<!--                t-on-click="onClickSignature"-->
+<!--                t-on-error.stop="onLoadFailed"-->
+<!--                />-->
+<!--        </t>-->
+<!--        <t t-else="">-->
+<!--            <div class="o_signature o_signature_empty" t-att-style="sizeStyle" t-on-click="onClickSignature">-->
+<!--                <svg t-on-error.stop="onLoadFailed"></svg>-->
+<!--                <p>SIGNATURE</p>-->
+<!--            </div>-->
+<!--        </t>-->
     </t>
+
 </templates>
+
+
+<!--<?xml version="1.0" encoding="UTF-8" ?>-->
+<!--<templates id="template" xml:space="preserve">-->
+<!--   <t t-name="FieldSignature">-->
+<!--       <t t-if="widget.mode != 'readonly'">-->
+<!--           <div class="panel panel-default mt16 mb0 oe_edit_only" id="drawsign">-->
+<!--                <div class="panel-heading">-->
+<!--                    <div class="pull-right">-->
+<!--                        <a id="sign_clean" class="btn btn-xs oe_edit_only">Clear</a>-->
+<!--                        <a class="oe_edit_only save_sign"></a>-->
+<!--                    </div>-->
+<!--                    <strong>Draw your signature</strong>-->
+<!--                </div>-->
+<!--                <div class="signature"></div>-->
+<!--            </div>-->
+<!--       </t>-->
+<!--       <t t-if="widget.mode == 'readonly'">-->
+<!--           <div class="panel panel-default mt16 mb0 " id="drawsign">-->
+<!--                <div class="signature"></div>-->
+<!--            </div>-->
+<!--       </t>-->
+<!--    </t>-->
+<!--</templates>-->

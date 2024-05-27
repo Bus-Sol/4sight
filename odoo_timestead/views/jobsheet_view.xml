@@ -243,7 +243,7 @@
                                                readonly="status != 'created'"
                                         />
 <!--                                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
-                                        <field name="signature" widget="signature"
+                                        <field name="signature" widget="custom_signature"
                                                readonly="status != 'created'"
                                         />
 <!--                                                                                        attrs="{'invisible': [('status', 'in', ['signed','invoiced','confirmed'])]}"-->
