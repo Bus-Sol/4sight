@@ -185,8 +185,8 @@ class JobSheet(models.Model):
                 template = self.env.ref('sale.email_template_edi_sale')
             if obj._name == 'account.move':
                 template = self.env.ref('account.email_template_edi_invoice')
-            values = self.env['mail.compose.message'].sudo().generate_email_for_composer(
-                template.id, [obj.id],
+            values = self.env['mail.compose.message'].sudo()._generate_template_for_composer(
+                [obj.id],
                 ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to',
                  'attachment_ids', 'mail_server_id']
             )[obj.id]
@@ -563,7 +563,7 @@ class JobSheet(models.Model):
             lang = template._render_lang(self.ids)[self.id]
         ctx = dict(
             default_model="client.jobsheet",
-            default_res_id=self.id,
+            default_res_ids=self.ids,
             default_use_template=bool(template),
             default_template_id=template.id,
             default_composition_mode='comment',
@@ -597,7 +597,7 @@ class JobSheet(models.Model):
             lang = template._render_lang(self.ids)[self.id]
         ctx = dict(
             default_model="client.jobsheet",
-            default_res_id=self.id,
+            default_res_ids=self.ids,
             default_use_template=bool(template),
             default_template_id=template.id,
             default_composition_mode='comment',
