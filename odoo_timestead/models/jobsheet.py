@@ -185,8 +185,7 @@ class JobSheet(models.Model):
                 template = self.env.ref('sale.email_template_edi_sale')
             if obj._name == 'account.move':
                 template = self.env.ref('account.email_template_edi_invoice')
-            values = self.env['mail.compose.message'].sudo()._generate_template_for_composer(
-                [obj.id],
+            values = template.sudo()._generate_template([obj.id],
                 ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to',
                  'attachment_ids', 'mail_server_id']
             )[obj.id]
