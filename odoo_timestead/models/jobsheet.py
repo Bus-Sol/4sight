@@ -185,10 +185,17 @@ class JobSheet(models.Model):
                 template = self.env.ref('sale.email_template_edi_sale')
             if obj._name == 'account.move':
                 template = self.env.ref('account.email_template_edi_invoice')
+            print("====================TEMPLATE===========>",template)
             values = template.sudo()._generate_template([obj.id],
                 ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to',
                  'attachment_ids', 'mail_server_id']
             )[obj.id]
+            print("====================TEMPLATE===========>",values)
+            body = None
+            if 'body' in values:
+                body = values['body']
+            if 'body_html' in values:
+                body = values['body_html'] 
             mail_composer = self.env['mail.compose.message'].with_context(
                 default_use_template=bool(template.id),
                 mark_so_as_sent=True,
@@ -200,16 +207,16 @@ class JobSheet(models.Model):
                 default_model=obj._name,
                 default_template_id=template.id,
                 default_composition_mode='comment',
-                model_description=obj.type_name
+                model_description=obj.type_name,
+                active_ids = obj.ids
             ).sudo().create({
-                'res_id': obj.id,
                 'subject': values['subject'],
-                'body': values['body'],
+                'body': body,
                 'author_id': self.company_id.jobsheet_manager.partner_id.id if not self.env.user.has_group(
                     'odoo_timestead.group_jobsheet_manager') else self.env.user.partner_id.id,
                 'email_from': self.company_id.jobsheet_manager.login if not self.env.user.has_group(
                     'odoo_timestead.group_jobsheet_manager') else self.env.user.login,
-                'attachment_ids': values['attachments'],
+                'attachment_ids': values['attachment_ids'],
                 'partner_ids': [obj.partner_id.id],
                 'template_id': template and template.id or False,
                 'model': obj._name,
