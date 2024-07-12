@@ -100,6 +100,7 @@ class AccountMove(models.Model):
 
                 ## changes should be done here###
                 tax_amount=0
+                diff = 0
                 if lines.tax_totals:
                     tax_amount = lines.tax_totals['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_amount']
                     if lines.move_type in ['out_refund', 'in_refund']:
