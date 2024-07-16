@@ -102,11 +102,15 @@ class AccountMove(models.Model):
                 tax_amount=0
                 diff = 0
                 if lines.tax_totals:
-                    tax_amount = lines.tax_totals['groups_by_subtotal']['Untaxed Amount'][0]['tax_group_amount']
-                    if lines.move_type in ['out_refund', 'in_refund']:
-                        diff = (tax_amount - abs(total)) * -1 if tax_amount else 0
-                    else:
-                        diff = tax_amount - total if tax_amount else 0
+                    groups_by_subtotal = lines.tax_totals['groups_by_subtotal']
+                    if groups_by_subtotal:
+                        untax_amount = groups_by_subtotal['Untaxed Amount']
+                        if untax_amount:
+                            tax_amount = untax_amount[0]['tax_group_amount']
+                            if lines.move_type in ['out_refund', 'in_refund']:
+                                diff = (tax_amount - abs(total)) * -1 if tax_amount else 0
+                            else:
+                                diff = tax_amount - total if tax_amount else 0
                 if lines.move_type != 'entry':
                     if round(diff, 2) != 0:
                         if not exist_line:
