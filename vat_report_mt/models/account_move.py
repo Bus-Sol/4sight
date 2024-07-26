@@ -116,7 +116,7 @@ class AccountMove(models.Model):
                         if not exist_line:
                             line_id = self.env['account.move.line'].create({
                                 'move_id': lines.id,
-                                'exclude_from_invoice_tab': True,
+                                # 'exclude_from_invoice_tab': True,
                                 'is_vat_round': True,
                                 'tax_value': diff,
                                 'gross_value': diff,
