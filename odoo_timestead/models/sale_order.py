@@ -17,3 +17,11 @@ class SaleOrder(models.Model):
             self.env['client.jobsheet'].get_email_template_and_send(move)
 
         return res
+
+    _sql_constraints = [
+        # ('sale_subscription_state_coherence',
+        #  "CHECK(NOT (is_subscription=TRUE AND state = 'sale' AND subscription_state='1_draft'))",
+        #  "You cannot set to draft a confirmed subscription. Please create a new quotation"),
+        # ('check_start_date_lower_next_invoice_date', 'CHECK((next_invoice_date IS NULL OR start_date IS NULL) OR (next_invoice_date >= start_date))',
+        #  'The next invoice date of a sale order should be after its start date.'),
+    ]
