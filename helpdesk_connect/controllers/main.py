@@ -60,7 +60,7 @@ class TrialPortal(http.Controller):
         return values
 
 
-    @http.route('/portal/helpdesk/<string:team>', type='http',method='post', auth="public", website=True)
+    @http.route('/portal/helpdesk/<string:team>', type='http', methods=['POST'], auth="public", website=True)
     def get_portal_user(self, request, team = None):
         url = request.httprequest.url
         parsed = urlparse(url)

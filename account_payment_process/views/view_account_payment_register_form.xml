@@ -9,7 +9,7 @@
             <field name="journal_id" position="after">
                 <field name="edit_amount"/>
             </field>
-            <xpath expr="//group[@name='group2']/div[@name='amount_div']" position="attributes">
+            <!-- <xpath expr="//group[@name='group2']/div[@name='amount_div']" position="attributes">
                 <attribute name="attrs">{'invisible': ['|','|', ('can_edit_wizard', '=', False),('edit_amount', '=', True),'&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}</attribute>
             </xpath>
             <xpath expr="//group[@name='group2']/label[@for='amount']" position="attributes">
@@ -23,11 +23,11 @@
             </xpath>
             <xpath expr="//group[@name='group1']/field[@name='group_payment']" position="attributes">
                 <attribute name="attrs">{'invisible': ['|',('can_group_payments', '=', False),('edit_amount', '=', True)]}</attribute>
-            </xpath>
+            </xpath> -->
 
 
             <xpath expr="//group" position="after">
-                        <field name="invoice_line_ids" attrs="{'invisible': [('edit_amount', '=', False)]}">
+                        <field name="invoice_line_ids" invisible="edit_amount == False">
                             <tree editable="bottom" create="false" delete="false" mode="tree">
                                 <field name="date" readonly="1"/>
                                 <field name="name"/>
@@ -38,7 +38,7 @@
                                 <field name="company_id" invisible="1"/>
                             </tree>
                         </field>
-                        <group class="oe_subtotal_footer oe_left" colspan="4" attrs="{'invisible': [('edit_amount', '=', False)]}">
+                        <group class="oe_subtotal_footer oe_left" colspan="4" invisible="edit_amount == False">
                             <field name="amount_total" widget="monetary"/>
                         </group>
             </xpath>

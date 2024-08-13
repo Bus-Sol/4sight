@@ -1,23 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="acquirer_form_viva" model="ir.ui.view">
-        <field name="name">payment.acquirer.form.inherit</field>
-        <field name="model">payment.acquirer</field>
-        <field name="inherit_id" ref="payment.acquirer_form"/>
+    <record id="4sight_payment_provider_form" model="ir.ui.view">
+        <field name="name">VivaWallet Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <xpath expr='//group[@name="acquirer"]' position='inside'>
-                <group attrs="{'invisible': [('provider', '!=', 'viva')]}">
-                    <field name="viva_secret_key" attrs="{'required':[ ('provider', '=', 'viva'), ('state', '!=', 'disabled')]}" password="True"/>
-                    <field name="viva_publishable_key" attrs="{'required':[ ('provider', '=', 'viva'), ('state', '!=', 'disabled')]}" password="True"/>
-                    <field name="viva_client_id" attrs="{'required':[ ('provider', '=', 'viva'), ('state', '!=', 'disabled')]}" password="True"/>
-                    <field name="viva_client_secret" attrs="{'required':[ ('provider', '=', 'viva'), ('state', '!=', 'disabled')]}" password="True"/>
+            <group name="provider_credentials" position="inside">
+                <group invisible="code != 'viva'">
+                    <field name="viva_client_public"
+                           required = "code == 'viva' and state != 'disabled'"/>
+                    <field name="viva_client_secret" password="True"
+                           required = "code == 'viva' and state != 'disabled'"/>
+                    <a href="https://www.vivawallet.com/"
+                       target="_blank"
+                       colspan="2">
+                        Get to know Viva Wallet
+                    </a>
                 </group>
-            </xpath>
-            <xpath expr='//group[@name="acquirer_config"]' position='after'>
-                <group attrs="{'invisible': [('provider', '!=', 'viva')]}">
-                    <field name="viva_image_url"/>
-                </group>
-            </xpath>
+            </group>
+        </field>
+    </record>
+
+    <record id="4sight_payment_transaction_form" model="ir.ui.view">
+        <field name="name">VivaWallet Transaction Form</field>
+        <field name="model">payment.transaction</field>
+        <field name="inherit_id" ref="payment.payment_transaction_form"/>
+        <field name="arch" type="xml">
+            <field name="provider_reference" position="after">
+                <field name="order_code"
+                       readonly="1"
+                       invisible="provider_code != 'viva'"/>
+            </field>
         </field>
     </record>
 </odoo>

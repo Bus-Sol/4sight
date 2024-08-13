@@ -1,87 +1,50 @@
 # -*- coding: utf-8 -*-
+
 import logging
+
 import pprint
-import werkzeug
-import requests
-from odoo import http, _
+from odoo import _, http
 from odoo.http import request
-from odoo.addons.payment.models.payment_acquirer import ValidationError
+import requests
 
 _logger = logging.getLogger(__name__)
 
 
 class VivaController(http.Controller):
     _return_url = '/viva/return'
-    _cancel_url = '/payment/viva/cancel'
+    _cancel_url = '/viva/cancel'
 
-    @http.route(_return_url, type='http', csrf=False, auth='public')
-    def viva_return(self, **post):
-        try:
-            res = self.viva_validate_data(**post)
-        except ValidationError:
-            _logger.exception('Validating the Viva Wallet payment')
-        return werkzeug.utils.redirect('/payment/process')
+    @http.route(
+        [_return_url, _cancel_url], type='http', auth='public', methods=['GET', 'POST'], csrf=False,
+        save_session=False
+    )
+    def viva_return_from_redirect(self, **data):
 
-    @http.route(_cancel_url, type='http', auth="public", csrf=False)
-    def viva_cancel(self, **post):
-        """ When the user cancels its Paypal payment: GET on this route """
-        try:
-            res = self.viva_validate_data(**post)
-        except ValidationError:
-            _logger.exception('Unable to validate the Viva Wallet payment')
-        return werkzeug.utils.redirect('/payment/process')
+        _logger.info("Viva Wallet: received data:\n%s", pprint.pformat(data))
+        self.check_transaction(data)
+        request.env['payment.transaction'].sudo()._handle_feedback_data('viva', data)
+        return request.redirect('/payment/status')
 
-    def get_transaction_url(self, tx):
-        environment = 'prod' if tx.acquirer_id.state == 'enabled' else 'test'
-        _logger.info('environment: %s' % environment)
-        _logger.info('tx: %s' % tx)
-        return tx.acquirer_id._get_viva_urls(environment)['viva_rest_trx']
+    def check_transaction(self, data):
+        order_code = data.get('s', False)
+        transaction_id = data.get('t', False)
+        tx = False
+        if order_code:
+            tx = request.env['payment.transaction'].sudo().search([('order_code', '=', order_code)])
+        if transaction_id:
+            access_token = tx.request_token()
+            headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
+            headers['Authorization'] = "Bearer %s" % access_token
+            viva_url = 'https://api.vivapayments.com/checkout/v2/transactions/' if tx.acquirer_id.state == 'enabled' else 'https://demo-api.vivapayments.com/checkout/v2/transactions/'
+            _logger.info('viva_url: %s' % viva_url)
+            try:
+                urequest = requests.get(url=viva_url + transaction_id, headers=headers)
+                urequest.raise_for_status()
+            except Exception:
+                _logger.info("Viva Wallet: Could not find transaction ID")
+                return data
 
-    def viva_validate_data(self, **post):
-        _logger.info('Entering controller: %s' % post)
-        res = False
-        reference = post.get('s')
-        tx = None
-        viva_transaction_id = post.get('t', False)
-        if reference:
-            tx = request.env['payment.transaction'].sudo().search([('order_code', '=', reference)])
-        if not tx:
-            _logger.warning('Received notification for unknown payment reference')
-            return False
-        if not viva_transaction_id:
-            _logger.warning('Received notification for unknown payment transaction reference')
-            return False
-        access_token = tx.acquirer_id.request_token()
-        headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
-        headers['Authorization'] = "Bearer %s" % access_token
-        viva_url = self.get_transaction_url(tx) + viva_transaction_id
-        _logger.info('viva_url: %s' % viva_url)
-        try:
-            urequest = requests.get(url=viva_url, headers=headers)
-            urequest.raise_for_status()
-        except Exception as e:
-            raise ValidationError(_('The Viva Wallet proxy is not reachable, please try again later.'))
-
-        resp = urequest.json()
-        _logger.info('resp: %s' % resp)
-        if 'statusId' in resp:
-            if resp['statusId'] == 'F':
-                _logger.info('Viva Wallet: validated data')
-                post['cardNumber'] = resp['cardNumber']
-                post['statusId'] = resp['statusId']
-                res = request.env['payment.transaction'].sudo().form_feedback(post, 'viva')
-            elif resp['statusId'] in ['A', 'C']:
-                _logger.info('Viva Wallet: Captured/Activated data')
-                post['cardNumber'] = resp['cardNumber']
-                post['statusId'] = resp['statusId']
-                res = request.env['payment.transaction'].sudo().form_feedback(post, 'viva')
-            elif resp['statusId'] == 'E':
-                _logger.warning('Viva Wallet: answered INVALID/FAIL on data verification')
-                if tx:
-                    tx._set_transaction_error('Invalid response from Viva Wallet. Please contact your administrator.')
-            else:
-                _logger.warning(
-                    'Viva Wallet: unrecognized Viva Wallet answer, received ERROR instead of VERIFIED/SUCCESS or INVALID/FAIL')
-                if tx:
-                    tx._set_transaction_error('Unrecognized error from Viva Wallet. Please contact your administrator.')
-        return res
+            resp = urequest.json()
+            if resp:
+                data.update(resp)
+        return data

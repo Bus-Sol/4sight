@@ -4,10 +4,10 @@ from odoo.http import request
 import json
 from psycopg2 import IntegrityError
 from odoo.exceptions import ValidationError, UserError
-from odoo.addons.website_form.controllers.main import WebsiteForm
+from odoo.addons.website.controllers import form
 
 
-class WebsiteForm(WebsiteForm):
+class WebsiteForm(form.WebsiteForm):
     def _handle_website_form(self, model_name, **kwargs):
             model_record = request.env['ir.model'].sudo().search(
                 [('model', '=', model_name), ('website_form_access', '=', True)])

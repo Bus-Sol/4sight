@@ -163,11 +163,11 @@
                                         1
                                     </div>
                                     <div class="col-2 text-right" style="border-right:1px solid #000;">
-                                        <t t-esc="lines['1'][0]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
                                     <div class="col-1">
-                                        <t t-esc="lines['1'][1]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
 
                                 </div>
                                 <div class="row row-border">
@@ -179,11 +179,11 @@
                                         2
                                     </div>
                                     <div class="col-2 text-right" style="border-right:1px solid #000;">
-                                        <t t-esc="lines['2'][0]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
                                     <div class="col-1">
-                                        <t t-esc="lines['2'][1]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
 
                                 </div>
                                 <div class="row row-border">
@@ -194,11 +194,11 @@
                                         3
                                     </div>
                                     <div class="col-2 text-right" style="border-right:1px solid #000;">
-                                        <t t-esc="lines['3'][0]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
                                     <div class="col-1">
-                                        <t t-esc="lines['3'][1]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
 
                                 </div>
                                 <div class="row row-border">
@@ -211,11 +211,11 @@
                                         4
                                     </div>
                                     <div class="col-2 text-right" style="border-right:1px solid #000;">
-                                        <t t-esc="lines['4'][0]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
                                     <div class="col-1">
-                                        <t t-esc="lines['4'][1]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
 
                                 </div>
                                 <div class="row row-border">
@@ -227,11 +227,11 @@
                                         5
                                     </div>
                                     <div class="col-2 text-right" style="border-right:1px solid #000;">
-                                        <t t-esc="lines['5'][0]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
                                     <div class="col-1">
-                                        <t t-esc="lines['5'][1]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
 
                                 </div>
                                 <div class="row row-border">
@@ -243,11 +243,11 @@
                                         6
                                     </div>
                                     <div class="col-2 text-right" style="border-right:1px solid #000;">
-                                        <t t-esc="lines['6'][0]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
                                     <div class="col-1">
-                                        <t t-esc="lines['6'][1]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
 
                                 </div>
                                 <div class="row row-border">
@@ -259,11 +259,11 @@
                                         7
                                     </div>
                                     <div class="col-2 text-right" style="border-right:1px solid #000;">
-                                        <t t-esc="lines['7'][0]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
                                     <div class="col-1">
-                                        <t t-esc="lines['7'][1]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
 
                                 </div>
                                 <div class="row row-border">
@@ -275,11 +275,11 @@
                                         8A
                                     </div>
                                     <div class="col-2 text-right" style="border-right:1px solid #000;">
-                                        <t t-esc="lines['8a'][0]"/>
-                                    </div>
+
+<p>2</p>                                    </div>
                                     <div class="col-1">
-                                        <t t-esc="lines['8a'][1]"/>
-                                    </div>
+
+<p>2</p>                                    </div>
 
                                 </div>
                                 <div class="row row-border">
@@ -291,11 +291,11 @@
                                         8B
                                     </div>
                                     <div class="col-2 text-right" style="border-right:1px solid #000;">
-                                        <t t-esc="lines['8b'][0]"/>
-                                    </div>
+
+<p>2</p>                                    </div>
                                     <div class="col-1">
-                                        <t t-esc="lines['8b'][1]"/>
-                                    </div>
+
+<p>2</p>                                    </div>
 
                                 </div>
                                 <div class="row row-border">
@@ -307,11 +307,11 @@
                                         9
                                     </div>
                                     <div class="col-2 text-right" style="border-right:1px solid #000;">
-                                        <t t-esc="lines['9'][0]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
                                     <div class="col-1">
-                                        <t t-esc="lines['9'][1]"/>
-                                    </div>
+
+ <p>2</p>                                   </div>
 
                                 </div>
                                 <div class="row row-border">
@@ -324,11 +324,11 @@
                                         10
                                     </div>
                                     <div class="col-2 text-right" style="border-right:1px solid #000;">
-                                        <t t-esc="lines['10'][0]"/>
-                                    </div>
+
+<p>2</p>                                    </div>
                                     <div class="col-1">
-                                        <t t-esc="lines['10'][1]"/>
-                                    </div>
+
+<p>2</p>                                    </div>
 
                                 </div>
 
@@ -341,10 +341,12 @@
                                         11A
                                     </div>
                                     <div class="col-2 text-right" style="border-right:1px solid #000;">
-                                        <t t-esc="lines['11a'][0]"/>
+
+                                        <p>2</p>
                                     </div>
                                     <div class="col-1">
-                                        <t t-esc="lines['11a'][1]"/>
+
+                                        <p>2</p>
                                     </div>
 
                                 </div>
@@ -358,10 +360,12 @@
                                         11B
                                     </div>
                                     <div class="col-2 text-right" style="border-right:1px solid #000;">
-                                        <t t-esc="lines['11b'][0]"/>
+
+                                        <p>2</p>
                                     </div>
                                     <div class="col-1">
-                                        <t t-esc="lines['11b'][1]"/>
+
+                                        <p>2</p>
                                     </div>
 
                                 </div>

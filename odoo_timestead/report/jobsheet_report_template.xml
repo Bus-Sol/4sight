@@ -6,7 +6,8 @@
             <t t-set="address">
                 <div t-field="doc.partner_id"
                      t-options='{"widget": "contact", "fields": ["address", "name","phone","email"], "no_marker": True}'/>
-                <p t-if="doc.partner_id.vat"><t t-esc="'VAT '"/>
+                <p t-if="doc.partner_id.vat">
+                    <t t-esc="'VAT '"/>
                     <span t-field="doc.partner_id.vat"/>
                 </p>
             </t>
@@ -35,25 +36,25 @@
                     <div class="col-auto col-2 mw-100 mb-2">
                         <strong>Status:</strong>
                         <p>
-                        <t t-if="doc.status == 'created'">
-                            <span class="badge badge-pill badge-light">
-                                <span class="">Created</span>
-                            </span>
-                        </t>
-                        <t t-if="doc.status == 'signed'">
-                            <span class="badge badge-pill badge-info">
-                                <i class="fa fa-fw fa-pencil-square-o" aria-label="Signed" title="Signed"
-                                   role="img"></i>
-                                <span class="">Signed</span>
-                            </span>
-                        </t>
-                        <t t-if="doc.status == 'invoiced'">
-                            <span class="badge badge-pill badge-success">
-                                <i class="fa fa-fw fa-check" aria-label="Paid" title="Paid"
-                                   role="img"></i>
-                                <span class="">Invoiced</span>
-                            </span>
-                        </t>
+                            <t t-if="doc.status == 'created'">
+                                <span class="badge badge-pill badge-light">
+                                    <span class="">Created</span>
+                                </span>
+                            </t>
+                            <t t-if="doc.status == 'signed'">
+                                <span class="badge badge-pill badge-info">
+                                    <i class="fa fa-fw fa-pencil-square-o" aria-label="Signed" title="Signed"
+                                       role="img"/>
+                                    <span class="">Signed</span>
+                                </span>
+                            </t>
+                            <t t-if="doc.status == 'invoiced'">
+                                <span class="badge badge-pill badge-success">
+                                    <i class="fa fa-fw fa-check" aria-label="Paid" title="Paid"
+                                       role="img"/>
+                                    <span class="">Invoiced</span>
+                                </span>
+                            </t>
                         </p>
 
                     </div>
@@ -93,8 +94,12 @@
                 <br/>
                 <t t-if="doc.type not in ['postpaid','contract'] and doc.move_ids">
                     <small class="font-italic">
-                        In this Jobsheet we went <span t-esc="abs(doc.remaining_hours)" t-options='{"widget": "float_time"}'></span> above the initial hours,
-                        An invoice <span t-field="doc.move_ids[0].name"/> has been generated and sent.
+                        In this Jobsheet we went
+                        <span t-esc="abs(doc.remaining_hours)" t-options='{"widget": "float_time"}'/>
+                        above the initial hours,
+                        An invoice
+                        <span t-field="doc.move_ids[0].name"/>
+                        has been generated and sent.
                     </small>
                 </t>
                 <br/>
@@ -132,23 +137,23 @@
 
                 <t t-if="doc.amount_total">
                     <div class="clearfix" name="so_total_summary">
-                    <div id="total" class="row" name="total">
-                        <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
-                            <table class="table table-sm">
+                        <div id="total" class="row" name="total">
+                            <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
+                                <table class="table table-sm">
 
-                                <tr class="border-black o_total">
-                                    <td name="td_amount_total_label">
-                                        <strong>Total</strong>
-                                    </td>
-                                    <td name="td_amount_total" class="text-right">
-                                        <span t-field="doc.amount_total"
-                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
-                                    </td>
-                                </tr>
-                            </table>
+                                    <tr class="border-black o_total">
+                                        <td name="td_amount_total_label">
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td name="td_amount_total" class="text-right">
+                                            <span t-field="doc.amount_total"
+                                                  t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
                 </t>
 
                 <div t-if="doc.signature" class="mt32 ml64 mr4" name="signature">

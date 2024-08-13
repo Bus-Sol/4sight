@@ -65,14 +65,14 @@
                                 <t t-if="jobsheet.status == 'signed'">
                                     <span class="badge badge-pill badge-info">
                                         <i class="fa fa-fw fa-pencil-square-o" aria-label="Signed" title="Signed"
-                                           role="img"></i>
+                                           role="img"/>
                                         <span class="d-none d-md-inline">Signed</span>
                                     </span>
                                 </t>
                                 <t t-if="jobsheet.status == 'invoiced'">
                                     <span class="badge badge-pill badge-success">
                                         <i class="fa fa-fw fa-check" aria-label="Paid" title="Paid"
-                                           role="img"></i>
+                                           role="img"/>
                                         <span class="d-none d-md-inline">Invoiced</span>
                                     </span>
                                 </t>
@@ -126,8 +126,11 @@
                     <t t-set="entries">
                         <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
                             <li class="list-group-item flex-grow-1">
-                                <a t-if="jobsheet.status in ['created','sent']" role="button" id="o_sale_portal_paynow" class="btn btn-primary btn-block mb8" data-toggle="modal" data-target="#modalaccept" href="#">
-                                    <i class="fa fa-check"/><span>Accept &amp; Sign</span>
+                                <a t-if="jobsheet.status in ['created','sent']" role="button" id="o_sale_portal_paynow"
+                                   class="btn btn-primary btn-block mb8" data-toggle="modal" data-target="#modalaccept"
+                                   href="#">
+                                    <i class="fa fa-check"/>
+                                    <span>Accept &amp; Sign</span>
                                 </a>
                                 <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
                                     <div class="btn-group  flex-grow-1 mr-1 mb-1">
@@ -216,7 +219,7 @@
 
                     <div class="o_portal_html_view shadow p-3">
                         <div class="o_portal_html_loader text-center">
-                            <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw text-black-50"></i>
+                            <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw text-black-50"/>
                         </div>
                         <iframe id="invoice_html" class="mt8 mb8" width="100%" height="100%" frameborder="0"
                                 scrolling="no" t-att-src="jobsheet.get_portal_url(report_type='html')"/>

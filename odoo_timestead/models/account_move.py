@@ -2,6 +2,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
+
 class AccountMove(models.Model):
     _inherit = "account.move"
 
@@ -11,11 +12,11 @@ class AccountMove(models.Model):
     @api.depends('job_ids')
     def _get_jobsheets(self):
         for order in self:
-            order.job_count = len(order.job_ids)
-
+            jobsheets = self.env['client.jobsheet'].search([('move_ids', 'in', order.ids)])
+            order.job_ids = jobsheets
+            order.job_count = len(jobsheets)
 
     def action_view_jobsheets(self):
-
         jobsheets = self.mapped('job_ids')
         action = self.env["ir.actions.actions"]._for_xml_id("odoo_timestead.action_jobsheets")
         if len(jobsheets) > 1:
@@ -23,7 +24,7 @@ class AccountMove(models.Model):
         elif len(jobsheets) == 1:
             form_view = [(self.env.ref('odoo_timestead.view_client_jobsheet_form').id, 'form')]
             if 'views' in action:
-                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+                action['views'] = form_view + [(state, view) for state, view in action['views'] if view != 'form']
             else:
                 action['views'] = form_view
             action['res_id'] = jobsheets.id

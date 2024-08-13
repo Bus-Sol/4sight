@@ -7,6 +7,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 class JobSheet(models.Model):
     _name = "client.jobsheet"
     _inherit = ['mail.thread', 'portal.mixin', 'timer.mixin', 'mail.activity.mixin']
@@ -20,14 +21,14 @@ class JobSheet(models.Model):
     partner_id = fields.Many2one('res.partner', 'Client', domain=get_list_partners)
     service_domain = fields.Many2many('product.template', compute='compute_service_domain')
     service_id = fields.Many2one('product.template', domain="[('id', 'in', service_domain)]")
-    user_id = fields.Many2one('res.users', 'Technician', required=True, default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', 'Technicien', required=True, default=lambda self: self.env.user)
     brief = fields.Char('Brief')
-    date_order = fields.Datetime(string='Date (DO NOT USE)', readonly=True, index=True, default=fields.Datetime.now)
+    date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     details = fields.Text(string='Details')
     jobsheet_type_id = fields.Many2one('jobsheet.type', 'Jobsheet Types')
-    start_date = fields.Datetime(string='Job Start Time')
+    start_date = fields.Datetime(string='Start')
     jobsheet_start = fields.Date(string='Jobsheet Start', compute='compute_start_job', store=True)
-    end_date = fields.Datetime(string='Job End Time')
+    end_date = fields.Datetime(string='End')
     jobsheet_line = fields.One2many('jobsheet.line', 'jobsheet_id', 'Jobsheet Details')
     status = fields.Selection(
         [('created', 'Created'), ('confirmed', 'Confirmed'), ('sent', 'Email Sent'), ('signed', 'Signed by Client'),
@@ -57,10 +58,11 @@ class JobSheet(models.Model):
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True,
                                    help="Time spent on this task, excluding its sub-tasks.")
     task_id = fields.Many2one('project.task', compute='compute_task_id', store=True)
-    planned_hours = fields.Float(related='task_id.planned_hours')
+    planned_hours = fields.Float(string='planned hours') # changed related='task_id.planned_hours'
     remaining_hours = fields.Float(related='task_id.remaining_hours')
     progress = fields.Float(related='task_id.progress')
-    sale_order_id = fields.Many2one('sale.order', string='Next Sale Order')
+    sale_order_id = fields.Many2one('sale.order', string='Next Sale Order',
+                                    groups='odoo_timestead.group_jobsheet_manager')
     tick_postpaid = fields.Boolean('Is out of contract', default=False)
     url_detail = fields.Char(string='Link for Details')
     ticket_id = fields.Many2one('helpdesk.ticket')
@@ -146,7 +148,6 @@ class JobSheet(models.Model):
 
     @api.depends('project_id')
     def compute_task_id(self):
-
         SaleOrderLine = self.env['sale.order.line']
         ProjectTask = self.env['project.task']
         task_id = False
@@ -162,7 +163,7 @@ class JobSheet(models.Model):
                     task_id = tasks.id
 
                 elif len(tasks) > 1:
-                    inprogress_task = tasks.filtered(lambda t: 0 < t.progress < 100)
+                    inprogress_task = tasks.filtered(lambda t: 0 < round(t.progress) < 100)
                     if inprogress_task:
                         task_id = inprogress_task[0].id
                     else:
@@ -177,22 +178,24 @@ class JobSheet(models.Model):
                 task_id = False
             job.task_id = task_id
 
-
-    def get_email_template_and_send(self, obj, create_invoice_after_confirm_so=False):
+    def get_email_template_and_send(self, obj):
         template = False
         if obj:
             if obj._name == 'sale.order':
                 template = self.env.ref('sale.email_template_edi_sale')
             if obj._name == 'account.move':
-                if create_invoice_after_confirm_so:
-                    template = self.env.ref('odoo_timestead.jobsheet_email_template_edi_invoice')
-                else:
-                    template = self.env.ref('account.email_template_edi_invoice')
-            values = self.env['mail.compose.message'].sudo().generate_email_for_composer(
-                template.id, [obj.id],
+                template = self.env.ref('account.email_template_edi_invoice')
+            print("====================TEMPLATE===========>",template)
+            values = template.sudo()._generate_template([obj.id],
                 ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to',
                  'attachment_ids', 'mail_server_id']
             )[obj.id]
+            print("====================TEMPLATE===========>",values)
+            body = None
+            if 'body' in values:
+                body = values['body']
+            if 'body_html' in values:
+                body = values['body_html'] 
             mail_composer = self.env['mail.compose.message'].with_context(
                 default_use_template=bool(template.id),
                 mark_so_as_sent=True,
@@ -204,28 +207,25 @@ class JobSheet(models.Model):
                 default_model=obj._name,
                 default_template_id=template.id,
                 default_composition_mode='comment',
-                model_description=obj.type_name
+                model_description=obj.type_name,
+                active_ids = obj.ids
             ).sudo().create({
-                'res_id': obj.id,
                 'subject': values['subject'],
-                'body': values['body'],
+                'body': body,
                 'author_id': self.company_id.jobsheet_manager.partner_id.id if not self.env.user.has_group(
                     'odoo_timestead.group_jobsheet_manager') else self.env.user.partner_id.id,
                 'email_from': self.company_id.jobsheet_manager.login if not self.env.user.has_group(
                     'odoo_timestead.group_jobsheet_manager') else self.env.user.login,
-                'attachment_ids': values['attachments'],
+                'attachment_ids': values['attachment_ids'],
                 'partner_ids': [obj.partner_id.id],
                 'template_id': template and template.id or False,
                 'model': obj._name,
                 'composition_mode': 'comment'})
-            mail_composer.action_send_mail()
+            mail_composer._action_send_mail()
 
     def create_invoice_from_job(self, buffer):
         service = self.partner_id.service_ids.filtered(
             lambda s: s.product_id == self.task_id.sale_line_id.product_id.product_tmpl_id)[0]
-        narration = ''
-        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
-            narration = self.company_id.invoice_terms or self.env.company.invoice_terms
         invoice_id = self.env['account.move'].sudo().create({
             'partner_id': self.partner_id.id,
             'job_ids': [(6, 0, self.ids)],
@@ -234,7 +234,6 @@ class JobSheet(models.Model):
             'user_id': self.company_id.jobsheet_manager.id if not self.env.user.has_group(
                 'odoo_timestead.group_jobsheet_manager') else self.env.uid,
             'partner_bank_id': self.company_id.partner_id.bank_ids[:1].id,
-            'narration': narration,
             'invoice_line_ids': [[0, 0, {
                 "name": self.name,
                 "quantity": buffer,
@@ -267,7 +266,7 @@ class JobSheet(models.Model):
                                                 ('product_id', '=', self.service_id.product_variant_id.id),
                                                 ('state', '=', 'sale')])
         task = ProjectTask.search(
-            [('sale_line_id', 'in', sale_order_line.ids), ('id', '!=', self.task_id.id), ('progress', '<', 99.5)],
+            [('sale_line_id', 'in', sale_order_line.ids), ('id', '!=', self.task_id.id), ('remaining_hours', '>', 0)],
             limit=1)
 
         if not task:
@@ -299,13 +298,16 @@ class JobSheet(models.Model):
             pass
         else:
             if last_progress >= 100:
+                print("\n ++++++++++ 1 ++++++++++")
                 raise UserError(_('You cannot go over 100%, please contact your administrator'))
+        print("\n +++++++ progress last_progress ++++++++", progress, last_progress, remaining_hour)
         if progress >= 75 and last_progress < 75:
             #### if we're surpassing 75% #####
             if remaining_hour < 0:
                 buffer = current_service.extra_hour
                 if abs(remaining_hour) > buffer or buffer <= 0:
                     print(abs(remaining_hour))
+                    print("\n ++++++++++ 2 ++++++++++")
                     raise UserError(_('You cannot go over 100%, please contact your administrator'))
                 else:
                     current_service.extra_hour = 0
@@ -323,21 +325,20 @@ class JobSheet(models.Model):
                     lambda s: s.product_id.product_tmpl_id == self.service_id).sudo().order_id
                 if sale_order:
                     self.sudo().sale_order_id = sale_order[0]
-                else:
-                    self.create_sale_order_from_job(self)
         ###########"
         if last_progress >= 75:
             if remaining_hour < 0:
                 buffer = current_service.extra_hour
                 if abs(remaining_hour) > buffer or buffer <= 0:
                     print(abs(remaining_hour))
+                    print("\n ++++++++++ 3 ++++++++++")
                     raise UserError(_('You cannot go over 100%, please contact your administrator'))
                 else:
                     current_service.extra_hour = 0
                     self.create_invoice_from_job(abs(remaining_hour))
-                    self.get_email_template_and_send(self.sudo().sale_order_id)
+                    self.get_email_template_and_send(self.sale_order_id)
             else:
-                self.get_email_template_and_send(self.sudo().sale_order_id)
+                self.get_email_template_and_send(self.sale_order_id)
 
     def create_account_analytic_line(self, values):
         #### This is only in Prepaid mode ###
@@ -347,11 +348,16 @@ class JobSheet(models.Model):
             SaleOrderLine = self.env['sale.order.line']
             ProjectTask = self.env['project.task']
             check_next_sale_order = False
-            sale_order_line = SaleOrderLine.search([('order_partner_id', '=', self.partner_id.id),
-                                                    ('product_id', '=', self.service_id.product_variant_id.id),
-                                                    ('state', '=', 'sale')])
-            task = ProjectTask.search([('sale_line_id', 'in', sale_order_line.ids), ('id', '!=', self.task_id.id),
-                                       ('remaining_hours', '>', 0)], limit=1)
+            sale_order_line = SaleOrderLine.search([
+                ('order_partner_id', '=', self.partner_id.id),
+                ('product_id', '=', self.service_id.product_variant_id.id),
+                ('state', '=', 'sale')
+            ])
+            task = ProjectTask.search([
+                ('sale_line_id', 'in', sale_order_line.ids),
+                ('id', '!=', self.task_id.id),
+                ('remaining_hours', '>', 0)
+            ], limit=1)
             if task:
                 sale_order = task.sudo().sale_line_id.sudo().order_id
                 check_next_sale_order = sale_order[0] if sale_order else False
@@ -520,13 +526,13 @@ class JobSheet(models.Model):
         for job_id in self:
             job_id.access_url = '/my/jobsheets/%s' % (job_id.id)
 
-    def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
-
+    def _get_share_url(self, redirect=False, signup_partner=False, pid=None, share_token=True):
+    # def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
         self.ensure_one()
         if self:
             auth_param = url_encode(self.partner_id.signup_get_auth_param()[self.partner_id.id])
             return self.get_portal_url(query_string='&%s' % auth_param)
-        return super(JobSheet, self)._get_share_url(redirect, signup_partner, pid)
+        return super(JobSheet, self)._get_share_url(redirect, signup_partner, pid, share_token)
 
     def _get_report_base_filename(self):
         self.ensure_one()
@@ -534,7 +540,6 @@ class JobSheet(models.Model):
 
     @api.depends('move_ids')
     def _get_invoiced(self):
-
         for order in self:
             invoices = self.env['account.move'].sudo().search(
                 [('move_type', 'in', ('out_invoice', 'out_refund'))]).filtered(
@@ -557,7 +562,6 @@ class JobSheet(models.Model):
         self.status = 'created'
 
     def action_jobsheet_send(self):
-
         self.ensure_one()
         template = self.env.ref('odoo_timestead.email_template_jobsheet', raise_if_not_found=False)
         lang = self.env.context.get('lang')
@@ -565,7 +569,7 @@ class JobSheet(models.Model):
             lang = template._render_lang(self.ids)[self.id]
         ctx = dict(
             default_model="client.jobsheet",
-            default_res_id=self.id,
+            default_res_ids=self.ids,
             default_use_template=bool(template),
             default_template_id=template.id,
             default_composition_mode='comment',
@@ -592,7 +596,6 @@ class JobSheet(models.Model):
         return super(JobSheet, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
     def action_send_copy(self):
-
         self.ensure_one()
         template = self.env.ref('odoo_timestead.email_template_jobsheet', raise_if_not_found=False)
         lang = self.env.context.get('lang')
@@ -600,7 +603,7 @@ class JobSheet(models.Model):
             lang = template._render_lang(self.ids)[self.id]
         ctx = dict(
             default_model="client.jobsheet",
-            default_res_id=self.id,
+            default_res_ids=self.ids,
             default_use_template=bool(template),
             default_template_id=template.id,
             default_composition_mode='comment',
@@ -620,9 +623,6 @@ class JobSheet(models.Model):
         }
 
     def _prepare_invoice(self, ref):
-        narration = ''
-        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
-            narration = self.company_id.invoice_terms or self.env.company.invoice_terms
         invoice_vals = {
             'ref': ref if ref else self.name or '',
             'move_type': 'out_invoice',
@@ -631,25 +631,21 @@ class JobSheet(models.Model):
             'invoice_user_id': self.company_id.jobsheet_manager.id,
             'invoice_origin': ref if ref else self.name or '',
             'partner_bank_id': self.company_id.partner_id.bank_ids[:1].id,
-            'narration': narration,
             'invoice_line_ids': [],
         }
-
         return invoice_vals
 
     def _prepare_account_move_line_from_rate(self):
         self.ensure_one()
         current_service = self.partner_id.service_ids.filtered(
             lambda s: s.product_id == self.service_id)[0]
-
-        fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id)
-        tax = fiscal_position_id.map_tax(self.service_id.taxes_id, partner=self.partner_id)
         res = {
             'name': '%s' % (self.name),
+            # 'product_id': product_service.id,
             'product_uom_id': self.env.ref('uom.product_uom_hour').id,
             'quantity': self.effective_hours,
             'price_unit': current_service.hour,
-            'tax_ids': [(6, 0, tax.ids)],
+            'tax_ids': [(6, 0, self.service_id.taxes_id.ids)],
         }
         return res
 
@@ -671,7 +667,6 @@ class JobSheet(models.Model):
             return self.action_open_invoice(moves)
 
     def action_open_invoice(self, invoices):
-
         return {
             'type': 'ir.actions.act_window',
             'view_type': 'form',
@@ -735,7 +730,7 @@ class JobSheetline(models.Model):
     product_id = fields.Many2one(
         'product.product', string='Product',
         domain="[('sale_ok', '=', True),('type', '=', 'consu')]",
-        change_default=True, ondelete='restrict', check_company=True)
+        change_default=True, ondelete='restrict') # , check_company=True
     product_uom_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True, default=1.0)
 
     def _prepare_account_move_line(self):

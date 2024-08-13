@@ -9,13 +9,12 @@ _logger = logging.getLogger(__name__)
 class AccountReportVatCy(models.AbstractModel):
 
     _description = "Vat Report CY"
-    _inherit = "account.generic.tax.report"
+    _inherit = "account.report.custom.handler"
 
-    def _get_reports_buttons(self):
-        res = super(AccountReportVatCy, self)._get_reports_buttons()
-        if self.env.user.has_group('account.group_account_user') and self.env.company.country_code =="CY":
-            res.append({'name': _('Print VAT (CY)'), 'sequence': 3, 'action': 'print_cy_pdf', 'file_export_type': _('PDF')})
-        return res
+
+    def _custom_options_initializer(self, report, options, previous_options=None):
+        super()._custom_options_initializer(report, options, previous_options=previous_options)
+        options['buttons'].append({'name': _('Print VAT (CY)'), 'sequence': 3, 'action': 'print_cy_pdf', 'file_export_type': _('PDF')})
 
     def print_cy_pdf(self, options):
         return {
@@ -40,11 +39,13 @@ class AccountReportVatCy(models.AbstractModel):
                     lines_data[k] = (int(split_value[0]),format_cent)
                 else:
                     lines_data[k] = (int(split_value[0]), '00')
-    def get_pdf(self, options, minimal_layout=True, **kwargs ):
+
+    def get_pdf(self, options, minimal_layout=True, **kwargs):
         if kwargs.get('vat_report_cy', False):
             if not config['test_enable']:
                 self = self.with_context(commit_assetsbundle=True)
-            lines = self._get_lines(options)
+            report = self.env.ref('account.generic_tax_report')
+            lines = self._get_dynamic_lines(report, options, 'default')
             _logger.info('Standard Lines**** %s', lines)
             new_lines = []
             lines_data = {}
@@ -52,20 +53,21 @@ class AccountReportVatCy(models.AbstractModel):
                 if "total_" in str(line['id']):
                     new_lines.append(line)
             _logger.info('NEw Lines**** %s', new_lines)
-            lines_data['1'] = new_lines[0]['columns'][0]['balance']
-            lines_data['2'] = new_lines[1]['columns'][0]['balance']
-            lines_data['3'] = new_lines[2]['columns'][0]['balance']
-            lines_data['4'] = new_lines[3]['columns'][0]['balance']
-            lines_data['5'] = new_lines[4]['columns'][0]['balance']
-            lines_data['6'] = new_lines[5]['columns'][0]['balance']
-            lines_data['7'] = new_lines[6]['columns'][0]['balance']
-            lines_data['8a'] = new_lines[7]['columns'][0]['balance']
-            lines_data['8b'] = new_lines[8]['columns'][0]['balance']
-            lines_data['9'] = new_lines[9]['columns'][0]['balance']
-            lines_data['10'] = new_lines[10]['columns'][0]['balance']
-            lines_data['11a'] = new_lines[11]['columns'][0]['balance']
-            lines_data['11b'] = new_lines[12]['columns'][0]['balance']
-            self.extract_fractional_part(lines_data)
+            if new_lines:
+                lines_data['1'] = new_lines[0]['columns'][0]['balance']
+                lines_data['2'] = new_lines[1]['columns'][0]['balance']
+                lines_data['3'] = new_lines[2]['columns'][0]['balance']
+                lines_data['4'] = new_lines[3]['columns'][0]['balance']
+                lines_data['5'] = new_lines[4]['columns'][0]['balance']
+                lines_data['6'] = new_lines[5]['columns'][0]['balance']
+                lines_data['7'] = new_lines[6]['columns'][0]['balance']
+                lines_data['8a'] = new_lines[7]['columns'][0]['balance']
+                lines_data['8b'] = new_lines[8]['columns'][0]['balance']
+                lines_data['9'] = new_lines[9]['columns'][0]['balance']
+                lines_data['10'] = new_lines[10]['columns'][0]['balance']
+                lines_data['11a'] = new_lines[11]['columns'][0]['balance']
+                lines_data['11b'] = new_lines[12]['columns'][0]['balance']
+                self.extract_fractional_part(lines_data)
             date_from = options['date']['date_from']
             date_to = options['date']['date_to']
             base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -91,6 +93,16 @@ class AccountReportVatCy(models.AbstractModel):
                 specific_paperformat_args=spec_paperformat_args
             )
         return super(AccountReportVatCy, self).get_pdf(options=options)
+
+    @api.model
+    def _get_export_mime_type(self, file_type):
+        """ Returns the MIME type associated with a report export file type,
+        for attachment generation.
+        """
+        type_mapping = {
+            'pdf': 'application/pdf',
+        }
+        return type_mapping.get(file_type, False)
 
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'

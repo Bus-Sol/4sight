@@ -66,7 +66,7 @@ class AccountPaymentRegister(models.TransientModel):
 
         to_reconcile = []
         if edit_mode:
-            payment_vals = self._create_payment_vals_from_wizard()
+            payment_vals = self._create_payment_vals_from_wizard('batch_result')
             payment_vals_list = [payment_vals]
             to_reconcile.append(batches[0]['lines'])
         else:
@@ -139,7 +139,7 @@ class AccountPaymentRegister(models.TransientModel):
         if self.post_payment:
             payments.action_post()
 
-        domain = [('account_internal_type', 'in', ('receivable', 'payable')), ('reconciled', '=', False)]
+        domain = [('account_type', 'in', ('asset_receivable', 'liability_payable')), ('reconciled', '=', False)]
         for payment, lines in zip(payments, to_reconcile):
 
             # When using the payment tokens, the payment could not be posted at this point (e.g. the transaction failed)

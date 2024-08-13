@@ -1,30 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
         <record id="view_designation_tree" model="ir.ui.view">
-        <field name="name">client.designation.tree</field>
-        <field name="model">client.designation</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="name"/>
-            </tree>
-        </field>
-    </record>
+            <field name="name">client.designation.tree</field>
+            <field name="model">client.designation</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
 
-    <record id="action_open_designations" model="ir.actions.act_window">
-        <field name="name">User Designations</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">client.designation</field>
-        <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a new designation
-            </p>
-        </field>
-    </record>
+        <record id="action_open_designations" model="ir.actions.act_window">
+            <field name="name">User Designations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">client.designation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new designation
+                </p>
+            </field>
+        </record>
 
-    <menuitem id="menu_designation"
-              name="User Designations"
-              action="action_open_designations"
-              parent="contacts.res_partner_menu_config"
-              sequence="9"/>
+        <menuitem id="menu_designation" name="User Designations" action="action_open_designations"
+                  parent="contacts.res_partner_menu_config" sequence="9"/>
+    </data>
 </odoo>

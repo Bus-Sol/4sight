@@ -6,12 +6,13 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     monthly_hours = fields.Float(string='Monthly Hours', digits='Product Unit of Measure')
-    product_id = fields.Many2one('product.template', string='Service', domain=[('type','=', 'service'),('service_tracking', '!=', 'no')])
+    product_id = fields.Many2one('product.template', string='Service',
+                                 domain=[('type', '=', 'service'), ('service_tracking', '!=', 'no')])
     type = fields.Selection(selection_add=[('jobsheet', 'Jobsheet Address')])
     receive_jobsheet = fields.Boolean('Receive Jobsheet')
     receive_invoice = fields.Boolean('Receive Invoice')
     service_ids = fields.One2many('jobsheet.service', 'partner_service_id', string='Related services')
-    jobsheet_type = fields.Selection([('prepaid','Prepaid'),('contract_postpaid','Contract/Postpaid')])
+    jobsheet_type = fields.Selection([('prepaid', 'Prepaid'), ('contract_postpaid', 'Contract/Postpaid')])
     job_count = fields.Integer("Jobsheets", compute='_compute_job_count')
 
     def _compute_job_count(self):
@@ -58,13 +59,15 @@ class ResPartner(models.Model):
         return res
 
 
-
 class Task(models.Model):
     _inherit = "project.task"
 
     jobsheet_type = fields.Selection(related='partner_id.jobsheet_type')
-    check_balance = fields.Selection([('balanced','Balanced'),('out_of_balance','Out Of Balance')], string='Check Balance',compute='compute_balanced_task', store=True)
-    related_service_id = fields.Many2one('product.template', related='sale_line_id.product_id.product_tmpl_id', store=True)
+    check_balance = fields.Selection([('balanced', 'Balanced'), ('out_of_balance', 'Out Of Balance')],
+                                     string='Check Balance', compute='compute_balanced_task', store=True)
+    related_service_id = fields.Many2one('product.template', related='sale_line_id.product_id.product_tmpl_id',
+                                         store=True)
+    planned_hours = fields.Float("Initially Planned Hours", help='Time planned to achieve this task (including its sub-tasks).', tracking=True)
 
     @api.depends('remaining_hours')
     def compute_balanced_task(self):

@@ -8,16 +8,18 @@
         """
         """,
     'author': '4Sight Group',
-    'depends': ['base','mail','web','website_helpdesk_form'],
+    'depends': ['base', 'website', 'website_helpdesk'],
     'data': [
         'data/connect_to_portal.xml',
-        'views/assets.xml',
         'views/helpdesk_form_view.xml',
         'views/website_template.xml',
         'views/helpdesk_template.xml',
     ],
-    'demo': [
-    ],
+    'assets': {
+        'web.assets_frontend': [
+            '4sight/helpdesk_connect/static/src/js/submit_button.js',
+        ],
+    },
     'qweb': [
     ],
     'installable': True,

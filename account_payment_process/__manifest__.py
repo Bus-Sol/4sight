@@ -2,7 +2,7 @@
 
 {
     'name': 'Process Payment from Invoices',
-    'version': '1.0',
+    'version': '17.0',
     'category': 'Accounting',
     'description': """
     Register multiple payment from invoices with specific amount for each one 

@@ -10,7 +10,7 @@ class HelpdeskTeam(models.Model):
         for team in self:
             if not team.website_form_view_id:
                 default_form = etree.fromstring(self.env.ref('helpdesk_connect.ticket_submit_form').arch)
-                xmlid = 'website_helpdesk_form.team_form_' + str(team.id)
+                xmlid = 'website_helpdesk.team_form_' + str(team.id)
                 form_template = self.env['ir.ui.view'].create({
                     'type': 'qweb',
                     'arch': etree.tostring(default_form),
@@ -18,7 +18,7 @@ class HelpdeskTeam(models.Model):
                     'key': xmlid
                 })
                 self.env['ir.model.data'].create({
-                    'module': 'website_helpdesk_form',
+                    'module': 'website_helpdesk',
                     'name': xmlid.split('.')[1],
                     'model': 'ir.ui.view',
                     'res_id': form_template.id,

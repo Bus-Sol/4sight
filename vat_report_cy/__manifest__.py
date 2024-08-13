@@ -2,7 +2,7 @@
 
 {
     'name': 'VAT Report CY',
-    'version': '1.0',
+    'version': '17.0',
     'category': 'Accounting',
     'description': """
     Specific VAT Report for CY
@@ -16,10 +16,11 @@
     'data': [
         'data/paper_format_vat_cy.xml',
         'report/vat_report_template.xml',
-        'views/assets.xml',
     ],
-    'qweb': [
+
+    'assets': {
+        'web.assets_backend': [
+            # 'vat_report_cy/static/src/js/vat_report.js',
         ],
-    'demo' : [
-    ],
+    },
 }

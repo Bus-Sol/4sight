@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
         <record id="view_jobsheet_invoice" model="ir.ui.view">
             <field name="name">Invoice From Jobsheets</field>
             <field name="model">jobsheet.invoice</field>
@@ -10,7 +11,11 @@
                         them before validation.
                     </p>
                     <group>
-                        <field name="count" attrs="{'invisible': [('count','=', 1)]}" readonly="True"/>
+<!--                                                       attrs="{'invisible': [('count','=', 1)]}"-->
+                        <field name="count"
+                               invisible = "count == 1"
+                               readonly="True"
+                        />
                     </group>
                     <footer>
                         <button name="create_invoices" id="create_invoice_open" string="Create and View Invoice" type="object"
@@ -31,5 +36,5 @@
             <field name="binding_model_id" ref="odoo_timestead.model_client_jobsheet" />
             <field name="binding_view_types">list</field>
         </record>
-
+    </data>
 </odoo>

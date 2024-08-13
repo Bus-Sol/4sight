@@ -2,23 +2,53 @@
 from odoo import models, fields, api
 from odoo.tools.translate import _
 from odoo.tools.misc import formatLang, format_date
+from odoo.tools import get_lang
 
 
 class AccountFollowupReport(models.AbstractModel):
     _inherit = "account.followup.report"
 
-    def _get_report_name(self):
+    # def _get_report_name(self):
+    #     """
+    #     Override
+    #     Return the name of the report
+    #     """
+    #     return _('Statement Report')
+
+    @api.model
+    def _print_followup_letter(self, partner, options=None):
+        """Generate the followup letter for the given partner.
+        The letter is saved as ir.attachment and linked in the chatter.
+
+        Returns a client action downloading this letter and closing the wizard.
         """
-        Override
-        Return the name of the report
-        """
-        return _('Statement Report')
+        action = self.env.ref('account_followup.action_report_followup')
+        tz_date_str = format_date(self.env, fields.Date.today(), lang_code=self.env.user.lang or get_lang(self.env).code)
+        followup_letter_name = _('Statement Report')
+        followup_letter = action._render_qweb_pdf('account_followup.report_followup_print_all', partner.id, data={'options': options or {}})[0]
+        attachment = self.env['ir.attachment'].create({
+            'name': followup_letter_name,
+            'raw': followup_letter,
+            'res_id': partner.id,
+            'res_model': 'res.partner',
+            'type': 'binary',
+            'mimetype': 'application/pdf',
+        })
+        partner.message_post(body=_('Follow-up letter generated'), attachment_ids=[attachment.id])
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'close_followup_wizard',
+            'params': {
+                'url': '/web/content/%s?download=1' % attachment.id,
+            }
+        }
+
 
     def get_report_filename(self, options):
         """The name that will be used for the file when downloading pdf,xlsx,..."""
         return self._get_report_name().lower().replace(' ', '_')
 
-    def _get_lines(self, options, line_id=None):
+    def _get_followup_report_lines(self, options):
         """
         Override
         Compute and return the lines of the columns of the follow-ups report.
@@ -53,10 +83,10 @@ class AccountFollowupReport(models.AbstractModel):
                 if is_overdue or is_payment:
                     total_issued += not aml.blocked and amount or 0
                 if is_overdue:
-                    date_due = {'name': date_due, 'class': 'color-red date', 'style': 'white-space:nowrap;text-align:center;color: red;'}
+                    date_due = {'name': date_due, 'class': 'color-red date', 'style': 'white-space:nowrap;text-align:right;color: red;'}
                 if is_payment:
                     date_due = ''
-                move_line_name = self._format_aml_name(aml.name, aml.move_id.ref, aml.move_id.name)
+                move_line_name = self._followup_report_format_aml_name(aml.name, aml.move_id.ref)
                 if self.env.context.get('print_mode'):
                     move_line_name = {'name': move_line_name, 'style': 'text-align:right; white-space:normal;'}
                 amount = formatLang(self.env, amount, currency_obj=currency)
@@ -70,7 +100,7 @@ class AccountFollowupReport(models.AbstractModel):
                     date_due,
                     invoice_origin,
                     move_line_name,
-                    (expected_pay_date and expected_pay_date + ' ') + (aml.internal_note or ''),
+                    (expected_pay_date and expected_pay_date + ' '),
                     {'name': '', 'blocked': aml.blocked},
                     amount,
                 ]

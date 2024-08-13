@@ -2,6 +2,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
+
 class JobsheetInvoice(models.Model):
     _name = "jobsheet.invoice"
     _description = "create Invoice from multiple Jobsheets"

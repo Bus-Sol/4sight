@@ -2,7 +2,7 @@
 
 {
     'name': 'VAT Report MT',
-    'version': '1.0',
+    'version': '17.0',
     'category': 'Accounting',
     'description': """
     Specific VAT Report for MT
@@ -15,12 +15,13 @@
     ],
     'data': [
         'report/vat_report_template.xml',
-        'views/assets.xml',
         'views/account_vat_report.xml',
     ],
-    'qweb': [
-        'static/src/xml/base.xml',
-        ],
-    'demo' : [
-    ],
+    'assets': {
+        'web.assets_backend': [
+            'vat_report_mt/static/src/js/vat_report.js',
+            'vat_report_mt/static/src/js/action_manager.js',
+            'vat_report_mt/static/src/xml/base.xml'
+        ]
+    },
 }

@@ -5,9 +5,9 @@ from odoo import models, fields, api
 class JobSheetService(models.Model):
     _name = "jobsheet.service"
 
-    product_id = fields.Many2one('product.template', string='Service', domain=[('type','=', 'service')])
+    product_id = fields.Many2one('product.template', string='Service', domain=[('type', '=', 'service')])
     partner_service_id = fields.Many2one('res.partner', required=True, ondelete='cascade', index=True, copy=False)
-    quantity= fields.Float('Quantity')
+    quantity = fields.Float('Quantity')
     hour = fields.Float('Price')
     buffer = fields.Integer('Buffer (in %)')
     extra_hour = fields.Float('Extra Hour', compute="compute_extra_hour_based_on_buffer", store=True)
@@ -20,4 +20,3 @@ class JobSheetService(models.Model):
                 rec.extra_hour = rec.quantity * (rec.buffer / 100)
             else:
                 rec.extra_hour = 0
-

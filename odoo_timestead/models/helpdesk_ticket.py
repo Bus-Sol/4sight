@@ -7,9 +7,7 @@ class Helpdesk(models.Model):
 
     job_id = fields.Many2one('client.jobsheet', 'Related Job')
 
-
     def action_view_job(self):
-
         return {
             'type': 'ir.actions.act_window',
             'view_type': 'form',
@@ -21,7 +19,6 @@ class Helpdesk(models.Model):
         }
 
     def convert_to_job(self):
-
         action = self.env["ir.actions.actions"]._for_xml_id("odoo_timestead.action_jobsheets")
         action['context'] = {
             'default_ticket_id': self.id,

@@ -3,7 +3,7 @@
     'name': "MODIFY TIMESHEET ENTRIES",
     'author': "Fazal Ur Rahman",
     'category': 'Extra Tools',
-    'version': '14.0.0.1',
+    'version': '1.0',
 
     'depends': ['base', 'timesheet_grid', 'sale', 'purchase', 'product', 'account', 'odoo_timestead'],
 

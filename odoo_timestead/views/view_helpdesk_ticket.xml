@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <record id="helpdesk_ticket_view_form_inherit_add_btn" model="ir.ui.view">
-        <field name="name">helpdesk.ticket.form.inherit.add.btn</field>
-        <field name="model">helpdesk.ticket</field>
-        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
-                <button class="oe_stat_button" type="object" name="action_view_job" icon="fa-pencil-square-o"
-                        attrs="{'invisible': [('job_id', '=', False)]}">
-                    View Jobsheet
-                </button>
-            </xpath>
-            <xpath expr="//button[@name='assign_ticket_to_self']" position='after'>
-                <button name="convert_to_job" string="Convert To Jobsheet" type="object" class="oe_highlight"
-                        groups="helpdesk.group_helpdesk_user" attrs="{'invisible': [('job_id', '!=', False)]}"/>
-            </xpath>
-            <field name="email_cc" position="after">
-                <field name="job_id" invisible="1"/>
+    <data>
+        <record id="helpdesk_ticket_view_form_inherit_add_btn" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.form.inherit.add.btn</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+<!--                                                attrs="{'invisible': [('job_id', '=', False)]}"-->
+                    <button class="oe_stat_button" type="object" name="action_view_job" icon="fa-pencil-square-o"
+                            invisible = "job_id == False"
+                    >
+                        View Jobsheet
+                    </button>
+                </xpath>
+                <xpath expr="//div[hasclass('oe_button_box')]" position='after'>
+<!--                                                attrs="{'invisible': [('job_id', '!=', False)]}"-->
+                    <button name="convert_to_job" string="Convert To Jobsheet" type="object" class="oe_highlight"
+                            groups="helpdesk.group_helpdesk_user"
+                            invisible="job_id != False"
+                    />
+                </xpath>
+                <field name="email_cc" position="after">
+                    <field name="job_id" invisible="1"/>
+                </field>
             </field>
-        </field>
-    </record>
+        </record>
+    </data>
 </odoo>

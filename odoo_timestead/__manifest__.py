@@ -2,13 +2,14 @@
 {
     'name': 'Odoo Timestead',
     'category': '',
-    'version': '1.0',
+    'version': '17.0',
     'summary': '',
-    'description':
-        """
-        """,
+    'description': """  """,
     'author': '4Sight Group',
-    'depends': ['contacts','product','sale_timesheet','account','portal','timer','analytic','project','helpdesk', 'account_reports'],
+    'depends': [
+        'contacts', 'product', 'sale_timesheet', 'account', 'portal', 'timer', 'analytic', 'project',
+        'helpdesk', 'account_reports'
+    ],
     'data': [
         'security/jobsheet_security.xml',
         'security/ir.model.access.csv',
@@ -31,14 +32,14 @@
         'views/view_helpdesk_ticket.xml',
         'views/view_project_task.xml',
         'views/view_jobsheet_report.xml',
-        'report/task_timesheet_report.xml',
     ],
-    'demo': [
-    ],
-    'qweb': [
-        'static/src/xml/digital_sign.xml',
-    ],
-    
+    "assets": {
+        "web.assets_backend": [
+            # "odoo_timestead/static/src/js/digital_sign.js",
+            # "odoo_timestead/static/src/css/jobsheet_customize_tickbox.css",
+            # "odoo_timestead/static/src/xml/digital_sign.xml",
+        ]
+    },
     'installable': True,
     'application': True,
 }

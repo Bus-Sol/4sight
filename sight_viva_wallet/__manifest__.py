@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
 {
-    'name': '4Sight - Viva Wallet Payment Acquirer',
-    'version': '1.0',
+    'name': '4Sight Group - Viva Wallet',
     'category': 'Accounting/Payment Acquirers',
-    'summary': 'Payment Acquirer: Viva Wallet Implementation',
-    'description': """
-    Viva Wallet Implementation""",
-    'author': '4Sight Group',
-    'website': '',
-    'depends': ['payment','sale_subscription'],
+    'version': '17.0',
+    'summary': '',
+    "author": "4Sight Group",
+    'description': """4Sight Group - Viva Wallet""",
+    'depends': ['base', 'web', 'sale', 'purchase', 'account', 'payment'],
     'data': [
-        'views/payment_views.xml',
         'views/payment_viva_templates.xml',
+        'views/payment_views.xml',
         'data/payment_acquirer_data.xml',
-        'views/journal_dashboard_kanban.xml'
     ],
-    'demo': [
-    ],
-    'installable': True,
     'application': True,
+    'installable': True,
+    'uninstall_hook': 'uninstall_hook',
+    'license': 'LGPL-3',
 }

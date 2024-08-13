@@ -17,9 +17,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
         if self.advance_payment_method == 'delivered':
             lead_ids = sale_orders.mapped('opportunity_id')
+            print("+++++++++++++lead_ids____________________",lead_ids)
             for lead in lead_ids:
-                lead.stage_id= lead._stage_find(domain=[('fold', '=', True)]).id
+                lead.stage_id= lead._stage_find(domain=['|',('fold', '=', True),('fold', '=', False)]).id
+                print("+++++++++++++++++lead.satge_id++++++++++++++++++",lead.stage_id)
             sale_orders._create_invoices(final=self.deduct_down_payments)
+
 
             if self._context.get('open_invoices', False):
                 return sale_orders.action_view_invoice()
