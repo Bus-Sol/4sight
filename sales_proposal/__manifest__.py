@@ -3,7 +3,7 @@
 
 {
     'name': 'Sale Proposals',
-    'version': '14.0.1.0.0',
+    'version': '17.0',
     'summary': 'Sale Proposals',
     'category': 'Reporting',
     'author': 'Abrus Digital',
