@@ -154,7 +154,7 @@ class JobSheet(models.Model):
         for job in self:
             if job.type == 'prepaid':
                 sale_order_line = SaleOrderLine.search([('order_partner_id', '=', job.partner_id.id),
-                                                        ('product_id', '=', self.service_id.product_variant_id.id),
+                                                        ('product_id', 'in', self.service_id.product_variant_id.ids),
                                                         ('state', '=', 'sale')])
                 _logger.info('sale_order_line: %s', sale_order_line)
                 tasks = ProjectTask.search([('sale_line_id', 'in', sale_order_line.ids)])
