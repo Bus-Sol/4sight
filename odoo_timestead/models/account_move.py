@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    job_ids = fields.Many2many('client.jobsheet', string='Job Ref')
+    job_ids = fields.Many2many('client.jobsheet', 'move_job_rel',  'move_id', 'job_id', string='Job Ref')
     job_count = fields.Integer(string='Jobsheets Count', compute='_get_jobsheets', readonly=True)
 
     @api.depends('job_ids')
