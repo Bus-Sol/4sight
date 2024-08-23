@@ -7,3 +7,11 @@ access_jobsheet_line,access_jobsheet_line,model_jobsheet_line,,1,1,1,1
 access_jobsheet_invoice,access_jobsheet_invoice,model_jobsheet_invoice,,1,1,1,1
 access_jobsheet_tags,access_jobsheet_tags,model_jobsheet_tags,,1,1,1,1
 access_jobsheet.service,access.jobsheet.service,model_jobsheet_service,,1,1,1,1
+
+access_account_group_jobsheet_user,jobsheet.account.group,account.model_account_group,odoo_timestead.group_jobsheet_user,1,0,0,0
+access_account_report_jobsheet_user,jobsheet.account.report,account.model_account_report,odoo_timestead.group_jobsheet_user,1,0,0,0
+access_account_report_line_jobsheet_user,jobsheet.account.report.line,account.model_account_report_line,odoo_timestead.group_jobsheet_user,1,0,0,0
+access_account_report_column_jobsheet_user,jobsheet.account.report.column,account.model_account_report_column,odoo_timestead.group_jobsheet_user,1,0,0,0
+access_account_report_expression_jobsheet_user,jobsheet.account.report.expression,account.model_account_report_expression,odoo_timestead.group_jobsheet_user,1,0,0,0
+access_account_report_horizontal_group_jobsheet_user,jobsheet.account.report.horizontal.group,account_reports.model_account_report_horizontal_group,odoo_timestead.group_jobsheet_user,1,0,0,0
+access_account_report_horizontal_rule_jobsheet_user,jobsheet.account.report.horizontal.group.rule,account_reports.model_account_report_horizontal_group_rule,odoo_timestead.group_jobsheet_user,1,0,0,0
