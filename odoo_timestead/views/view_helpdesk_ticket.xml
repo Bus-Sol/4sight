@@ -14,7 +14,7 @@
                         View Jobsheet
                     </button>
                 </xpath>
-                <xpath expr="//div[hasclass('oe_button_box')]" position='after'>
+                <xpath expr="//header" position='inside'>
 <!--                                                attrs="{'invisible': [('job_id', '!=', False)]}"-->
                     <button name="convert_to_job" string="Convert To Jobsheet" type="object" class="oe_highlight"
                             groups="helpdesk.group_helpdesk_user"
