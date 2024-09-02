@@ -223,6 +223,7 @@
                             <field name="details"
                                    readonly="status != 'created'"
                                    required="1"
+                                   widget="html"
                             />
                             <field name="url_detail" widget="url"/>
                             <field name="invoice_amount" groups="odoo_timestead.group_jobsheet_manager"/>
