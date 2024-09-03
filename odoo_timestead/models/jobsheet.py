@@ -434,7 +434,7 @@ class JobSheet(models.Model):
         return res
 
     def write(self, vals):
-        if all(key in vals for key in ('start_date', 'end_date')):
+        if any(key in vals for key in ('start_date', 'end_date')):
             values = {
                 'job_id': self.id,
                 'project_id': self.project_id.id,
