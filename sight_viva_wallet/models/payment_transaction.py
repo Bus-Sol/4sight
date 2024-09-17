@@ -76,7 +76,7 @@ class PaymentTransaction(models.Model):
     def _get_specific_rendering_values(self, processing_values):
 
         res = super()._get_specific_rendering_values(processing_values)
-        if self.code != 'viva':
+        if self.provider_id.code != 'viva':
             return res
 
         base_url = self.acquirer_id.get_base_url()
@@ -123,7 +123,7 @@ class PaymentTransaction(models.Model):
     def _process_notification_data(self, data):
 
         super()._process_notification_data(data)
-        if self.code != 'viva':
+        if self.provider_id.code != 'viva':
             return
 
         _logger.info('Entering validation with Viva Wallet payment: %s' % data)
