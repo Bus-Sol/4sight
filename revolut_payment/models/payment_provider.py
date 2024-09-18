@@ -6,6 +6,8 @@ from odoo.addons.revolut_payment.const import SUPPORTED_CURRENCIES, DEFAULT_PAYM
 import logging
 import requests
 import json
+import pprint
+
 
 _logger = logging.getLogger(__name__)
 
@@ -71,8 +73,17 @@ class PaymentProvider(models.Model):
 
         try:
             response = requests.request(method, url, json=data, headers=headers, timeout=60)
-            print('response',response.text)
-            response.raise_for_status()
+            try:
+                response.raise_for_status()
+            except requests.exceptions.HTTPError:
+                _logger.exception(
+                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(data)
+                )
+                raise ValidationError(
+                    "Revolut: " + _(
+                        "The communication with the API failed. Revolut gave us the following "
+                        "information: %s", response.json().get('message', '')
+                    ))
         except requests.exceptions.RequestException:
             _logger.exception("Unable to communicate with Revolut: %s", url)
             raise ValidationError("revolut: " + _("Could not establish the connection to the API."))
@@ -86,3 +97,11 @@ class PaymentProvider(models.Model):
             return default_codes
         return DEFAULT_PAYMENT_METHODS_CODES
 
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda p: p.code == 'revolut').update({
+            'support_manual_capture': 'full_only',
+            'support_refund': 'partial',
+            'support_tokenization': True,
+        })

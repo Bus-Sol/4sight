@@ -17,7 +17,6 @@ class PaymentTransaction(models.Model):
 
     revolut_order_code = fields.Char(string="Revolut Order Code")
     revolut_order_token = fields.Char(string="Revolut Order Token")
-    revolut_transaction_id = fields.Char(string="revolut Transaction ID")
 
 
     def _get_specific_rendering_values(self, processing_values):
@@ -49,8 +48,9 @@ class PaymentTransaction(models.Model):
         self.revolut_order_code = payment_data.get('id')
         self.revolut_order_token = payment_data.get('token')
         checkout_url = payment_data.get('checkout_url')
-
-        return {'api_url': checkout_url}
+        parsed_url = urls.url_parse(checkout_url)
+        url_params = urls.url_decode(parsed_url.query)
+        return {'api_url': checkout_url, 'url_params': url_params}
 
     def _get_revolut_order_payload(self):
 
@@ -107,7 +107,7 @@ class PaymentTransaction(models.Model):
             return
 
         api_url = self.provider_id._revolut_endpoint()
-        path = f'api/orders/{self.revolut_order_code}'
+        path = f'api/orders/{self.revolut_order_code.strip()}'
 
         payment_data = self.provider_id._revolut_make_request(
             endpoint=api_url,
@@ -115,15 +115,6 @@ class PaymentTransaction(models.Model):
             data={},
             method='GET'
         )
-
-        # Update the payment method.
-        # payment_method_type = payment_data.get('method', '')
-        # if payment_method_type == 'creditcard':
-        #     payment_method_type = payment_data.get('details', {}).get('cardLabel', '').lower()
-        # payment_method = self.env['payment.method']._get_from_code(
-        #     payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
-        # )
-        # self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
         payment_status = payment_data.get('state')

@@ -9,7 +9,6 @@ _logger = logging.getLogger(__name__)
 
 class RevolutController(http.Controller):
     _return_url = "/payment/revolut/status"
-    _webhook_url = "/payment/revolut/webhook"
 
     @http.route(_return_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False, save_session=False)
     def revolut_return(self, **data):
@@ -30,23 +29,3 @@ class RevolutController(http.Controller):
 
         request.env['payment.transaction'].sudo()._handle_notification_data('revolut', data)
         return request.redirect('/payment/status')
-
-
-    @http.route(_webhook_url, type='json', auth='public', methods=['POST'], csrf=False)
-    def revolut_webhook(self, **data):
-        """ Process the data returned by Revolut after webhook is called.
-
-        Odoo will not update payment.transaction state directly via webhook since can't be trusted.
-        Instead _handle_notification_data will be called again
-        """
-        _logger.info("Received Revolut webhook data:\n%s", pprint.pformat(data))
-
-        if data.get("EventData"):
-            print('webhook data', data.get("EventData"))
-            data['t'] = data['EventData']['TransactionId']
-            data['s'] = data['EventData']['OrderCode']
-
-            _logger.info("Handling Revolut webhook transaction: %s" % (data['t']))
-            request.env['payment.transaction'].sudo()._handle_notification_data('revolut', data)
-
-        return http.Response(status=200)
