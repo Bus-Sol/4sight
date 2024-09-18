@@ -55,6 +55,7 @@ class PaymentTransaction(models.Model):
     def _get_revolut_order_payload(self):
 
         base_url = self.provider_id.get_base_url()
+        rediredt_url = urls.url_join(base_url, RevolutController._return_url)
 
         return {
             'amount': payment_utils.to_minor_currency_units(self.amount, self.currency_id),
@@ -66,17 +67,10 @@ class PaymentTransaction(models.Model):
                 'phone': self.partner_id.phone,
             },
 
-            'redirect_url': urls.url_join("https://mdaoud.odoo.com", RevolutController._return_url)
+            'redirect_url': f'{rediredt_url}?ref={self.reference}'
         }
 
-    def _get_vivawallet_transaction(self, data, match, key):
-        return self.search([
-            (match, '=', data.get(key)),
-            ('provider_code', '=', 'revolut'),
-            (match, '!=', False)
-        ])
-
-    def _get_tx_from_notification_data(self, provider, data):
+    def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on revolut data.
 
         :param str provider: The provider of the acquirer that handled the transaction
@@ -85,60 +79,68 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_notification_data(provider, data)
+        tx = super()._get_tx_from_notification_data(provider, notification_data)
         if provider != 'revolut':
             return tx
 
-        print('notification_data',data)
+        print('notification_data',notification_data)
 
-        tx = self._get_vivawallet_transaction(data, "vivawallet_order_code", "t")
+        tx = self.search(
+            [('reference', '=', notification_data.get('ref')), ('provider_code', '=', 'revolut')]
+        )
         if not tx:
-            tx = self._get_vivawallet_transaction(data, "vivawallet_order_code", "s")
-
-        if not tx:
-            raise ValidationError(
-                "Vivawallet: " + _("No transaction found matching transaction reference %s.", data.get('t'))
-            )
-
+            raise ValidationError("Revolut: " + _(
+                "No transaction found matching reference %s.", notification_data.get('ref')
+            ))
         return tx
 
-    # def _process_notification_data(self, data):
-    #     """ Override of payment to process the transaction based on Vivawallet data.
-    #
-    #     Note: self.ensure_one()
-    #
-    #     :param dict data: The notification data sent by the provider
-    #     :return: None
-    #     """
-    #     super()._process_notification_data(data)
-    #     if self.provider_code != 'vivawallet':
-    #         return
-    #
-    #     if not data.get("t"):
-    #         self._set_pending()
-    #         return
-    #
-    #     self.vivawallet_transaction_id = data.get("t")
-    #
-    #     oauth_url, api_url, web_url = self.provider_id._vivawallet_endpoint()
-    #     vivawallet_transaction = self.provider_id._vivawallet_make_request(
-    #         endpoint=api_url,
-    #         path="/checkout/v2/transactions/%s" % (self.vivawallet_transaction_id),
-    #         method="GET"
-    #     )
-    #
-    #     payment_status = VIVAWALLET_STATE_MAPPING[vivawallet_transaction.get("statusId")]
-    #
-    #     if payment_status == 'pending':
-    #         self._set_pending()
-    #     elif payment_status == 'authorized':
-    #         self._set_authorized()
-    #     elif payment_status == 'done':
-    #         self._set_done()
-    #     elif payment_status in ['cancel', 'error']:
-    #         self._set_canceled("Vivawallet: " + _("Canceled payment with status: %s", payment_status))
-    #     else:
-    #         _logger.info("Received data with invalid payment status: %s", payment_status)
-    #         self._set_error(
-    #             "Vivawallet: " + _("Received data with invalid payment status: %s", payment_status)
-    #         )
+    def _process_notification_data(self, notification_data):
+        """ Override of payment to process the transaction based on Revolut data.
+
+        Note: self.ensure_one()
+
+        :param dict notification_data: The notification data sent by the provider
+        :return: None
+        """
+        super()._process_notification_data(notification_data)
+        if self.provider_code != 'revolut':
+            return
+
+        api_url = self.provider_id._revolut_endpoint()
+        path = f'api/orders/{self.revolut_order_code}'
+
+        payment_data = self.provider_id._revolut_make_request(
+            endpoint=api_url,
+            path=path,
+            data={},
+            method='GET'
+        )
+
+        # Update the payment method.
+        # payment_method_type = payment_data.get('method', '')
+        # if payment_method_type == 'creditcard':
+        #     payment_method_type = payment_data.get('details', {}).get('cardLabel', '').lower()
+        # payment_method = self.env['payment.method']._get_from_code(
+        #     payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
+        # )
+        # self.payment_method_id = payment_method or self.payment_method_id
+
+        # Update the payment state.
+        payment_status = payment_data.get('state')
+        if payment_status in ['pending','processing']:
+            self._set_pending()
+        elif payment_status == 'authorised':
+            self._set_authorized()
+        elif payment_status == 'completed':
+            self._set_done()
+        elif payment_status in ['cancelled', 'failed']:
+            self._set_canceled("Revolut: " + _("Canceled payment with status: %s", payment_status))
+        else:
+            _logger.info(
+                "received data with invalid payment status (%s) for transaction with reference %s",
+                payment_status, self.reference
+            )
+            self._set_error(
+                "Revolut: " + _("Received data with invalid payment status: %s", payment_status)
+            )
+
