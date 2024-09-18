@@ -112,7 +112,7 @@ class PaymentTransaction(models.Model):
         payment_data = self.provider_id._revolut_make_request(
             endpoint=api_url,
             path=path,
-            data={},
+            data=None,
             method='GET'
         )
 
