@@ -60,7 +60,7 @@ class PaymentTransaction(models.Model):
         return {
             'amount': payment_utils.to_minor_currency_units(self.amount, self.currency_id),
             'currency': self.currency_id.name,
-            "capture_mode": "manual",
+            "capture_mode": "automatic",
             "customer": {
                 'email': self.partner_id.email,
                 'full_name': self.partner_id.name,
