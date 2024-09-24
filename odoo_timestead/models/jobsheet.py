@@ -4,6 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 from werkzeug.urls import url_encode
 import datetime
 import logging
+import pytz
 
 _logger = logging.getLogger(__name__)
 
@@ -433,13 +434,25 @@ class JobSheet(models.Model):
                 res.trigger_send_quotation(last_progress, res.task_id.progress, res.remaining_hours, current_service)
         return res
 
+    @api.model
+    def convert_datetime_to_date(self, datetime_with_tz):
+        # Get the current user's timezone
+        user_timezone = self.env.user.tz or 'UTC'  # Default to UTC if no timezone is set
+        
+        # Convert the datetime to the user's timezone
+        localized_datetime = fields.Datetime.to_datetime(datetime_with_tz).astimezone(pytz.timezone(user_timezone))
+        # Extract the date
+        date_only = localized_datetime.date()
+        
+        return date_only
+
     def write(self, vals):
         if any(key in vals for key in ('start_date', 'end_date')):
             values = {
                 'job_id': self.id,
                 'project_id': self.project_id.id,
                 'task_id': self.task_id.id,
-                'date': self.start_date,
+                'date': self.convert_datetime_to_date(self.start_date),
                 'name': self.brief,
                 'user_id': self.env.uid,
                 'unit_amount': vals['hours'] if 'hours' in vals else self.hours,
