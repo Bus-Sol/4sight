@@ -439,7 +439,7 @@ class JobSheet(models.Model):
                 'job_id': self.id,
                 'project_id': self.project_id.id,
                 'task_id': self.task_id.id,
-                'date': fields.Datetime.now(),
+                'date': self.start_date,
                 'name': self.brief,
                 'user_id': self.env.uid,
                 'unit_amount': vals['hours'] if 'hours' in vals else self.hours,

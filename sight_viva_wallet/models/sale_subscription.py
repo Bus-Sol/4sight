@@ -13,3 +13,4 @@ class SaleSub(models.Model):
         if self.recurring_next_date <= datetime.date.today() and self.template_id.payment_mode != 'manual':
             res = self._recurring_create_invoice(automatic=True)
         return res
+
