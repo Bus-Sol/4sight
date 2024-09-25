@@ -443,16 +443,19 @@ class JobSheet(models.Model):
         localized_datetime = fields.Datetime.to_datetime(datetime_with_tz).astimezone(pytz.timezone(user_timezone))
         # Extract the date
         date_only = localized_datetime.date()
-        
         return date_only
 
     def write(self, vals):
         if any(key in vals for key in ('start_date', 'end_date')):
+            if 'start_date' in vals:
+                date_req = vals.get('start_date')
+            else:
+                date_req = vals.get('end_date')
             values = {
                 'job_id': self.id,
                 'project_id': self.project_id.id,
                 'task_id': self.task_id.id,
-                'date': self.convert_datetime_to_date(self.start_date),
+                'date': self.convert_datetime_to_date(date_req),
                 'name': self.brief,
                 'user_id': self.env.uid,
                 'unit_amount': vals['hours'] if 'hours' in vals else self.hours,
