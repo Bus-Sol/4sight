@@ -56,18 +56,19 @@ class PaymentTransaction(models.Model):
 
         base_url = self.provider_id.get_base_url()
         rediredt_url = urls.url_join(base_url, RevolutController._return_url)
-
+        emails = self.partner_id.email
+        first_email = emails.split(';')[0].strip() if emails else False
         return {
-            'amount': payment_utils.to_minor_currency_units(self.amount, self.currency_id),
-            'currency': self.currency_id.name,
+            "amount": payment_utils.to_minor_currency_units(self.amount, self.currency_id),
+            "currency": self.currency_id.name,
             "capture_mode": "automatic",
             "customer": {
-                'email': self.partner_id.email,
-                'full_name': self.partner_id.name,
-                'phone': self.partner_id.phone,
+                "email": first_email,
+                "full_name": self.partner_id.name,
+                "phone": self.partner_id.phone,
             },
 
-            'redirect_url': f'{rediredt_url}?ref={self.reference}'
+            "redirect_url": f'{rediredt_url}?ref={self.reference}'
         }
 
     def _get_tx_from_notification_data(self, provider, notification_data):
