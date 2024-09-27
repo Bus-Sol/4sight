@@ -25,3 +25,12 @@ class SaleOrder(models.Model):
         # ('check_start_date_lower_next_invoice_date', 'CHECK((next_invoice_date IS NULL OR start_date IS NULL) OR (next_invoice_date >= start_date))',
         #  'The next invoice date of a sale order should be after its start date.'),
     ]
+
+    def _send_order_confirmation_mail(self):
+        """ Send a mail to the SO customer to inform them that their order has been confirmed.
+
+        :return: None
+        """
+        for order in self:
+            mail_template = order._get_confirmation_template()
+            # order._send_order_notification_mail(mail_template)
