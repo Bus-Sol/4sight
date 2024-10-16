@@ -39,5 +39,5 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     def _compute_price_unit(self):
-        lines_without_price_recomputation = self.filtered(lambda l: l.product_id)
+        lines_without_price_recomputation = self.filtered(lambda l: l.product_id and l.price_unit > 0)
         super(SaleOrderLine, self - lines_without_price_recomputation)._compute_price_unit()
