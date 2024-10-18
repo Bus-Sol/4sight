@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 
-
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
@@ -34,3 +33,11 @@ class SaleOrder(models.Model):
         for order in self:
             mail_template = order._get_confirmation_template()
             # order._send_order_notification_mail(mail_template)
+
+
+class SaleOrderLine(models.Model):
+    _inherit = "sale.order.line"
+
+    def _compute_price_unit(self):
+        lines_without_price_recomputation = self.filtered(lambda l: l.product_id and l.create_date)
+        super(SaleOrderLine, self - lines_without_price_recomputation)._compute_price_unit()
