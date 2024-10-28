@@ -69,6 +69,12 @@ class JobSheet(models.Model):
     ticket_id = fields.Many2one('helpdesk.ticket')
     invoice_amount = fields.Float('Revenue', compute="_get_invoiced", store=True)
 
+    @api.constrains('hour')
+    def check_hour_value(self):
+        for record in self:
+            if record.hour <= 0.0:
+                raise ValidationError(_("The time must be a positive value."))
+
     @api.depends('start_date')
     def compute_start_job(self):
         for rec in self:
@@ -186,12 +192,10 @@ class JobSheet(models.Model):
                 template = self.env.ref('sale.email_template_edi_sale')
             if obj._name == 'account.move':
                 template = self.env.ref('account.email_template_edi_invoice')
-            print("====================TEMPLATE===========>",template)
             values = template.sudo()._generate_template([obj.id],
                 ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to',
                  'attachment_ids', 'mail_server_id']
             )[obj.id]
-            print("====================TEMPLATE===========>",values)
             body = None
             if 'body' in values:
                 body = values['body']
