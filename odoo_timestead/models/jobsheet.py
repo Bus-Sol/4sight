@@ -69,10 +69,10 @@ class JobSheet(models.Model):
     ticket_id = fields.Many2one('helpdesk.ticket')
     invoice_amount = fields.Float('Revenue', compute="_get_invoiced", store=True)
 
-    @api.constrains('hour')
+    @api.constrains('hours')
     def check_hour_value(self):
         for record in self:
-            if record.hour <= 0.0:
+            if record.hours <= 0.0:
                 raise ValidationError(_("The time must be a positive value."))
 
     @api.depends('start_date')
