@@ -144,26 +144,7 @@
                                        required="1"/>
 <!--                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
                                 <field name="is_prepaid" invisible="1"/>
-                                <label for="start_date" string="Planned Date"/>
-                                <div class="w-100">
-                                    <div class="o_row">
-                                        <field name="start_date" widget="daterange" required="1"
-                                               readonly="status != 'created'"
-                                               options='{"related_end_date": "end_date"}'/>
-<!--                                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
-                                        <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon"
-                                           title="Arrow"/>
-                                        <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon"
-                                           title="Arrow"
-                                           invisible = "start_date == False or end_date == False"
-                                        />
-<!--                                                                                   attrs="{'invisible': [('start_date', '=', False), ('end_date', '=', False)]}"-->
-                                        <field name="end_date" widget="daterange" required="1"
-                                               readonly="status != 'created'"
-                                               options='{"related_start_date": "start_date"}'/>
-<!--                                                                                       attrs="{'readonly': [('status', '!=', 'created')]}"-->
-                                    </div>
-                                </div>
+                                <field name="start_date" string="Planned Date" readonly="status != 'created'" widget="daterange" options="{'end_date_field': 'end_date'}"/>
                                 <field name="category_id" widget="many2many_tags"
                                        options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."
                                        readonly="status != 'created'"
