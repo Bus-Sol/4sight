@@ -25,7 +25,7 @@ class JobSheet(models.Model):
     user_id = fields.Many2one('res.users', 'Technicien', required=True, default=lambda self: self.env.user)
     brief = fields.Char('Brief')
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
-    details = fields.Text(string='Details')
+    details = fields.Html(string='Details')
     jobsheet_type_id = fields.Many2one('jobsheet.type', 'Jobsheet Types')
     start_date = fields.Datetime(string='Start')
     jobsheet_start = fields.Date(string='Jobsheet Start', compute='compute_start_job', store=True)
