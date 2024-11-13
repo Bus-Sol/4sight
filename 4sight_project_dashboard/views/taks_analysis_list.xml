@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="task_analysis_tree_view" model="ir.ui.view">
+            <field name="name">Task Analysis Tree</field>
+            <field name="model">report.project.task.user</field>
+            <field name="arch" type="xml">
+                <tree string="">
+                    <field name="project_id"/>
+                    <field name="partner_id"/>
+                    <field name="task_id"/>
+                    <field name="state"/>
+                    <field name="allocated_hours" widget="float_time"/>
+                    <field name="effective_hours" widget="float_time"/>
+                    <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="progress" widget="project_task_progressbar" optional="hide" options="{'overflow_class': 'bg-danger'}" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="planned_date_begin"/>
+                    <field name="date_deadline" widget="remaining_days"/>
+                    <field name="sale_order_id"/>
+                </tree>
+            </field>
+        </record>
+
+
+
+        <record id="task_analysis_list_view_action" model="ir.actions.act_window">
+            <field name="name">Task Analysis</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">report.project.task.user</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="project.view_task_search_form_base"/>
+
+        </record>
+
+        <menuitem name="Task List" id="menu_task_analysis_list" sequence="20" parent="project.menu_project_report" action="task_analysis_list_view_action"/>
+
+
+    </data>
+</odoo>

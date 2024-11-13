@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="owl.OwlProjectDashboard" owl="1">
+        <div class="vh-100 overflow-auto bg-muted">
+            <div class="row m-3">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col m-0 p-0">
+                            <div class="shadow-sm border m-2 p-4 bg-white">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h1 class="text-primary fw-bold">Projects Dashboard</h1>
+                                    <div>
+                                        <select class="form_select" t-model="state.selected_project" id="project_selection" t-on-change="onChangeProject">
+                                        <option value="all">All Projects</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <KpiCard  onClick.bind="viewOrders" name="'Orders'" value="state.orders.count"/>
+                        <KpiCard  onClick.bind="viewTasks" name="'Tasks'" value="state.tasks.count"/>
+                        <KpiCard  onClick.bind="viewTasks" name="'Allocated Hours'" value="state.tasks.allocated"/>
+                        <KpiCard  onClick.bind="viewTimesheet"  name="'Spent Hours'" value="state.tasks.spent"/>
+                        <KpiCard  onClick.bind="viewTasks" name="'Remaining Hours'" value="state.tasks.remaining"/>
+                        <KpiCard  onClick.bind="viewTasks" name="'Progress'" value="state.tasks.progress"/>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 m-0 p-0">
+                            <div class="shadow-sm border m-2 p-4 bg-white">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h3 class="text-primary fw-bold">Task Stages</h3>
+                                    <div class="px-3 py-1 bg-primary cursor-pointer">
+                                        <span class="fa fa-arrow-right text-white"/>
+                                    </div>
+                                </div>
+                                <ChartRenderer type="'doughnut'" title="'Tasks By Stages'" config="state.task_stages"/>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 m-0 p-0">
+                            <div class="shadow-sm border m-2 p-4 bg-white">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h3 class="text-primary fw-bold">Allocated And Remaining Hours</h3>
+                                    <div class="px-3 py-1 bg-primary cursor-pointer">
+                                        <span class="fa fa-arrow-right text-white"/>
+                                    </div>
+                                </div>
+                                <ChartRenderer type="'bar'" title="'Allocated And Remaining Hours'" config="state.task_hours"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 m-0 p-0">
+                            <div class="shadow-sm border m-2 p-4 bg-white">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h3 class="text-primary fw-bold">Employees Timesheets</h3>
+                                    <div class="px-3 py-1 bg-primary cursor-pointer">
+                                        <span class="fa fa-arrow-right text-white"/>
+                                    </div>
+                                </div>
+                                <ChartRenderer type="'bar'" title="'Employees Timesheets'" config="state.employee_hours"/>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 m-0 p-0">
+                            <div class="shadow-sm border m-2 p-4 bg-white">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h3 class="text-primary fw-bold">Tasks Progress</h3>
+                                <div class="px-3 py-1 bg-primary cursor-pointer">
+                                    <span class="fa fa-arrow-right text-white"/>
+                                </div>
+                            </div>
+                            <ChartRenderer type="'line'" title="'Tasks Progress'" config="state.task_progress"/>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+            </div>
+        </div>
+    </t>
+</templates>
