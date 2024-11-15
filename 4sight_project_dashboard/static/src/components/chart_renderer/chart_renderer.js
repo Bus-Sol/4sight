@@ -44,7 +44,6 @@ export class ChartRenderer extends Component {
           type: this.props.type,
           data: this.props.config.data,
           options: {
-
             responsive: true,
             plugins: {
               legend: {

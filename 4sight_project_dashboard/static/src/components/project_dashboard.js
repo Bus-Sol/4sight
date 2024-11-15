@@ -105,7 +105,7 @@ export class OwlProjectDashboard extends Component {
         if (this.state.selected_project != 'all'){
             domain.push(['project_id','=', parseInt(this.state.selected_project)])
         }
-        const data = await this.orm.readGroup("report.project.task.user", domain, ['task_id','progress'], ['task_id'])
+        const data = await this.orm.readGroup("report.project.task.user", domain, ['task_id','real_progress'], ['task_id'])
 
         this.state.task_progress = {
             data: {
@@ -113,7 +113,7 @@ export class OwlProjectDashboard extends Component {
                   datasets: [
                   {
                     label: 'Progress',
-                    data: data.map(d => d.progress),
+                    data: data.map(d => d.real_progress),
                     hoverOffset: 4,
                     backgroundColor: data.map((_, index) => getColor(index)),
                   }]

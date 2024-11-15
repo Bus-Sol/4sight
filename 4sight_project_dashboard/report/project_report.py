@@ -3,6 +3,10 @@ from odoo import fields, models
 
 class ReportProjectTaskUser(models.Model):
     _inherit = "report.project.task.user"
+    _order = "partner_name ASC, project_name ASC , name ASC"
+
+    project_name = fields.Char(string="Project Name", readonly=True)
+    partner_name = fields.Char(string="Partner Name", readonly=True)
 
     invoice_id = fields.Many2one(comodel_name="account.move", string="Invoice")
     invoice_line_id = fields.Many2one(comodel_name="account.move.line", string="Invoice Line")
@@ -13,20 +17,25 @@ class ReportProjectTaskUser(models.Model):
     real_progress = fields.Float(string="Task Progress", group_operator="avg", readonly=True)
 
 
+
     def _select(self):
         return super()._select() + (""",CASE WHEN COALESCE(t.allocated_hours, 0) = 0 THEN 0.0 ELSE (t.effective_hours * 100) / t.allocated_hours END as real_progress,
                                         aml.id as invoice_line_id, 
                                         am.id as invoice_id, 
                                         am.amount_total as invoice_total, 
                                         am.amount_residual as invoice_due,
-                                        am.invoice_date as invoice_date
+                                        am.invoice_date as invoice_date,
+                                        p.name as project_name,
+                                        c.name as partner_name
                                         """)
 
     def _group_by(self):
-        return super()._group_by() + ",aml.id,am.id, am.amount_total, am.amount_residual,am.invoice_date"
+        return super()._group_by() + ",p.name,c.name,aml.id,am.id, am.amount_total, am.amount_residual,am.invoice_date"
 
     def _from(self):
         return super()._from() + """
+            LEFT JOIN project_project p ON t.project_id = p.id
+            LEFT JOIN res_partner c ON t.partner_id = p.id
             LEFT JOIN sale_order_line_invoice_rel soli_rel ON soli_rel.order_line_id = sol.id
             LEFT JOIN account_move_line aml ON aml.id = soli_rel.invoice_line_id
             LEFT JOIN account_move am ON am.id = aml.move_id
