@@ -13,7 +13,8 @@
         'web',
         'board',
         'sale_project',
-        'hr_timesheet'
+        'hr_timesheet',
+        'sale_timesheet'
     ],
     'data': [
         'views/project_dashboard.xml',
