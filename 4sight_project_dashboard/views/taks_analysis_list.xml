@@ -15,11 +15,12 @@
                     <field name="effective_hours" widget="float_time" sum="Spent Hours"/>
                     <field name="total_hours_spent" widget="float_time" sum="Total Spent Hours" optional="hide"/>
                     <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="show" decoration-danger="real_progress &gt;= 100" decoration-warning="real_progress &gt;= 80 and real_progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user"/>
-                    <field name="real_progress" widget="project_task_progressbar" optional="show" options="{'overflow_class': 'bg-danger'}" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="real_progress" string="Progress" widget="project_task_progressbar" optional="show" options="{'overflow_class': 'bg-danger'}" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="planned_date_begin" optional="hide"/>
                     <field name="date_deadline" widget="remaining_days"/>
                     <field name="sale_order_id" widget="Many2one"/>
                     <field name="invoice_id" widget="Many2one"/>
+                    <field name="invoice_date"/>
                     <field name="invoice_total"/>
                     <field name="invoice_due"/>
                 </tree>

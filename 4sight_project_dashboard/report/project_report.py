@@ -9,19 +9,21 @@ class ReportProjectTaskUser(models.Model):
 
     invoice_total = fields.Float(string="Invoice Total Amount",group_operator="max", readonly=True)
     invoice_due = fields.Float(string="Invoice Due Amount", group_operator="max", readonly=True)
-
+    invoice_date = fields.Date(string="Invoice Date")
     real_progress = fields.Float(string="Task Progress", group_operator="avg", readonly=True)
+
 
     def _select(self):
         return super()._select() + (""",CASE WHEN COALESCE(t.allocated_hours, 0) = 0 THEN 0.0 ELSE (t.effective_hours * 100) / t.allocated_hours END as real_progress,
                                         aml.id as invoice_line_id, 
                                         am.id as invoice_id, 
                                         am.amount_total as invoice_total, 
-                                        am.amount_residual as invoice_due
+                                        am.amount_residual as invoice_due,
+                                        am.invoice_date as invoice_date
                                         """)
 
     def _group_by(self):
-        return super()._group_by() + ",aml.id,am.id, am.amount_total, am.amount_residual"
+        return super()._group_by() + ",aml.id,am.id, am.amount_total, am.amount_residual,am.invoice_date"
 
     def _from(self):
         return super()._from() + """
