@@ -19,6 +19,7 @@
     'data': [
         'views/project_dashboard.xml',
         'views/taks_analysis_list.xml',
+        'views/project_list.xml',
     ],
     'assets': {
         'web.assets_backend': [

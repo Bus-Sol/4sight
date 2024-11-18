@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry"
 import { KpiCard } from "./kpi_card/kpi_card"
+import { TextCard } from "./text_card/text_card"
 import { ChartRenderer } from "./chart_renderer/chart_renderer"
 import { loadJS } from "@web/core/assets"
 import { useService } from "@web/core/utils/hooks"
@@ -145,6 +146,7 @@ export class OwlProjectDashboard extends Component {
         onWillStart(async ()=>{
             await this.getTasks()
             await this.getOrders()
+            await this.getProjectText()
 
             await this.getTasksByStage()
             await this.getTasksHours()
@@ -163,6 +165,7 @@ export class OwlProjectDashboard extends Component {
         console.log(this.state.selected_project)
         await this.getTasks()
         await this.getOrders()
+        await this.getProjectText()
 
         await this.getTasksByStage()
         await this.getTasksHours()
@@ -208,24 +211,53 @@ export class OwlProjectDashboard extends Component {
             domain.push(['project_id','=', parseInt(this.state.selected_project)])
         }
         const data = await this.orm.searchCount("project.task", domain)
-        console.log('tasks',data)
+//        console.log('tasks',data)
         //this.state.quotations.value = data
 
         //revenues
         const allocated_hours = await this.orm.readGroup("project.task", domain, ["allocated_hours:sum"], [])
-        const remaining_hours = await this.orm.readGroup("project.task", domain, ["remaining_hours:sum"], [])
         const effective_hours = await this.orm.readGroup("project.task", domain, ["effective_hours:sum"], [])
-        const progress = allocated_hours[0].allocated_hours ? ((allocated_hours[0].allocated_hours - remaining_hours[0].remaining_hours) / allocated_hours[0].allocated_hours) * 100 : 0
+        const remaining_hours = allocated_hours[0].allocated_hours ? (allocated_hours[0].allocated_hours - effective_hours[0].effective_hours) : 0
+        const progress = allocated_hours[0].allocated_hours ? ((allocated_hours[0].allocated_hours - remaining_hours) / allocated_hours[0].allocated_hours) * 100 : 0
         this.state.tasks = {
             count: data,
             allocated: allocated_hours[0].allocated_hours ? `${(this.convertNumToTime(allocated_hours[0].allocated_hours))}` : 0,
-            remaining: remaining_hours[0].remaining_hours ? `${(this.convertNumToTime(remaining_hours[0].remaining_hours))}` : 0,
             spent: effective_hours[0].effective_hours ? `${(this.convertNumToTime(effective_hours[0].effective_hours))}` : 0,
+            remaining: `${(this.convertNumToTime(remaining_hours))}`,
             progress: `${(progress).toFixed(2)}%`,
 
         }
 
         //this.env.services.company
+    }
+
+    async getProjectText(){
+        let domain = []
+        if (this.state.selected_project != 'all'){
+            domain.push(['id','=', parseInt(this.state.selected_project)])
+            const data = await this.orm.searchRead("project.project", domain, ['achievements', 'dependencies','next_deliverables','action_items'])
+            console.log('project_text', data)
+            this.state.project = {
+                achievements: data[0].achievements,
+                dependencies: data[0].dependencies,
+                next_deliverables: data[0].next_deliverables,
+                action_items: data[0].action_items,
+
+            }
+
+        }
+        else{
+
+        this.state.project = {
+                achievements: 'NA',
+                dependencies: 'NA',
+
+            }
+
+        }
+
+
+
     }
 
     async viewTasks(){
@@ -325,6 +357,6 @@ export class OwlProjectDashboard extends Component {
 }
 
 OwlProjectDashboard.template = "owl.OwlProjectDashboard"
-OwlProjectDashboard.components = { KpiCard, ChartRenderer }
+OwlProjectDashboard.components = { KpiCard, ChartRenderer, TextCard }
 
 registry.category("actions").add("owl.project_dashboard", OwlProjectDashboard)

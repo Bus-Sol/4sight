@@ -25,5 +25,5 @@ class ProjectFilter(http.Controller):
             dic = {'name': project_id.name,
                    'id': project_id.id}
             project_list.append(dic)
-        print('projects', project_list)
+        # print('projects', project_list)
         return [project_list, employee_list]

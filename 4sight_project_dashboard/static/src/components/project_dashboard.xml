@@ -28,6 +28,17 @@
                     </div>
 
                     <div class="row">
+                        <TextCard name ="'Achievements'" value="state.project.achievements"/>
+                        <TextCard name ="'Issues/Risks/Dependencies'" value="state.project.dependencies"/>
+                    </div>
+
+                    <div class="row">
+                        <TextCard name ="'Next Deliverables'" value="state.project.next_deliverables"/>
+                        <TextCard name ="'Action Items'" value="state.project.action_items"/>
+                    </div>
+
+
+                    <div class="row">
                         <div class="col-lg-6 m-0 p-0">
                             <div class="shadow-sm border m-2 p-4 bg-white">
                                 <div class="d-flex align-items-center justify-content-between">
