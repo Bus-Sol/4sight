@@ -7,7 +7,7 @@
             <field name="model">project.project</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <tree string="Projects">
+                <tree string="Projects" editable="bottom" create="false">
                     <field name="partner_id" optional="show" string="Customer" widget="res_partner_many2one"/>
                     <field name="display_name" string="Name" class="fw-bold"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
