@@ -10,6 +10,8 @@
                 <tree string="Projects" editable="bottom" create="false" default_order="partner_id, name">
                     <field name="partner_id" optional="show" string="Customer" widget="res_partner_many2one"/>
                     <field name="display_name" string="Name" class="fw-bold"/>
+                    <button string="View" name="action_open_project" type="object"/>
+
                     <field name="name" string="Name" column_invisible="1"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
@@ -52,6 +54,43 @@
                   sequence="20"
                   parent="project.menu_project_report"
                   action="project_project_action_view"/>
+
+
+        <!-- Inherit Form View to Modify it -->
+        <record id="project_form_inherit" model="ir.ui.view">
+            <field name="name">project.project.form.inherit</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//notebook" position="inside">
+                    <page string="Notes" name="notes">
+                        <group>
+                            <group string="Achievements">
+                                <field name="achievements" nolabel="1" colspan="2"/>
+
+                            </group>
+                            <group string="Issues/Risks/Dependencies">
+                                <field name="dependencies" nolabel="1" colspan="2"/>
+
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Next Deliverables">
+                                <field name="next_deliverables" nolabel="1" colspan="2"/>
+
+                            </group>
+                            <group string="Action Items">
+                                <field name="action_items" nolabel="1" colspan="2"/>
+
+                            </group>
+                        </group>
+
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
 
 
     </data>

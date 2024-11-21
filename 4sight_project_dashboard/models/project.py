@@ -16,10 +16,19 @@ class Project(models.Model):
     remaining_from_paid = fields.Float(string="Remaining hours from Client Paid",compute="get_project_hours")
     paid_progress = fields.Float(string="Paid Progress", group_operator="avg", compute="get_progress")
 
-    achievements = fields.Text(string="Achievements")
-    next_deliverables = fields.Text(string="Next Deliverables")
-    dependencies = fields.Text(string="Issues/Risks/Dependencies")
-    action_items = fields.Text(string="Action Items")
+    achievements = fields.Text(string="Achievements", tracking=True)
+    next_deliverables = fields.Text(string="Next Deliverables", tracking=True)
+    dependencies = fields.Text(string="Issues/Risks/Dependencies", tracking=True)
+    action_items = fields.Text(string="Action Items", tracking=True)
+
+    def action_open_project(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('project.open_view_project_all')
+        action["views"] = [
+            (self.env.ref("project.edit_project").id, "form")
+        ]
+        action['res_id'] = self.id
+        return action
 
     @api.depends('sale_order_id','sale_order_id.invoice_ids')
     def get_invoices(self):
@@ -37,9 +46,9 @@ class Project(models.Model):
             rec.remaining_from_paid = rec.paid_hours - rec.effective_hours
 
 
-    @api.depends('allocated_hours', 'tasks_allocated_hours','paid_hours','remaining_from_paid')
+    @api.depends('effective_hours', 'tasks_allocated_hours','paid_hours')
     def get_progress(self):
         for rec in self:
             rec.progress = (rec.effective_hours * 100 ) / rec.tasks_allocated_hours if rec.tasks_allocated_hours > 0 else 0
-            rec.paid_progress = (rec.remaining_from_paid * 100 ) / rec.paid_hours if rec.paid_hours > 0 else 0
+            rec.paid_progress = (rec.effective_hours * 100 ) / rec.paid_hours if rec.paid_hours > 0 else 0
 
