@@ -7,7 +7,7 @@
             <field name="model">project.project</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <tree string="Projects" editable="bottom" create="false">
+                <tree string="Projects" editable="bottom" create="false" default_order="partner_id, display_name">
                     <field name="partner_id" optional="show" string="Customer" widget="res_partner_many2one"/>
                     <field name="display_name" string="Name" class="fw-bold"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
@@ -16,13 +16,16 @@
                     <field name="date_start" string="Planned Date" widget="daterange" options="{'end_date_field': 'date', 'always_range': '1'}" optional="hide"/>
                     <field name="stage_id" options="{'no_open': True}" domain="[('company_id', 'in', (company_id, False))]" optional="show"/>
                     <field name="tasks_allocated_hours" widget="float_time"/>
+                    <field name="paid_hours" widget="float_time"/>
                     <field name="effective_hours" widget="float_time"/>
                     <field name="tasks_remaining_hours"  widget="float_time" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="remaining_from_paid" widget="float_time" decoration-danger="paid_progress &gt;= 100" decoration-warning="paid_progress &gt;= 80 and paid_progress &lt; 100"/>
+                    <field name="paid_progress" column_invisible="1"/>
                     <field name="progress" widget="project_task_progressbar" options="{'overflow_class': 'bg-danger'}" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="sale_order_id"/>
-                    <field name="invoice_ids" widget="many2many_tags"/>
-                    <field name="invoice_total"/>
-                    <field name="invoice_due"/>
+                    <field name="invoice_ids" widget="many2many_tags" groups="account.group_account_manager"/>
+                    <field name="invoice_total" groups="account.group_account_manager"/>
+                    <field name="invoice_due" groups="account.group_account_manager"/>
 
                     <field name="achievements"/>
                     <field name="next_deliverables"/>
