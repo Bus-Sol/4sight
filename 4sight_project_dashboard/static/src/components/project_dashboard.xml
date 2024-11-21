@@ -39,7 +39,7 @@
 
 
                     <div class="row">
-                        <div class="col-lg-6 m-0 p-0">
+                        <div class="col-lg-4 m-0 p-0">
                             <div class="shadow-sm border m-2 p-4 bg-white">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <h3 class="text-primary fw-bold">Task Stages</h3>
@@ -51,7 +51,7 @@
 
                             </div>
                         </div>
-                        <div class="col-lg-6 m-0 p-0">
+                        <div class="col-lg-8 m-0 p-0">
                             <div class="shadow-sm border m-2 p-4 bg-white">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <h3 class="text-primary fw-bold">Allocated And Remaining Hours</h3>
