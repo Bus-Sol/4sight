@@ -20,7 +20,8 @@
                     <field name="date_start" string="Planned Date" widget="daterange" options="{'end_date_field': 'date', 'always_range': '1'}" optional="hide"/>
                     <field name="stage_id" options="{'no_open': True}" domain="[('company_id', 'in', (company_id, False))]" optional="show"/>
                     <field name="tasks_allocated_hours" widget="float_time"/>
-                    <field name="paid_hours" widget="float_time"/>
+                    <field name="paid_hours" widget="float_time" groups="account.group_account_manager"/>
+                    <field name="paid_hours" widget="float_time" readonly="1" groups="!account.group_account_manager"/>
                     <field name="effective_hours" widget="float_time"/>
                     <field name="tasks_remaining_hours"  widget="float_time" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="remaining_from_paid" widget="float_time" decoration-danger="paid_progress &gt;= 100" decoration-warning="paid_progress &gt;= 80 and paid_progress &lt; 100"/>

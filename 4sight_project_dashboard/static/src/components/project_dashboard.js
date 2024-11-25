@@ -88,7 +88,7 @@ export class OwlProjectDashboard extends Component {
                   datasets: [
                   {
                     label: 'Recorded Hours',
-                    data: data.map(d => d.unit_amount),
+                    data: data.map(d => d.unit_amount.toFixed(2)),
                     hoverOffset: 4,
                     backgroundColor: data.map((_, index) => getColor(index)),
                   }
