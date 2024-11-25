@@ -47,7 +47,7 @@
                                         <span class="fa fa-arrow-right text-white"/>
                                     </div>
                                 </div>
-                                <ChartRenderer type="'doughnut'" title="'Tasks By Stages'" config="state.task_stages"/>
+                                <ChartRenderer type="'doughnut'" title="'Tasks By Stages'" config="state.task_stages" datalabels="true"/>
 
                             </div>
                         </div>
@@ -59,7 +59,7 @@
                                         <span class="fa fa-arrow-right text-white"/>
                                     </div>
                                 </div>
-                                <ChartRenderer type="'bar'" title="'Allocated And Remaining Hours'" config="state.task_hours"/>
+                                <ChartRenderer type="'bar'" title="'Allocated And Remaining Hours'" config="state.task_hours" datalabels="false"/>
                             </div>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                                         <span class="fa fa-arrow-right text-white"/>
                                     </div>
                                 </div>
-                                <ChartRenderer type="'bar'" title="'Employees Timesheets'" config="state.employee_hours"/>
+                                <ChartRenderer type="'bar'" title="'Employees Timesheets'" config="state.employee_hours" datalabels="true"/>
 
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                                     <span class="fa fa-arrow-right text-white"/>
                                 </div>
                             </div>
-                            <ChartRenderer type="'line'" title="'Tasks Progress'" config="state.task_progress"/>
+                            <ChartRenderer type="'line'" title="'Tasks Progress'" config="state.task_progress" datalabels="false"/>
                             </div>
                         </div>
                     </div>

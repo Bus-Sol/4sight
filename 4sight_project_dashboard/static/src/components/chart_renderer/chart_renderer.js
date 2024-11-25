@@ -55,7 +55,7 @@ export class ChartRenderer extends Component {
                         weight: 'bold',
                         size: 14
                 },
-
+                display : this.props.datalabels
                 },
 
               legend: {
