@@ -12,6 +12,9 @@ export class ChartRenderer extends Component {
 
         onWillStart(async ()=>{
             await loadJS("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js")
+            await loadJS("https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2")
+            console.log('js loaded')
+//            <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
             //await loadJS("/web/static/lib/Chart/Chart.js")
         })
 
@@ -46,6 +49,15 @@ export class ChartRenderer extends Component {
           options: {
             responsive: true,
             plugins: {
+                datalabels:{
+                color: '#2f3236',
+                font: {
+                        weight: 'bold',
+                        size: 14
+                },
+
+                },
+
               legend: {
                 position: 'bottom',
               },
@@ -57,6 +69,7 @@ export class ChartRenderer extends Component {
             },
             scales: 'scales' in this.props.config ? this.props.config.scales : {},
           },
+          plugins: [ChartDataLabels]
         }
       );
     }

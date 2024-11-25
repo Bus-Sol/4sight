@@ -114,7 +114,7 @@ export class OwlProjectDashboard extends Component {
                   datasets: [
                   {
                     label: 'Progress',
-                    data: data.map(d => d.real_progress),
+                    data: data.map(d => d.real_progress.toFixed(2)),
                     hoverOffset: 4,
                     backgroundColor: data.map((_, index) => getColor(index)),
                   }]
