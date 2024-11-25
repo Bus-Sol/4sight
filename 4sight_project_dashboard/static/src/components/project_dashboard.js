@@ -251,6 +251,8 @@ export class OwlProjectDashboard extends Component {
         this.state.project = {
                 achievements: 'NA',
                 dependencies: 'NA',
+                next_deliverables: 'NA',
+                action_items: 'NA',
 
             }
 
