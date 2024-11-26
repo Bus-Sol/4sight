@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="task_analysis_tree_view" model="ir.ui.view">
+            <field name="name">Task Analysis Tree</field>
+            <field name="model">report.project.task.user</field>
+            <field name="arch" type="xml">
+                <tree string="" js_class="project_task_list">
+                    <field name="partner_id" widget="res_partner_many2one"/>
+                    <field name="project_id" widget="Many2one"/>
+                    <field name="task_id" widget="Many2one" string="Task"/>
+                    <field name="state" optional="hide"/>
+                    <field name="allocated_hours" widget="float_time" sum="Allocated Hours"/>
+                    <field name="effective_hours" widget="float_time" sum="Spent Hours"/>
+                    <field name="total_hours_spent" widget="float_time" sum="Total Spent Hours" optional="hide"/>
+                    <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="show" decoration-danger="real_progress &gt;= 100" decoration-warning="real_progress &gt;= 80 and real_progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="real_progress" string="Progress" widget="project_task_progressbar" optional="show" options="{'overflow_class': 'bg-danger'}" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="planned_date_begin" optional="hide"/>
+                    <field name="date_deadline" widget="remaining_days"/>
+                    <field name="sale_order_id" widget="Many2one"/>
+                    <field name="invoice_id" widget="Many2one" groups="account.group_account_manager"/>
+                    <field name="invoice_date" groups="account.group_account_manager"/>
+                    <field name="invoice_total" groups="account.group_account_manager"/>
+                    <field name="invoice_due" groups="account.group_account_manager"/>
+                </tree>
+            </field>
+        </record>
+
+
+
+        <record id="task_analysis_list_view_action" model="ir.actions.act_window">
+            <field name="name">Task Analysis</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">report.project.task.user</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="project.view_task_search_form_base"/>
+
+        </record>
+
+        <menuitem name="Task List" id="menu_task_analysis_list" sequence="20" parent="project.menu_project_report" action="task_analysis_list_view_action"/>
+
+
+    </data>
+</odoo>
