@@ -19,7 +19,8 @@
                     <field name="company_id" column_invisible="True"/>
                     <field name="date_start" string="Planned Date" widget="daterange" options="{'end_date_field': 'date', 'always_range': '1'}" optional="hide"/>
                     <field name="stage_id" options="{'no_open': True}" domain="[('company_id', 'in', (company_id, False))]" optional="show"/>
-                    <field name="tasks_allocated_hours" widget="float_time"/>
+                    <field name="allocated_hours" widget="float_time"/>
+                    <field name="tasks_allocated_hours" widget="float_time" column_invisible="1"/>
                     <field name="paid_hours" widget="float_time" groups="account.group_account_manager"/>
                     <field name="paid_hours" widget="float_time" readonly="1" groups="!account.group_account_manager"/>
                     <field name="effective_hours" widget="float_time"/>
