@@ -51,6 +51,6 @@ class Project(models.Model):
     @api.depends('effective_hours', 'tasks_allocated_hours','paid_hours')
     def get_progress(self):
         for rec in self:
-            rec.progress = (rec.effective_hours * 100 ) / rec.tasks_allocated_hours if rec.tasks_allocated_hours > 0 else 0
+            rec.progress = (rec.effective_hours * 100 ) / rec.allocated_hours if rec.allocated_hours > 0 else 0
             rec.paid_progress = (rec.effective_hours * 100 ) / rec.paid_hours if rec.paid_hours > 0 else 0
 
