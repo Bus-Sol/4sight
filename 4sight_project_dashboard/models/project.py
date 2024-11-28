@@ -9,6 +9,7 @@ class Project(models.Model):
     invoice_due = fields.Float(string="Invoices Due Amount", group_operator="sum", compute="get_invoices")
     tasks_allocated_hours = fields.Float(string="Allocated Hours", group_operator="sum", compute="get_project_hours")
     tasks_remaining_hours = fields.Float(string="Remaining Hours", group_operator="sum", compute="get_project_hours")
+    project_remaining_hours = fields.Float(string="Remaining Hours", group_operator="sum", compute="get_project_hours")
     effective_hours = fields.Float(string="Spent Hours", group_operator="sum", compute="get_project_hours")
     progress = fields.Float(string="Progress", group_operator="avg", compute="get_progress")
 
@@ -43,6 +44,7 @@ class Project(models.Model):
             rec.effective_hours = sum([t.effective_hours for t in rec.task_ids])
             rec.tasks_allocated_hours = sum([t.allocated_hours for t in rec.task_ids])
             rec.tasks_remaining_hours = sum([t.allocated_hours - t.effective_hours for t in rec.task_ids])
+            rec.project_remaining_hours = rec.allocated_hours - sum([t.effective_hours for t in rec.task_ids])
             rec.remaining_from_paid = rec.paid_hours - rec.effective_hours
 
 
