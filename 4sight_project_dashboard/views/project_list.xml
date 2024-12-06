@@ -55,7 +55,7 @@
 
         <menuitem name="Projects List" id="menu_project_analysis_list"
                   sequence="20"
-                  parent="project.menu_project_report"
+                  parent="project.menu_project_management"
                   action="project_project_action_view"/>
 
 

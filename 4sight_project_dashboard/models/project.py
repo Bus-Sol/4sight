@@ -41,10 +41,11 @@ class Project(models.Model):
     @api.depends('task_ids.effective_hours','paid_hours')
     def get_project_hours(self):
         for rec in self:
-            rec.effective_hours = sum([t.effective_hours for t in rec.task_ids])
+            timesheet_lines = self.env['account.analytic.line'].search([('project_id','=', rec.id),('project_id', '!=', False),('is_timesheet','=',True)])
+            rec.effective_hours = sum([t.unit_amount for t in timesheet_lines])
             rec.tasks_allocated_hours = sum([t.allocated_hours for t in rec.task_ids])
             rec.tasks_remaining_hours = sum([t.allocated_hours - t.effective_hours for t in rec.task_ids])
-            rec.project_remaining_hours = rec.allocated_hours - sum([t.effective_hours for t in rec.task_ids])
+            rec.project_remaining_hours = rec.allocated_hours - sum([t.unit_amount for t in timesheet_lines])
             rec.remaining_from_paid = rec.paid_hours - rec.effective_hours
 
 
