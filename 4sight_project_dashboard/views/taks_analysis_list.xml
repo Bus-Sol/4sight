@@ -38,7 +38,7 @@
 
         </record>
 
-        <menuitem name="Task List" id="menu_task_analysis_list" sequence="20" parent="project.menu_project_report" action="task_analysis_list_view_action"/>
+        <menuitem name="Task List" id="menu_task_analysis_list" sequence="10" parent="project.menu_project_management" action="task_analysis_list_view_action"/>
 
 
     </data>
