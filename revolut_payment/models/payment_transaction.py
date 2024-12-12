@@ -45,6 +45,7 @@ class PaymentTransaction(models.Model):
         # print('payment_data', payment_data)
 
         # The acquirer reference is set now to allow fetching the payment status after redirection
+        self.provider_reference = payment_data.get('id')
         self.revolut_order_code = payment_data.get('id')
         self.revolut_order_token = payment_data.get('token')
         checkout_url = payment_data.get('checkout_url')
@@ -136,3 +137,34 @@ class PaymentTransaction(models.Model):
                 "Revolut: " + _("Received data with invalid payment status: %s", payment_status)
             )
 
+    def _send_capture_request(self, amount_to_capture=None):
+        """ Override of `payment` to send a capture request to Razorpay. """
+        child_capture_tx = super()._send_capture_request(amount_to_capture=amount_to_capture)
+        if self.provider_code != 'revolut':
+            return child_capture_tx
+
+        converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency_id)
+        payload = {'amount': converted_amount}
+        _logger.info(
+            "Payload of '/orders/<id>/capture' request for transaction with reference %s:\n%s",
+            self.revolut_order_code, pprint.pformat(payload)
+        )
+
+        api_url = self.provider_id._revolut_endpoint()
+        path = f'api/orders/{self.revolut_order_code.strip()}/capture'
+
+        response_content = self.provider_id._revolut_make_request(
+            endpoint=api_url,
+            path=path,
+            data=payload,
+            method='POST'
+        )
+        _logger.info(
+            "Response of '/orders/<id>/capture' request for transaction with reference %s:\n%s",
+            self.revolut_order_code, pprint.pformat(response_content)
+        )
+
+        # Handle the capture request response.
+        self._handle_notification_data('revolut', response_content)
+
+        return child_capture_tx
