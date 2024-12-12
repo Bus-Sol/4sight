@@ -165,6 +165,22 @@ class PaymentTransaction(models.Model):
         )
 
         # Handle the capture request response.
-        self._handle_notification_data('revolut', response_content)
+        payment_status = response_content.get('state')
+        if payment_status in ['pending', 'processing']:
+            self._set_pending()
+        elif payment_status == 'authorised':
+            self._set_authorized()
+        elif payment_status == 'completed':
+            self._set_done()
+        elif payment_status in ['cancelled', 'failed']:
+            self._set_canceled("Revolut: " + _("Canceled payment with status: %s", payment_status))
+        else:
+            _logger.info(
+                "received data with invalid payment status (%s) for transaction with reference %s",
+                payment_status, self.reference
+            )
+            self._set_error(
+                "Revolut: " + _("Received data with invalid payment status: %s", payment_status)
+            )
 
         return child_capture_tx
