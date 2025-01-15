@@ -423,7 +423,7 @@ class JobSheet(models.Model):
                 'job_id': res.id,
                 'project_id': res.project_id.id,
                 'task_id': res.task_id.id,
-                'date': fields.Datetime.now(),
+                'date': res.start_date,
                 'name': res.brief,
                 'user_id': res.env.uid,
                 'unit_amount': vals['hours'],
