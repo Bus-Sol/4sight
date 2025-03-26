@@ -16,6 +16,7 @@ class Project(models.Model):
     paid_hours = fields.Float(string="Client Paid Hours")
     remaining_from_paid = fields.Float(string="Remaining hours from Client Paid",compute="get_project_hours")
     paid_progress = fields.Float(string="Paid Progress", group_operator="avg", compute="get_progress")
+    invoiced_hours = fields.Float(string="Invoiced Hours",  compute="get_project_hours")
 
     achievements = fields.Text(string="Achievements", tracking=True)
     next_deliverables = fields.Text(string="Next Deliverables", tracking=True)
@@ -41,12 +42,20 @@ class Project(models.Model):
     @api.depends('task_ids.effective_hours','paid_hours')
     def get_project_hours(self):
         for rec in self:
+            all_sale_orders = rec._fetch_sale_order_items(
+                {'project.task': [('state', 'in', self.env['project.task'].OPEN_STATES)]}).sudo().order_id
+
             timesheet_lines = self.env['account.analytic.line'].search([('project_id','=', rec.id),('project_id', '!=', False),('is_timesheet','=',True)])
             rec.effective_hours = sum([t.unit_amount for t in timesheet_lines])
             rec.tasks_allocated_hours = sum([t.allocated_hours for t in rec.task_ids])
             rec.tasks_remaining_hours = sum([t.allocated_hours - t.effective_hours for t in rec.task_ids])
             rec.project_remaining_hours = rec.allocated_hours - sum([t.unit_amount for t in timesheet_lines])
             rec.remaining_from_paid = rec.paid_hours - rec.effective_hours
+
+            invoiced = 0
+            for order in all_sale_orders:
+                invoiced += sum(order.order_line.mapped('qty_invoiced'))
+            rec.invoiced_hours = invoiced
 
 
     @api.depends('effective_hours', 'tasks_allocated_hours','paid_hours')
