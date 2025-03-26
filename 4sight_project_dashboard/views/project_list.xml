@@ -21,6 +21,7 @@
                     <field name="stage_id" options="{'no_open': True}" domain="[('company_id', 'in', (company_id, False))]" optional="show"/>
                     <field name="allocated_hours" widget="float_time" sum="Total"/>
                     <field name="tasks_allocated_hours" widget="float_time" column_invisible="1" sum="Total"/>
+                    <field name="invoiced_hours" widget="float_time"  groups="account.group_account_manager,project.group_project_manager" sum="Total"/>
                     <field name="paid_hours" widget="float_time" groups="account.group_account_manager" sum="Total"/>
                     <field name="paid_hours" widget="float_time" readonly="1" groups="project.group_project_manager" sum="Total"/>
                     <field name="effective_hours" widget="float_time" sum="Total"/>
