@@ -39,7 +39,9 @@ class Project(models.Model):
             rec.invoice_total = sum([i.amount_total for i in rec.sale_order_id.invoice_ids])
             rec.invoice_due = sum([i.amount_residual for i in rec.sale_order_id.invoice_ids])
 
-    @api.depends('task_ids.effective_hours','paid_hours')
+    @api.depends('task_ids.effective_hours','task_ids.allocated_hours','task_ids.sale_order_id',
+                'task_ids.sale_order_id.order_line.qty_invoiced','task_ids.sale_line_id','paid_hours','allocated_hours',
+                 'timesheet_ids','timesheet_ids.unit_amount')
     def get_project_hours(self):
         for rec in self:
             all_sale_orders = rec._fetch_sale_order_items(
