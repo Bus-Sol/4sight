@@ -13,6 +13,7 @@
                     <button string="View" name="action_open_project" type="object"/>
 
                     <field name="name" string="Name" column_invisible="1"/>
+                    <field name="is_account_manager" column_invisible="1"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
                     <field name="company_id" optional="hide" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
@@ -22,8 +23,7 @@
                     <field name="allocated_hours" widget="float_time" sum="Total"/>
                     <field name="tasks_allocated_hours" widget="float_time" column_invisible="1" sum="Total"/>
                     <field name="invoiced_hours" widget="float_time"  groups="account.group_account_manager,project.group_project_manager" sum="Total"/>
-                    <field name="paid_hours" widget="float_time" groups="account.group_account_manager" sum="Total"/>
-                    <field name="paid_hours" widget="float_time" readonly="1" groups="project.group_project_manager" sum="Total"/>
+                    <field name="paid_hours" widget="float_time" readonly="not is_account_manager" groups="account.group_account_manager,project.group_project_manager" sum="Total"/>
                     <field name="effective_hours" widget="float_time" sum="Total"/>
                     <field name="tasks_remaining_hours"  widget="float_time" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user" column_invisible="1" sum="Total"/>
                     <field name="project_remaining_hours"  widget="float_time" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user" sum="Total"/>
