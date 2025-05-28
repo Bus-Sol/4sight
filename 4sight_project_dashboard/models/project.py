@@ -23,6 +23,13 @@ class Project(models.Model):
     dependencies = fields.Text(string="Issues/Risks/Dependencies", tracking=True)
     action_items = fields.Text(string="Action Items", tracking=True)
 
+    is_account_manager = fields.Boolean(string="Is Account Manager", compute="_compute_user_am")
+
+    @api.depends_context('uid')
+    def _compute_user_am(self):
+        for rec in self:
+            rec.is_account_manager = self.env.user.has_group('account.group_account_manager')
+
     def action_open_project(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('project.open_view_project_all')
