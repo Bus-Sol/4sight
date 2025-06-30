@@ -13,13 +13,96 @@ class PortalJobsheet(CustomerPortal):
 
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
+        partner = request.env.user.partner_id
+        Service = request.env['jobsheet.service']
+
         if 'jobsheet_count' in counters:
             values['jobsheet_count'] = (
                 request.env['client.jobsheet'].search_count([])
                 if request.env['client.jobsheet'].check_access_rights('read', raise_exception=False)
                 else 0
             )
+
+        if 'service_count' in counters:
+            values['service_count'] = Service.search_count(self._prepare_service_domain(partner)) \
+                if Service.check_access_rights('read', raise_exception=False) else 0
         return values
+
+
+    def _prepare_service_domain(self, partner):
+        return [
+            ('partner_service_id', 'child_of', [partner.commercial_partner_id.id])
+        ]
+
+
+    def _prepare_service_portal_rendering_values(
+        self, page=1,  sortby=None, **kwargs
+    ):
+        Service = request.env['jobsheet.service']
+
+        partner = request.env.user.partner_id
+        values = self._prepare_portal_layout_values()
+
+
+        url = "/my/services"
+        domain = self._prepare_service_domain(partner)
+
+        pager_values = portal_pager(
+            url=url,
+            total=Service.search_count(domain),
+            page=page,
+            step=self._items_per_page,
+        )
+        Services = Service.search(domain, limit=self._items_per_page, offset=pager_values['offset'])
+        # print('services', Services)
+        lines = []
+
+        tks = False
+        for service in Services:
+            planned = 0
+            effective = 0
+            remaining = 0
+            tks1 = request.env['project.task'].search(
+                [('partner_id', '=', partner.id),
+                 ('related_service_id', '=', service.product_id.id),
+                 ('sale_line_id', '!=', False),
+                 ('sale_line_id.order_id.state', 'in', ['sale', 'done'])],
+                order='id desc')
+            # print('tasks', tks1)
+
+            tks = [task for task in tks1 if round(task.remaining_hours, 2) > 0]
+
+            for tsk in tks:
+                planned += tsk.allocated_hours
+                effective += tsk.effective_hours
+                remaining += tsk.remaining_hours
+
+            lines.append({
+                'service': service.product_id.name,
+                'planned': planned,
+                'effective': effective,
+                'remaining': remaining,
+            })
+
+        # print('lines', lines)
+
+        values.update({
+            'services': Services,
+            'lines': lines,
+            'page_name': 'service',
+            'pager': pager_values,
+            'default_url': url,
+            'sortby': sortby,
+        })
+
+        return values
+
+    @http.route(['/my/services', '/my/services/page/<int:page>'], type='http', auth="user", website=True)
+    def portal_my_quotes(self, **kwargs):
+        values = self._prepare_service_portal_rendering_values(**kwargs)
+        return request.render("odoo_timestead.portal_my_services", values)
+
+
 
     def _jobsheet_get_page_view_values(self, jobsheet, access_token, **kwargs):
         values = {

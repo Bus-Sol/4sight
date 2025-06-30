@@ -26,6 +26,75 @@
         </xpath>
     </template>
 
+
+    <template id="portal_my_home_service_template" name="Show Services" customize_show="True"
+              inherit_id="portal.portal_my_home" priority="50">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/odoo_timestead/static/src/img/star_img.svg'"/>
+                <t t-set="title">Services</t>
+                <t t-set="url" t-value="'/my/services'"/>
+                <t t-set="text"> View your services</t>
+                <t t-set="placeholder_count" t-value="'service_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+
+    <template id="portal_my_services" name="My Services">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Services</t>
+            </t>
+            <div t-if="not lines" class="alert alert-warning" role="alert">
+                There are currently no Service for your account.
+            </div>
+            <t t-if="lines" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Service</th>
+                        <th class="text-end">Planned Hours</th>
+                        <th class="text-end">Used Hours</th>
+                        <th class="text-end">Remaining Hours</th>
+
+                    </tr>
+                </thead>
+                <t t-foreach="lines" t-as="line">
+                    <tr>
+
+                        <td><span t-esc="line['service']"/></td>
+
+                        <td class="text-end">
+                            <t t-set="raw_hours" t-value="line['planned'] or 0"/>
+                            <t t-set="hours" t-value="int(raw_hours)"/>
+                            <t t-set="minutes" t-value="int(round((raw_hours - hours) * 60))"/>
+                            <t t-esc="'%02d:%02d' % (hours, minutes)"/>
+                        </td>
+
+                        <td class="text-end">
+                            <t t-set="raw_hours" t-value="line['effective'] or 0"/>
+                            <t t-set="hours" t-value="int(raw_hours)"/>
+                            <t t-set="minutes" t-value="int(round((raw_hours - hours) * 60))"/>
+                            <t t-esc="'%02d:%02d' % (hours, minutes)"/>
+                        </td>
+
+                        <td class="text-end">
+                            <t t-set="raw_hours" t-value="line['remaining'] or 0"/>
+                            <t t-set="hours" t-value="int(raw_hours)"/>
+                            <t t-set="minutes" t-value="int(round((raw_hours - hours) * 60))"/>
+                            <t t-esc="'%02d:%02d' % (hours, minutes)"/>
+                        </td>
+
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+
     <template id="portal_my_jobsheets" name="My Jobsheets">
         <t t-call="portal.portal_layout">
             <t t-set="breadcrumbs_searchbar" t-value="True"/>
