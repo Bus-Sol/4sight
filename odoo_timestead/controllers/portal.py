@@ -38,7 +38,7 @@ class PortalJobsheet(CustomerPortal):
     def _prepare_service_portal_rendering_values(
         self, page=1,  sortby=None, **kwargs
     ):
-        Service = request.env['jobsheet.service']
+        Service = request.env['jobsheet.service'].sudo()
 
         partner = request.env.user.partner_id
         values = self._prepare_portal_layout_values()
@@ -62,7 +62,7 @@ class PortalJobsheet(CustomerPortal):
             planned = 0
             effective = 0
             remaining = 0
-            tks1 = request.env['project.task'].search(
+            tks1 = request.env['project.task'].sudo().search(
                 [('partner_id', '=', partner.id),
                  ('related_service_id', '=', service.product_id.id),
                  ('sale_line_id', '!=', False),
