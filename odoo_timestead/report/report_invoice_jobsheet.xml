@@ -55,9 +55,13 @@
 
         </xpath>
 
+
+        <xpath expr="//tbody[hasclass('invoice_tbody')]//t[1]" position="after">
+            <t t-set="i" t-value="0"/>
+        </xpath>
+
         <xpath expr="//tbody[hasclass('invoice_tbody')]//tr//td[@name='account_invoice_line_name']" position="replace">
 
-            <t t-set="i" t-value="0"/>
             <t t-if="report_type == 'html'">
                 <td name="account_invoice_line_name">
                     <t t-if="line.move_id.job_ids">
