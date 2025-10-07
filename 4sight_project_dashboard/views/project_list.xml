@@ -22,7 +22,7 @@
                     <field name="stage_id" options="{'no_open': True}" domain="[('company_id', 'in', (company_id, False))]" optional="show"/>
                     <field name="allocated_hours" widget="float_time" sum="Total"/>
                     <field name="tasks_allocated_hours" widget="float_time" column_invisible="1" sum="Total"/>
-                    <field name="invoiced_hours" widget="float_time"  groups="account.group_account_manager,project.group_project_manager" sum="Total"/>
+                    <field name="invoiced_hours" widget="float_time"  groups="account.group_account_manager,project.group_project_manager"/>
                     <field name="paid_hours" widget="float_time" readonly="not is_account_manager" groups="account.group_account_manager,project.group_project_manager" sum="Total"/>
                     <field name="effective_hours" widget="float_time" sum="Total"/>
                     <field name="tasks_remaining_hours"  widget="float_time" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user" column_invisible="1" sum="Total"/>

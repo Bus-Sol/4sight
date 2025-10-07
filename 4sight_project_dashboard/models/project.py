@@ -62,8 +62,9 @@ class Project(models.Model):
             rec.remaining_from_paid = rec.paid_hours - rec.effective_hours
 
             invoiced = 0
+
             for order in all_sale_orders:
-                invoiced += sum(order.order_line.mapped('qty_invoiced'))
+                invoiced += sum(order.order_line.filtered(lambda l: l.product_uom.name in ['HOURs', 'HOURS']).mapped('qty_invoiced'))
             rec.invoiced_hours = invoiced
 
 
