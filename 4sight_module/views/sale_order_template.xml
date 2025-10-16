@@ -8,11 +8,13 @@
             <field name="inherit_id" ref="sale_management.sale_order_template_view_form"/>
             <field name="arch" type="xml">
 
-                <xpath expr="//field[@name='plan_id']" position="after">
-                    <field name="is_flow_template"/>
-                    <field name="flow_image" widget="image" invisible="not is_flow_template"/>
-                    <field name="flow_details" invisible="not is_flow_template"/>
-                </xpath>
+                    <group name="sale_info" position="after">
+                        <group>
+                            <field name="is_flow_template"/>
+                            <field name="flow_image" widget="image" invisible="not is_flow_template"/>
+                            <field name="flow_details" invisible="not is_flow_template"/>
+                        </group>
+                    </group>
 
             </field>
         </record>
