@@ -7,3 +7,4 @@ from . import crm_lead
 from . import res_partner
 from . import mail_message
 from . import sale_template
+from . import account_move
