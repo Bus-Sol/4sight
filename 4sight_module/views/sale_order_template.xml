@@ -13,6 +13,10 @@
                             <field name="is_flow_template"/>
                             <field name="flow_image" widget="image" invisible="not is_flow_template"/>
                             <field name="flow_details" invisible="not is_flow_template"/>
+                            <field name="flow_email" invisible="not is_flow_template"/>
+                            <field name="flow_website" invisible="not is_flow_template"/>
+                            <field name="flow_phone" invisible="not is_flow_template"/>
+                            <field name="flow_vat" invisible="not is_flow_template"/>
                         </group>
                     </group>
 
