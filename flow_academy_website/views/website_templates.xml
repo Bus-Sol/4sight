@@ -1,0 +1,45 @@
+<odoo>
+    <template id="events_by_category" name="Events by Type">
+        <t t-call="website.layout">
+            <div class="container mt-5 mb-5">
+                <div class="row">
+                    <t t-if="events">
+                        <t t-foreach="events" t-as="event">
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-body">
+                                        <h5 class="card-title" t-field="event.name"/>
+
+                                        <p class="card-text text-muted">
+                                            <i class="fa fa-calendar me-2"/>
+                                            <span t-field="event.date_begin" t-options='{"format": "d MMMM y"}'/>
+                                            -
+                                            <span t-field="event.date_end" t-options='{"format": "d MMMM y"}'/>
+                                        </p>
+
+                                        <p class="card-text small">
+                                            <i class="fa fa-clock-o me-2"/>
+                                            <span t-field="event.date_begin" t-options='{"format": "short"}'/>
+                                        </p>
+                                    </div>
+
+                                    <div class="card-footer bg-white border-top-0">
+                                        <a t-att-href="event.website_url" class="btn btn-primary w-100">
+                                            Register Now
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+
+                    <t t-else="">
+                        <div class="col-12 text-center alert alert-info">
+                            No upcoming events found for this type.
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
