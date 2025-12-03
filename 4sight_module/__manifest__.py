@@ -27,6 +27,7 @@
         'views/view_crm_kanban.xml',
         'views/view_account_inv_send.xml',
         'views/view_partner_form.xml',
+        'views/sale_order_template.xml',
     ],
     'demo': [
     ],
