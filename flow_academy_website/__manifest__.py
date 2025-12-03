@@ -24,5 +24,10 @@
         'views/website_templates.xml',
         'security/ir.model.access.csv'
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'flow_academy_website/static/src/js/website_sale.js',
+        ],
+    },
 
 }
