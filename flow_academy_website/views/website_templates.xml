@@ -21,12 +21,20 @@
                                             <i class="fa fa-clock-o me-2"/>
                                             <span t-field="event.date_begin" t-options='{"format": "short"}'/>
                                         </p>
+                                        <p class="card-text text-muted">
+                                            <i class="fa fa-ticket me-2"/>
+                                            Available Seats: <span t-field="event.seats_available"/>
+                                        </p>
                                     </div>
 
                                     <div class="card-footer bg-white border-top-0">
-                                        <a t-att-href="event.website_url" class="btn btn-primary w-100">
-                                            Register Now
-                                        </a>
+                                        <button t-if="event.event_registrations_open" type="button" data-bs-toggle="modal" data-bs-target="#modal_ticket_registration" class="btn btn-primary w-100">Register</button>
+        <div t-if="registration_error_code == 'insufficient_seats'" class="alert alert-danger my-3" role="alert">
+            Registration failed! These tickets are not available anymore.
+        </div>
+                                        <p t-if="not event.event_registrations_open">
+                                            NOT AVAILABLE
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -40,6 +48,43 @@
                     </t>
                 </div>
             </div>
+                    <t t-call="website_event.modal_ticket_registration"/>
         </t>
     </template>
+
+
+    <template id="modal_ticket_registration" inherit_id="website_event.modal_ticket_registration">
+
+
+         <xpath expr="//div[hasclass('o_wevent_registration_title')]" position="after">
+            <div class="o_wevent_registration_title modal-title fs-5" id="staticLabel">Seats</div>
+        </xpath>
+
+         <xpath expr="//div[@id='staticBackdropLabel']" position="replace">
+        </xpath>
+
+
+    </template>
+
+    <template id="registration_attendee_details" inherit_id="website_event.registration_attendee_details">
+
+
+         <xpath expr="//div[hasclass('modal-body')]/h5" position="after">
+            <h5 t-attf-class="mt-1 pb-2 #{'border-bottom' if event.question_ids else ''}">Seat #<span t-out="counter"/> <small class="text-muted">- <span t-out="ticket['name']"/></small></h5>
+        </xpath>
+
+         <xpath expr="//div[hasclass('modal-body')]/h5[1]" position="replace">
+        </xpath>
+
+
+    </template>
+
+
+    <template id="event_confirmation" inherit_id="website_event_sale.event_confirmation">
+        <xpath expr="//t[@t-if='events']" position="replace">
+        </xpath>
+
+    </template>
+
+
 </odoo>
