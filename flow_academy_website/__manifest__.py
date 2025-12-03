@@ -16,6 +16,7 @@
         'website_event',
         'website_sale',
         'account',
+        'website_event_sale'
     ],
     'data': [
         'views/event_category.xml',
