@@ -30,7 +30,7 @@
                     </group>
 
                     <notebook>
-                        <page string="Authorization" invisible="grant_type != 'authorization_code'">
+                        <page string="Authorization" attrs="{'invisible': [('grant_type', '!=', 'authorization_code')]}">
                             <div class="alert alert-info" role="alert">
                                 <strong>Authorization Code Flow:</strong>
                                 Click "Authorize" to open Provet Cloud login page.
@@ -40,9 +40,9 @@
                                 <group string="Authorization">
                                     <div class="text-center">
                                         <button name="generate_auth_url" type="object" string="Authorize with Provet Cloud" class="btn-primary"/>
-                                        <a t-attf-href="/provet/oauth/status/{{id}}" class="btn btn-link">Check Authorization Status</a>
+                                        <button name="check_auth_status" type="object" string="Check Status" class="btn-secondary"/>
                                     </div>
-                                    <field name="auth_url" widget="url" readonly="1" nolabel="1"/>
+                                    <field name="auth_url" widget="url" readonly="1" string="Authorization URL"/>
                                     <field name="redirect_uri"/>
                                     <field name="auth_state" readonly="1"/>
                                 </group>
@@ -53,7 +53,7 @@
                             </group>
                         </page>
 
-                        <page string="Client Credentials" invisible="grant_type != 'client_credentials'">
+                        <page string="Client Credentials" attrs="{'invisible': [('grant_type', '!=', 'client_credentials')]}">
                             <div class="alert alert-info" role="alert">
                                 <strong>Client Credentials Flow:</strong>
                                 Direct server-to-server authentication. Click "Get Token" to authenticate.
@@ -71,6 +71,7 @@
                                     <field name="access_token" password="true"/>
                                     <field name="refresh_token" password="true"/>
                                     <field name="token_expiry"/>
+                                    <field name="last_sync"/>
                                 </group>
                                 <group string="Actions">
                                     <div class="text-center">
@@ -93,7 +94,6 @@
             </form>
         </field>
     </record>
-
     <!-- Add QWeb templates for OAuth pages -->
     <template id="oauth_success" name="OAuth Success">
         <t t-call="web.basic_layout">
@@ -125,75 +125,6 @@
         </t>
     </template>
 
-    <template id="oauth_error" name="OAuth Error">
-        <t t-call="web.basic_layout">
-            <div class="container mt-5">
-                <div class="row justify-content-center">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header bg-danger text-white">
-                                <h4 class="mb-0">Authorization Failed</h4>
-                            </div>
-                            <div class="card-body text-center">
-                                <div class="mb-4">
-                                    <i class="fa fa-times-circle fa-5x text-danger"></i>
-                                </div>
-                                <h5 class="card-title">Connection Error</h5>
-                                <p class="card-text" t-esc="error_message"/>
-                                <a t-attf-href="/web#id=#{config.id}&amp;model=provet.config&amp;view_type=form"
-                                   class="btn btn-primary">
-                                    Return to Configuration
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </t>
-    </template>
-
-    <template id="oauth_status" name="OAuth Status">
-        <t t-call="web.basic_layout">
-            <div class="container mt-5">
-                <div class="row justify-content-center">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="mb-0">Authorization Status</h4>
-                            </div>
-                            <div class="card-body text-center">
-                                <div t-if="config.connection_status == 'connected'" class="mb-4">
-                                    <i class="fa fa-check-circle fa-5x text-success"></i>
-                                    <h5 class="card-title mt-3">Connected</h5>
-                                    <p class="card-text">
-                                        Token expires:
-                                        <t t-esc="config.token_expiry"/>
-                                    </p>
-                                </div>
-                                <div t-elif="config.connection_status == 'auth_required'" class="mb-4">
-                                    <i class="fa fa-exclamation-circle fa-5x text-warning"></i>
-                                    <h5 class="card-title mt-3">Authorization Required</h5>
-                                    <p class="card-text">
-                                        Click the "Authorize" button in the configuration.
-                                    </p>
-                                </div>
-                                <div t-else="" class="mb-4">
-                                    <i class="fa fa-times-circle fa-5x text-danger"></i>
-                                    <h5 class="card-title mt-3">
-                                        <t t-esc="config.connection_status"/>
-                                    </h5>
-                                </div>
-                                <a t-attf-href="/web#id=#{config.id}&amp;model=provet.config&amp;view_type=form"
-                                   class="btn btn-primary">
-                                    Return to Configuration
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </t>
-    </template>
 
     <!-- Tree/List View -->
     <record id="view_provet_config_tree" model="ir.ui.view">

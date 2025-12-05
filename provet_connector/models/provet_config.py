@@ -328,3 +328,18 @@ class ProvetConfig(models.Model):
         except Exception as e:
             _logger.error("Connection test failed: %s", str(e))
             raise ValidationError(_("Connection test failed: %s") % str(e))
+
+    def check_auth_status(self):
+        """Check and return authorization status"""
+        self.ensure_one()
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Authorization Status',
+                'message': f'Status: {self.connection_status}. Token expires: {self.token_expiry or "Never"}',
+                'type': 'info' if self.connection_status == 'connected' else 'warning',
+                'sticky': True,
+            }
+        }
