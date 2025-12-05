@@ -8,10 +8,7 @@
             <form string="Provet Configuration">
                 <header>
                     <button name="test_connection" type="object" string="Test Connection" class="btn-primary"/>
-                    <button name="get_access_token" type="object" string="Get Token" class="btn-secondary"/>
-                    <button name="refresh_access_token" type="object" string="Refresh Token" class="btn-secondary"/>
-                    <button name="revoke_token" type="object" string="Revoke Token" class="btn-danger"/>
-                    <field name="connection_status" widget="statusbar" statusbar_visible="not_configured,connected,expired,error"/>
+                    <field name="connection_status" widget="statusbar" statusbar_visible="not_configured,auth_required,connected,expired,error"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -19,6 +16,7 @@
                             <field name="instance_name" placeholder="e.g., Production Instance"/>
                         </h1>
                     </div>
+
                     <group>
                         <group string="Instance Configuration">
                             <field name="base_url"/>
@@ -32,25 +30,59 @@
                     </group>
 
                     <notebook>
-                        <page string="Advanced" attrs="{'invisible': [('grant_type', '!=', 'authorization_code')]}">
-                            <group string="Authorization Code Flow">
-                                <field name="username"/>
-                                <field name="password" password="true"/>
-                                <field name="redirect_uri"/>
+                        <page string="Authorization" invisible="grant_type != 'authorization_code'">
+                            <div class="alert alert-info" role="alert">
+                                <strong>Authorization Code Flow:</strong>
+                                Click "Authorize" to open Provet Cloud login page.
+                                After login, you'll be redirected back to Odoo.
+                            </div>
+                            <group>
+                                <group string="Authorization">
+                                    <div class="text-center">
+                                        <button name="generate_auth_url" type="object" string="Authorize with Provet Cloud" class="btn-primary"/>
+                                        <a t-attf-href="/provet/oauth/status/{{id}}" class="btn btn-link">Check Authorization Status</a>
+                                    </div>
+                                    <field name="auth_url" widget="url" readonly="1" nolabel="1"/>
+                                    <field name="redirect_uri"/>
+                                    <field name="auth_state" readonly="1"/>
+                                </group>
+                                <group string="Credentials (Optional)">
+                                    <field name="username"/>
+                                    <field name="password" password="true"/>
+                                </group>
                             </group>
                         </page>
 
-                        <page string="Token Information">
-                            <group string="Current Token">
-                                <field name="access_token" password="true"/>
-                                <field name="refresh_token" password="true"/>
-                                <field name="token_expiry"/>
-                                <field name="last_sync"/>
+                        <page string="Client Credentials" invisible="grant_type != 'client_credentials'">
+                            <div class="alert alert-info" role="alert">
+                                <strong>Client Credentials Flow:</strong>
+                                Direct server-to-server authentication. Click "Get Token" to authenticate.
+                            </div>
+                            <group>
+                                <div class="text-center">
+                                    <button name="get_access_token" type="object" string="Get Token" class="btn-primary"/>
+                                </div>
                             </group>
                         </page>
 
-                        <page string="Endpoints">
-                            <group string="API Endpoints">
+                        <page string="Token Management">
+                            <group>
+                                <group string="Current Tokens">
+                                    <field name="access_token" password="true"/>
+                                    <field name="refresh_token" password="true"/>
+                                    <field name="token_expiry"/>
+                                </group>
+                                <group string="Actions">
+                                    <div class="text-center">
+                                        <button name="refresh_access_token" type="object" string="Refresh Token" class="btn-secondary"/>
+                                        <button name="get_access_token" type="object" string="Get New Token" class="btn-secondary"/>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="API Endpoints">
+                            <group string="Generated Endpoints">
                                 <field name="authorize_url" readonly="1"/>
                                 <field name="token_url" readonly="1"/>
                                 <field name="revoke_url" readonly="1"/>
@@ -61,6 +93,107 @@
             </form>
         </field>
     </record>
+
+    <!-- Add QWeb templates for OAuth pages -->
+    <template id="oauth_success" name="OAuth Success">
+        <t t-call="web.basic_layout">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h4 class="mb-0">Authorization Successful!</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="mb-4">
+                                    <i class="fa fa-check-circle fa-5x text-success"></i>
+                                </div>
+                                <h5 class="card-title">Connected to Provet Cloud</h5>
+                                <p class="card-text">
+                                    Your Odoo instance is now connected to Provet Cloud.
+                                    You can close this window and return to Odoo.
+                                </p>
+                                <a t-attf-href="/web#id=#{config.id}&amp;model=provet.config&amp;view_type=form"
+                                   class="btn btn-primary">
+                                    Return to Configuration
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="oauth_error" name="OAuth Error">
+        <t t-call="web.basic_layout">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-danger text-white">
+                                <h4 class="mb-0">Authorization Failed</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="mb-4">
+                                    <i class="fa fa-times-circle fa-5x text-danger"></i>
+                                </div>
+                                <h5 class="card-title">Connection Error</h5>
+                                <p class="card-text" t-esc="error_message"/>
+                                <a t-attf-href="/web#id=#{config.id}&amp;model=provet.config&amp;view_type=form"
+                                   class="btn btn-primary">
+                                    Return to Configuration
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="oauth_status" name="OAuth Status">
+        <t t-call="web.basic_layout">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="mb-0">Authorization Status</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <div t-if="config.connection_status == 'connected'" class="mb-4">
+                                    <i class="fa fa-check-circle fa-5x text-success"></i>
+                                    <h5 class="card-title mt-3">Connected</h5>
+                                    <p class="card-text">
+                                        Token expires:
+                                        <t t-esc="config.token_expiry"/>
+                                    </p>
+                                </div>
+                                <div t-elif="config.connection_status == 'auth_required'" class="mb-4">
+                                    <i class="fa fa-exclamation-circle fa-5x text-warning"></i>
+                                    <h5 class="card-title mt-3">Authorization Required</h5>
+                                    <p class="card-text">
+                                        Click the "Authorize" button in the configuration.
+                                    </p>
+                                </div>
+                                <div t-else="" class="mb-4">
+                                    <i class="fa fa-times-circle fa-5x text-danger"></i>
+                                    <h5 class="card-title mt-3">
+                                        <t t-esc="config.connection_status"/>
+                                    </h5>
+                                </div>
+                                <a t-attf-href="/web#id=#{config.id}&amp;model=provet.config&amp;view_type=form"
+                                   class="btn btn-primary">
+                                    Return to Configuration
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
 
     <!-- Tree/List View -->
     <record id="view_provet_config_tree" model="ir.ui.view">
