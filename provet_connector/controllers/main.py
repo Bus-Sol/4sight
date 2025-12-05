@@ -7,6 +7,12 @@ _logger = logging.getLogger(__name__)
 
 class ProvetAuthController(http.Controller):
 
+    @http.route('/provet/invoice/create', type='http', auth='public', csrf=False)
+    def provet_invoice_webhook(self, **kwargs):
+
+        _logger.info("Provet Invoice Webhook , data=%s",
+                     kwargs)
+
     @http.route('/provet/oauth/callback', type='http', auth='public', csrf=False)
     def oauth_callback(self, **kwargs):
         """Handle OAuth callback from Provet Cloud - Simple HTML response"""
