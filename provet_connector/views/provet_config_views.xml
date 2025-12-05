@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_provet_config_form" model="ir.ui.view">
+        <field name="name">provet.config.form</field>
+        <field name="model">provet.config</field>
+        <field name="arch" type="xml">
+            <form string="Provet Configuration">
+                <header>
+                    <button name="test_connection" type="object" string="Test Connection" class="btn-primary"/>
+                    <button name="get_access_token" type="object" string="Get Token" class="btn-secondary"/>
+                    <button name="refresh_access_token" type="object" string="Refresh Token" class="btn-secondary"/>
+                    <button name="revoke_token" type="object" string="Revoke Token" class="btn-danger"/>
+                    <field name="connection_status" widget="statusbar" statusbar_visible="not_configured,connected,expired,error"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="instance_name" placeholder="e.g., Production Instance"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Instance Configuration">
+                            <field name="base_url"/>
+                            <field name="provet_id"/>
+                            <field name="grant_type"/>
+                        </group>
+                        <group string="OAuth2 Credentials">
+                            <field name="client_id"/>
+                            <field name="client_secret" password="true"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Advanced" attrs="{'invisible': [('grant_type', '!=', 'authorization_code')]}">
+                            <group string="Authorization Code Flow">
+                                <field name="username"/>
+                                <field name="password" password="true"/>
+                                <field name="redirect_uri"/>
+                            </group>
+                        </page>
+
+                        <page string="Token Information">
+                            <group string="Current Token">
+                                <field name="access_token" password="true"/>
+                                <field name="refresh_token" password="true"/>
+                                <field name="token_expiry"/>
+                                <field name="last_sync"/>
+                            </group>
+                        </page>
+
+                        <page string="Endpoints">
+                            <group string="API Endpoints">
+                                <field name="authorize_url" readonly="1"/>
+                                <field name="token_url" readonly="1"/>
+                                <field name="revoke_url" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree/List View -->
+    <record id="view_provet_config_tree" model="ir.ui.view">
+        <field name="name">provet.config.tree</field>
+        <field name="model">provet.config</field>
+        <field name="arch" type="xml">
+            <tree string="Provet Configurations">
+                <field name="instance_name"/>
+                <field name="base_url"/>
+                <field name="connection_status" widget="badge"/>
+                <field name="last_sync"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_provet_config" model="ir.actions.act_window">
+        <field name="name">Provet Configurations</field>
+        <field name="res_model">provet.config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure your Provet Cloud connection
+            </p>
+            <p>
+                Set up OAuth2 authentication to connect with Provet Cloud API.
+                Use Client Credentials for background integrations or Authorization Code
+                for user-specific access.
+            </p>
+        </field>
+    </record>
+
+    <!-- This Menu Item must have a parent and an action -->
+    <menuitem id="action_provet_config_menu" name="Provet Config" parent="base.menu_administration" action="action_provet_config" sequence="10"/>
+
+</odoo>
