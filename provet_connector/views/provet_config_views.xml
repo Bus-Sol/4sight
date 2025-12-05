@@ -30,7 +30,7 @@
                     </group>
 
                     <notebook>
-                        <page string="Authorization" attrs="{'invisible': [('grant_type', '!=', 'authorization_code')]}">
+                        <page string="Authorization">
                             <div class="alert alert-info" role="alert">
                                 <strong>Authorization Code Flow:</strong>
                                 Click "Authorize" to open Provet Cloud login page.
@@ -53,7 +53,7 @@
                             </group>
                         </page>
 
-                        <page string="Client Credentials" attrs="{'invisible': [('grant_type', '!=', 'client_credentials')]}">
+                        <page string="Client Credentials">
                             <div class="alert alert-info" role="alert">
                                 <strong>Client Credentials Flow:</strong>
                                 Direct server-to-server authentication. Click "Get Token" to authenticate.
