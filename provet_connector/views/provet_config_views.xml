@@ -95,35 +95,7 @@
         </field>
     </record>
     <!-- Add QWeb templates for OAuth pages -->
-    <template id="oauth_success" name="OAuth Success">
-        <t t-call="web.basic_layout">
-            <div class="container mt-5">
-                <div class="row justify-content-center">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header bg-success text-white">
-                                <h4 class="mb-0">Authorization Successful!</h4>
-                            </div>
-                            <div class="card-body text-center">
-                                <div class="mb-4">
-                                    <i class="fa fa-check-circle fa-5x text-success"></i>
-                                </div>
-                                <h5 class="card-title">Connected to Provet Cloud</h5>
-                                <p class="card-text">
-                                    Your Odoo instance is now connected to Provet Cloud.
-                                    You can close this window and return to Odoo.
-                                </p>
-                                <a t-attf-href="/web#id=#{config.id}&amp;model=provet.config&amp;view_type=form"
-                                   class="btn btn-primary">
-                                    Return to Configuration
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </t>
-    </template>
+
 
 
     <!-- Tree/List View -->

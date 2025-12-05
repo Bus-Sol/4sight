@@ -12,7 +12,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/provet_config_views.xml',
-        'views/templates.xml',
+        # 'views/templates.xml',
     ],
     'installable': True,
     'application': True,
