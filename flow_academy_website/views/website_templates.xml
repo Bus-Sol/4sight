@@ -1,54 +1,588 @@
 <odoo>
     <template id="events_by_category" name="Events by Type">
         <t t-call="website.layout">
-            <div class="container mt-5 mb-5">
-                <div class="row">
-                    <t t-if="events">
-                        <t t-foreach="events" t-as="event">
-                            <div class="col-md-6 col-lg-4 mb-4">
-                                <div class="card h-100 shadow-sm">
-                                    <div class="card-body">
-                                        <h5 class="card-title" t-field="event.name"/>
+                    <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="s_cover bg-black-50 o_colored_level pb40 pt40 parallax"
+                         data-scroll-background-ratio="1.5" data-snippet="s_cover" data-name="Cover"
+                         style="background-image: none;">
+                    <span class="s_parallax_bg oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
+                          style="background-image: url(&quot;/web/image/149496-83df35ad/HERO%20BANNER%20ECOM%20BOOKING%20PAGES.webp&quot;);"
+                          data-mimetype="image/webp" data-original-id="149495"
+                          data-original-src="/web/image/149495-83df35ad/HERO%20BANNER%20ECOM%20BOOKING%20PAGES.jpg"
+                          data-mimetype-before-conversion="image/jpeg" data-resize-width="1920" data-quality="100"/>
 
-                                        <p class="card-text text-muted">
-                                            <i class="fa fa-calendar me-2"/>
-                                            <span t-field="event.date_begin" t-options='{"format": "d MMMM y"}'/>
-                                            -
-                                            <span t-field="event.date_end" t-options='{"format": "d MMMM y"}'/>
-                                        </p>
+                    <div class="o_we_bg_filter bg-black-50"/>
+                    <div class="s_allow_columns container">
+                        <h1 class="display-3" style="text-align: center; font-weight: bold;">You're Almost There!</h1>
+                        <p class="lead" style="text-align: center;">Pick the Date That Fits Your Schedule&amp;nbsp;</p>
+                    </div>
+                </section>
+                <br/>
+                <div class="container">
+                    <div class="row">
+                        <t t-if="events">
+                            <t t-foreach="events" t-as="event">
+                                <div class="col-md-6 col-lg-4 mb-4">
+                                    <div class="card h-100 shadow-sm">
+                                        <div class="card-body">
 
-                                        <p class="card-text small">
-                                            <i class="fa fa-clock-o me-2"/>
-                                            <span t-field="event.date_begin" t-options='{"format": "short"}'/>
-                                        </p>
-                                        <p class="card-text text-muted">
-                                            <i class="fa fa-ticket me-2"/>
-                                            Available Seats: <span t-field="event.seats_available"/>
-                                        </p>
-                                    </div>
+                                            <t t-set="address" t-value="event.address_id.with_context(show_address=True)"/>
+                                            <h5 class="card-title text-primary">
+                                                <strong t-field="event.name"/>
+                                            </h5>
+                                            <br/>
 
-                                    <div class="card-footer bg-white border-top-0">
-                                        <button t-if="event.event_registrations_open" type="button" data-bs-toggle="modal" data-bs-target="#modal_ticket_registration" class="btn btn-primary w-100">Register</button>
-        <div t-if="registration_error_code == 'insufficient_seats'" class="alert alert-danger my-3" role="alert">
-            Registration failed! These tickets are not available anymore.
-        </div>
-                                        <p t-if="not event.event_registrations_open">
-                                            NOT AVAILABLE
-                                        </p>
+                                            <p class="card-text ">
+                                                <i class="fa fa-calendar me-2 fa-lg text-primary"/>
+                                                <span t-field="event.date_begin"
+                                                      t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
+                                                -
+                                                <span t-field="event.date_end"
+                                                      t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
+                                            </p>
+
+                                            <p class="card-text ">
+                                                <i class="fa fa-map-marker-alt fa-lg text-primary"/>
+                                                <span t-esc="', '.join(address.display_name[1:])"/>
+
+                                            </p>
+                                            <p class="card-text ">
+                                                <i class="fa fa-dollar me-2 fa-lg text-primary"/>
+                                                Price: <span t-field="event.price"/>
+                                            </p>
+                                            <p class="card-text ">
+                                                <i class="fa fa-ticket me-2 fa-lg text-primary"/>
+                                                Available Seats:
+                                                <span t-field="event.seats_available"/>
+                                            </p>
+                                        </div>
+
+                                        <div class="card-footer bg-white border-top-10">
+                                            <button t-if="event.event_registrations_open" type="button"
+                                                    data-bs-toggle="modal" data-bs-target="#modal_ticket_registration"
+                                                    class="btn btn-primary w-100">Select Option
+                                            </button>
+                                            <div t-if="registration_error_code == 'insufficient_seats'"
+                                                 class="alert alert-danger my-3" role="alert">
+                                                Registration failed! These tickets are not available anymore.
+                                            </div>
+                                            <p t-if="not event.event_registrations_open">
+                                                NOT AVAILABLE
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
+                            </t>
+                        </t>
+
+                        <t t-else="">
+                            <div class="col-12 text-center alert alert-info">
+                                No upcoming events found for this type.
                             </div>
                         </t>
-                    </t>
+                    </div>
 
-                    <t t-else="">
-                        <div class="col-12 text-center alert alert-info">
-                            No upcoming events found for this type.
-                        </div>
-                    </t>
                 </div>
+
+
+                <section class="s_call_to_action o_cc o_cc4 o_colored_level pt24 pb0" data-snippet="s_call_to_action"
+                         data-name="Call to Action" style="background-image: none;">
+                    <div class="container">
+                        <div class="row o_grid_mode" data-row-count="4">
+                            <div class="o_colored_level o_grid_item g-col-lg-9 g-height-4 col-lg-9"
+                                 style="grid-area: 1 / 1 / 5 / 10; z-index: 1;">
+                                <p style="font-size:28px;">Help your organisation grow stronger, smarter, and ready for
+                                    the future with <strong>FLOW Academy and the Investing in Skills Scheme</strong>.
+                                </p>
+                                <p style="font-size:12px;">More than a funding, it's a partnership in progress.</p>
+                            </div>
+
+                            <div class="o_colored_level o_grid_item g-col-lg-3 g-height-2 col-lg-3"
+                                 style="z-index: 2; grid-area: 1 / 10 / 3 / 13;">
+                                <p style="text-align: right;">
+                                    <a class="btn btn-fill-custom bg-o-color-2 rounded-circle btn-lg" href="/contactus"
+                                       data-bs-original-title="" title=""
+                                       style="border-width: 1px; border-style: solid;">Request More Info
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section class="s_title pt40 o_colored_level pb0" data-vcss="001" data-snippet="s_title"
+                         data-name="Title" style="background-image: none;">
+                    <div class="container s_allow_columns">
+                        <h2 style="text-align: center;">They Already Started Their Learning Journey with FLOW Academy
+                        </h2>
+                        <p style="text-align: center;">
+                            <span style="font-size: 0.875rem;">You&amp;nbsp;are in good company.</span>
+                        </p>
+                    </div>
+                </section>
+                <section class="s_text_block pt40 o_colored_level pb0" data-snippet="s_text_block" data-name="Text"
+                         style="background-image: none;">
+                    <div class="container s_allow_columns">
+                        <section class="s_embed_code text-center pb24 pt8" data-snippet="s_embed_code"
+                                 data-name="Embed Code">
+                            <template class="s_embed_code_saved">
+                                <style>
+                                    .slider-wrapper {
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    gap: 15px;
+                                    width: 100%;
+                                    }
+
+                                    .slider-container {
+                                    width: 100%;
+                                    overflow: hidden;
+                                    padding: 20px 0;
+                                    }
+
+                                    .slider-track {
+                                    display: flex;
+                                    gap: 60px;
+                                    transition: transform 0.5s ease;
+                                    }
+
+                                    .slider-item img {
+                                    width: 120px;
+                                    height: 120px;
+                                    object-fit: contain;
+                                    filter: grayscale(100%);
+                                    transition: filter 0.4s ease-in-out;
+                                    }
+
+                                    .slider-item img:hover {
+                                    filter: grayscale(0%);
+                                    }
+
+                                    .slider-arrow {
+                                    background: rgba(0,0,0,0.4);
+                                    border: none;
+                                    color: white;
+                                    font-size: 25px;
+                                    padding: 10px 15px;
+                                    cursor: pointer;
+                                    border-radius: 50%;
+                                    }
+
+                                    .slider-dots {
+                                    text-align: center;
+                                    margin-top: 15px;
+                                    }
+
+                                    .slider-dots span {
+                                    display: inline-block;
+                                    width: 10px;
+                                    height: 10px;
+                                    background: #ccc;
+                                    border-radius: 50%;
+                                    margin: 0 5px;
+                                    cursor: pointer;
+                                    }
+
+                                    .slider-dots .active {
+                                    background: #333;
+                                    }
+                                </style>
+
+                                <div class="slider-wrapper">
+                                    <button class="slider-arrow arrow-left">❮</button>
+
+                                    <div class="slider-container">
+                                        <div class="slider-track" id="track">
+
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148417-04c36062/konformaLogo%20TM.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148416-cec60ca5/PANTA.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148419-16d24358/MAL%20logo%20updated.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148418-099b2bbe/VD%20SUPPLIES.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/149460-d7532b56/GRASSWOOD.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/142539-7765327b/NOUV%20LOGO.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/138229-172fdb52/MARINE%20HOUND%20LOGO.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/149463-17455290/DOUBLE%20TREE%20BY%20HILTON.webp"
+                                                     loading="lazy"/>
+                                            </div>
+
+
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148417-04c36062/konformaLogo%20TM.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148416-cec60ca5/PANTA.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148419-16d24358/MAL%20logo%20updated.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148418-099b2bbe/VD%20SUPPLIES.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/149460-d7532b56/GRASSWOOD.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/142539-7765327b/NOUV%20LOGO.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/138229-172fdb52/MARINE%20HOUND%20LOGO.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/149463-17455290/DOUBLE%20TREE%20BY%20HILTON.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button class="slider-arrow arrow-right">❯</button>
+                                </div>
+
+                                <div class="slider-dots" id="dots"/>
+
+
+                                <script>
+                                    const track = document.getElementById("track");
+                                    const items = document.querySelectorAll(".slider-item");
+                                    const dotsContainer = document.getElementById("dots");
+
+                                    const originalCount = items.length / 2; // solo logos reales
+                                    const itemWidth = items[0].offsetWidth + 60;
+
+                                    let index = 0;
+
+                                    // Crear puntos
+                                    for (let i = 0; i &lt; originalCount; i++) {
+                                    const dot = document.createElement("span");
+                                    if (i === 0) dot.classList.add("active");
+                                    dot.addEventListener("click", () =&gt; moveToSlide(i));
+                                    dotsContainer.appendChild(dot);
+                                    }
+                                    const dots = document.querySelectorAll(".slider-dots span");
+
+                                    function updateDots() {
+                                    dots.forEach(d =&gt; d.classList.remove("active"));
+                                    dots[index % originalCount].classList.add("active");
+                                    }
+
+                                    function moveToSlide(i) {
+                                    index = i;
+                                    track.style.transition = "transform 0.5s ease";
+                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
+                                    updateDots();
+                                    }
+
+                                    function moveNext() {
+                                    index++;
+                                    track.style.transition = "transform 0.5s ease";
+                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
+
+                                    if (index === originalCount) {
+                                    // Reset sin parpadeos
+                                    setTimeout(() =&gt; {
+                                    track.style.transition = "none";
+                                    index = 0;
+                                    track.style.transform = "translateX(0)";
+                                    }, 500);
+                                    }
+
+                                    updateDots();
+                                    }
+
+                                    // Flechas
+                                    document.querySelector(".arrow-right").addEventListener("click", moveNext);
+                                    document.querySelector(".arrow-left").addEventListener("click", () =&gt; {
+                                    index--;
+                                    if (index &lt; 0) {
+                                    track.style.transition = "none";
+                                    index = originalCount - 1;
+                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
+                                    setTimeout(() =&gt; track.style.transition = "transform 0.5s ease", 20);
+                                    } else {
+                                    track.style.transition = "transform 0.5s ease";
+                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
+                                    }
+                                    updateDots();
+                                    });
+
+                                    // Auto-slide
+                                    setInterval(moveNext, 3000);
+
+                                    // Swipe móvil
+                                    let startX = 0;
+                                    track.addEventListener("touchstart", e =&gt; startX = e.touches[0].clientX);
+                                    track.addEventListener("touchend", e =&gt; {
+                                    let endX = e.changedTouches[0].clientX;
+                                    if (endX &lt; startX - 50) moveNext();
+                                    if (endX &gt; startX + 50) document.querySelector(".arrow-left").click();
+                                    });
+                                </script>
+                            </template>
+                            <div class="s_embed_code_embedded container o_not_editable" contenteditable="false">
+                                <style>
+                                    .slider-wrapper {
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    gap: 15px;
+                                    width: 100%;
+                                    }
+
+                                    .slider-container {
+                                    width: 100%;
+                                    overflow: hidden;
+                                    padding: 20px 0;
+                                    }
+
+                                    .slider-track {
+                                    display: flex;
+                                    gap: 60px;
+                                    transition: transform 0.5s ease;
+                                    }
+
+                                    .slider-item img {
+                                    width: 120px;
+                                    height: 120px;
+                                    object-fit: contain;
+                                    filter: grayscale(100%);
+                                    transition: filter 0.4s ease-in-out;
+                                    }
+
+                                    .slider-item img:hover {
+                                    filter: grayscale(0%);
+                                    }
+
+                                    .slider-arrow {
+                                    background: rgba(0,0,0,0.4);
+                                    border: none;
+                                    color: white;
+                                    font-size: 25px;
+                                    padding: 10px 15px;
+                                    cursor: pointer;
+                                    border-radius: 50%;
+                                    }
+
+                                    .slider-dots {
+                                    text-align: center;
+                                    margin-top: 15px;
+                                    }
+
+                                    .slider-dots span {
+                                    display: inline-block;
+                                    width: 10px;
+                                    height: 10px;
+                                    background: #ccc;
+                                    border-radius: 50%;
+                                    margin: 0 5px;
+                                    cursor: pointer;
+                                    }
+
+                                    .slider-dots .active {
+                                    background: #333;
+                                    }
+                                </style>
+                                <div class="slider-wrapper">
+                                    <button class="slider-arrow arrow-left">❮</button>
+
+                                    <div class="slider-container">
+                                        <div class="slider-track" id="track">
+
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148417-04c36062/konformaLogo%20TM.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148416-cec60ca5/PANTA.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148419-16d24358/MAL%20logo%20updated.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148418-099b2bbe/VD%20SUPPLIES.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/149460-d7532b56/GRASSWOOD.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/142539-7765327b/NOUV%20LOGO.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/138229-172fdb52/MARINE%20HOUND%20LOGO.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/149463-17455290/DOUBLE%20TREE%20BY%20HILTON.webp"
+                                                     loading="lazy"/>
+                                            </div>
+
+
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148417-04c36062/konformaLogo%20TM.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148416-cec60ca5/PANTA.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148419-16d24358/MAL%20logo%20updated.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/148418-099b2bbe/VD%20SUPPLIES.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/149460-d7532b56/GRASSWOOD.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/142539-7765327b/NOUV%20LOGO.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/138229-172fdb52/MARINE%20HOUND%20LOGO.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                            <div class="slider-item">
+                                                <img src="https://www.flowacademy.mt/web/image/149463-17455290/DOUBLE%20TREE%20BY%20HILTON.webp"
+                                                     loading="lazy"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button class="slider-arrow arrow-right">❯</button>
+                                </div>
+                                <div class="slider-dots" id="dots"/>
+                                <script>
+                                    const track = document.getElementById("track");
+                                    const items = document.querySelectorAll(".slider-item");
+                                    const dotsContainer = document.getElementById("dots");
+
+                                    const originalCount = items.length / 2; // solo logos reales
+                                    const itemWidth = items[0].offsetWidth + 60;
+
+                                    let index = 0;
+
+                                    // Crear puntos
+                                    for (let i = 0; i &lt; originalCount; i++) {
+                                    const dot = document.createElement("span");
+                                    if (i === 0) dot.classList.add("active");
+                                    dot.addEventListener("click", () =&gt; moveToSlide(i));
+                                    dotsContainer.appendChild(dot);
+                                    }
+                                    const dots = document.querySelectorAll(".slider-dots span");
+
+                                    function updateDots() {
+                                    dots.forEach(d =&gt; d.classList.remove("active"));
+                                    dots[index % originalCount].classList.add("active");
+                                    }
+
+                                    function moveToSlide(i) {
+                                    index = i;
+                                    track.style.transition = "transform 0.5s ease";
+                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
+                                    updateDots();
+                                    }
+
+                                    function moveNext() {
+                                    index++;
+                                    track.style.transition = "transform 0.5s ease";
+                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
+
+                                    if (index === originalCount) {
+                                    // Reset sin parpadeos
+                                    setTimeout(() =&gt; {
+                                    track.style.transition = "none";
+                                    index = 0;
+                                    track.style.transform = "translateX(0)";
+                                    }, 500);
+                                    }
+
+                                    updateDots();
+                                    }
+
+                                    // Flechas
+                                    document.querySelector(".arrow-right").addEventListener("click", moveNext);
+                                    document.querySelector(".arrow-left").addEventListener("click", () =&gt; {
+                                    index--;
+                                    if (index &lt; 0) {
+                                    track.style.transition = "none";
+                                    index = originalCount - 1;
+                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
+                                    setTimeout(() =&gt; track.style.transition = "transform 0.5s ease", 20);
+                                    } else {
+                                    track.style.transition = "transform 0.5s ease";
+                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
+                                    }
+                                    updateDots();
+                                    });
+
+                                    // Auto-slide
+                                    setInterval(moveNext, 3000);
+
+                                    // Swipe móvil
+                                    let startX = 0;
+                                    track.addEventListener("touchstart", e =&gt; startX = e.touches[0].clientX);
+                                    track.addEventListener("touchend", e =&gt; {
+                                    let endX = e.changedTouches[0].clientX;
+                                    if (endX &lt; startX - 50) moveNext();
+                                    if (endX &gt; startX + 50) document.querySelector(".arrow-left").click();
+                                    });
+                                </script>
+                            </div>
+                        </section>
+                        <p>
+                            <br/>
+                        </p>
+                    </div>
+                </section>
+
+
             </div>
-                    <t t-call="website_event.modal_ticket_registration"/>
+
+            <t t-call="website_event.modal_ticket_registration"/>
+        </t>
+
+
+
+            <t t-call="website_event.modal_ticket_registration"/>
         </t>
     </template>
 
@@ -56,11 +590,11 @@
     <template id="modal_ticket_registration" inherit_id="website_event.modal_ticket_registration">
 
 
-         <xpath expr="//div[hasclass('o_wevent_registration_title')]" position="after">
+        <xpath expr="//div[hasclass('o_wevent_registration_title')]" position="after">
             <div class="o_wevent_registration_title modal-title fs-5" id="staticLabel">Seats</div>
         </xpath>
 
-         <xpath expr="//div[@id='staticBackdropLabel']" position="replace">
+        <xpath expr="//div[@id='staticBackdropLabel']" position="replace">
         </xpath>
 
 
@@ -69,11 +603,16 @@
     <template id="registration_attendee_details" inherit_id="website_event.registration_attendee_details">
 
 
-         <xpath expr="//div[hasclass('modal-body')]/h5" position="after">
-            <h5 t-attf-class="mt-1 pb-2 #{'border-bottom' if event.question_ids else ''}">Seat #<span t-out="counter"/> <small class="text-muted">- <span t-out="ticket['name']"/></small></h5>
+        <xpath expr="//div[hasclass('modal-body')]/h5" position="after">
+            <h5 t-attf-class="mt-1 pb-2 #{'border-bottom' if event.question_ids else ''}">Seat #
+                <span t-out="counter"/>
+                <small class="text-muted">-
+                    <span t-out="ticket['name']"/>
+                </small>
+            </h5>
         </xpath>
 
-         <xpath expr="//div[hasclass('modal-body')]/h5[1]" position="replace">
+        <xpath expr="//div[hasclass('modal-body')]/h5[1]" position="replace">
         </xpath>
 
 
@@ -90,7 +629,9 @@
         <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_name')]" position="before">
             <div t-attf-class="#{error.get('company_type') and 'o_has_error'} div_company_type col-lg-6 mb-2">
                 <label class="col-form-label" for="company_type">Contact Type</label>
-                <select id="company_type" name="company_type" t-attf-class="form-select #{error.get('company_type') and 'is-invalid' or ''}" t-att-mode="mode[1]">
+                <select id="company_type" name="company_type"
+                        t-attf-class="form-select #{error.get('company_type') and 'is-invalid' or ''}"
+                        t-att-mode="mode[1]">
                     <option value="person">Individual</option>
                     <option value="company">Company</option>
                 </select>
@@ -99,29 +640,38 @@
 
         <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_name')]" position="replace">
             <div t-attf-class="o_company_field div_name col-lg-12 mb-2 #{error.get('name') and 'o_has_error'}">
-            <label class="col-form-label" for="name">
-                <span t-if="company_type == 'company'">Company Name</span>
-                <span t-else="">Full name</span>
-            </label>
-            <input type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="'name' in checkout and checkout['name']"/>
-        </div>
+                <label class="col-form-label" for="name">
+                    <span t-if="company_type == 'company'">Company Name</span>
+                    <span t-else="">Full name</span>
+                </label>
+                <input type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}"
+                       t-att-value="'name' in checkout and checkout['name']"/>
+            </div>
 
-        <div class="w-100"/>
-        <div t-attf-class="o_individual_field col-lg-6 mb-2 #{error.get('firstname') and 'o_has_error'}" t-att-style="company_type == 'company' and 'display: none;' or None">
-            <label class="col-form-label" for="firstname">First Name</label>
-            <input type="text" name="firstname" t-attf-class="form-control #{error.get('firstname') and 'is-invalid' or ''}" t-att-value="'firstname' in checkout and checkout['firstname']"/>
-        </div>
-        <div t-attf-class="o_individual_field col-lg-6 mb-2 #{error.get('lastname') and 'o_has_error'}" t-att-style="company_type == 'company' and 'display: none;' or None">
-            <label class="col-form-label" for="lastname">Surname</label>
-            <input type="text" name="lastname" t-attf-class="form-control #{error.get('lastname') and 'is-invalid' or ''}" t-att-value="'lastname' in checkout and checkout['lastname']"/>
-        </div>
+            <div class="w-100"/>
+            <div t-attf-class="o_individual_field col-lg-6 mb-2 #{error.get('firstname') and 'o_has_error'}"
+                 t-att-style="company_type == 'company' and 'display: none;' or None">
+                <label class="col-form-label" for="firstname">First Name</label>
+                <input type="text" name="firstname"
+                       t-attf-class="form-control #{error.get('firstname') and 'is-invalid' or ''}"
+                       t-att-value="'firstname' in checkout and checkout['firstname']"/>
+            </div>
+            <div t-attf-class="o_individual_field col-lg-6 mb-2 #{error.get('lastname') and 'o_has_error'}"
+                 t-att-style="company_type == 'company' and 'display: none;' or None">
+                <label class="col-form-label" for="lastname">Surname</label>
+                <input type="text" name="lastname"
+                       t-attf-class="form-control #{error.get('lastname') and 'is-invalid' or ''}"
+                       t-att-value="'lastname' in checkout and checkout['lastname']"/>
+            </div>
         </xpath>
 
         <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_vat')]" position="attributes">
-            <attribute name="t-attf-class">#{error.get('vat') and 'o_has_error'} o_company_field div_vat col-lg-6 mb-2</attribute>
+            <attribute name="t-attf-class">#{error.get('vat') and 'o_has_error'} o_company_field div_vat col-lg-6 mb-2
+            </attribute>
         </xpath>
 
     </template>
+
 
 
 </odoo>
