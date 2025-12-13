@@ -1,7 +1,6 @@
 <odoo>
     <template id="events_by_category" name="Events by Type">
         <t t-call="website.layout">
-                    <t t-call="website.layout">
             <div id="wrap" class="oe_structure oe_empty">
                 <section class="s_cover bg-black-50 o_colored_level pb40 pt40 parallax"
                          data-scroll-background-ratio="1.5" data-snippet="s_cover" data-name="Cover"
@@ -26,15 +25,13 @@
                                 <div class="col-md-6 col-lg-4 mb-4">
                                     <div class="card h-100 shadow-sm">
                                         <div class="card-body">
-
-                                            <t t-set="address" t-value="event.address_id.with_context(show_address=True)"/>
                                             <h5 class="card-title text-primary">
                                                 <strong t-field="event.name"/>
                                             </h5>
                                             <br/>
 
-                                            <p class="card-text ">
-                                                <i class="fa fa-calendar me-2 fa-lg text-primary"/>
+                                            <p class="card-text">
+                                                <i class="fa fa-calendar me-2 fa-lg text-primary text-center"/>
                                                 <span t-field="event.date_begin"
                                                       t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
                                                 -
@@ -44,7 +41,7 @@
 
                                             <p class="card-text ">
                                                 <i class="fa fa-map-marker-alt fa-lg text-primary"/>
-                                                <span t-esc="', '.join(address.display_name[1:])"/>
+                                                <span t-esc="event.address_inline"/>
 
                                             </p>
                                             <p class="card-text ">
@@ -580,43 +577,12 @@
             <t t-call="website_event.modal_ticket_registration"/>
         </t>
 
-
-
-            <t t-call="website_event.modal_ticket_registration"/>
-        </t>
     </template>
 
 
-    <template id="modal_ticket_registration" inherit_id="website_event.modal_ticket_registration">
 
 
-        <xpath expr="//div[hasclass('o_wevent_registration_title')]" position="after">
-            <div class="o_wevent_registration_title modal-title fs-5" id="staticLabel">Seats</div>
-        </xpath>
 
-        <xpath expr="//div[@id='staticBackdropLabel']" position="replace">
-        </xpath>
-
-
-    </template>
-
-    <template id="registration_attendee_details" inherit_id="website_event.registration_attendee_details">
-
-
-        <xpath expr="//div[hasclass('modal-body')]/h5" position="after">
-            <h5 t-attf-class="mt-1 pb-2 #{'border-bottom' if event.question_ids else ''}">Seat #
-                <span t-out="counter"/>
-                <small class="text-muted">-
-                    <span t-out="ticket['name']"/>
-                </small>
-            </h5>
-        </xpath>
-
-        <xpath expr="//div[hasclass('modal-body')]/h5[1]" position="replace">
-        </xpath>
-
-
-    </template>
 
 
     <template id="event_confirmation" inherit_id="website_event_sale.event_confirmation">
