@@ -6,11 +6,11 @@ document.addEventListener('DOMContentLoaded', function() {
     var modalElement = document.getElementById('modal_ticket_registration');
     if (!modalElement) return;
 
-    var modal = new bootstrap.Modal(modalElement);
     var modalContent = modalElement.querySelector('.modal-content');
+    var modal = bootstrap.Modal.getOrCreateInstance(modalElement);
 
     // Add click handlers to all register buttons
-    document.querySelectorAll('[data-bs-target="#modal_ticket_registration"]').forEach(button => {
+    document.querySelectorAll('.register-btn').forEach(button => {
         button.addEventListener('click', function(event) {
             event.preventDefault();
 
@@ -41,9 +41,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Update modal content
                     modalContent.innerHTML = html;
 
-                    // Re-initialize any Odoo-specific JS if needed
-                    if (typeof odoo !== 'undefined') {
-                        odoo.init();
+                    // Re-initialize any Bootstrap components in the new content
+                    var forms = modalContent.querySelectorAll('form');
+                    forms.forEach(form => {
+                        // Re-initialize form validation if needed
+                    });
+
+                    // Re-attach event listeners for buttons inside modal
+                    var closeBtn = modalContent.querySelector('[data-bs-dismiss="modal"]');
+                    if (closeBtn) {
+                        closeBtn.addEventListener('click', function() {
+                            modal.hide();
+                        });
                     }
                 })
                 .catch(error => {
@@ -58,10 +67,5 @@ document.addEventListener('DOMContentLoaded', function() {
                     `;
                 });
         });
-    });
-
-    // Clear modal content when hidden to prevent stale data
-    modalElement.addEventListener('hidden.bs.modal', function() {
-        modalContent.innerHTML = '';
     });
 });

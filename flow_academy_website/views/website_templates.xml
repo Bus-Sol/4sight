@@ -57,9 +57,14 @@
 
                                         <div class="card-footer bg-white border-top-10">
                                             <button t-if="event.event_registrations_open" type="button"
-                                                    data-bs-toggle="modal" data-bs-target="#modal_ticket_registration"
-                                                    class="btn btn-primary w-100">Select Option
+                                                    class="btn btn-primary w-100 register-btn"
+                                                    t-att-data-event-id="event.id">
+                                                Select Option
                                             </button>
+<!--                                            <button t-if="event.event_registrations_open" type="button"-->
+<!--                                                    data-bs-toggle="modal" data-bs-target="#modal_ticket_registration"-->
+<!--                                                    class="btn btn-primary w-100">Select Option-->
+<!--                                            </button>-->
                                             <div t-if="registration_error_code == 'insufficient_seats'"
                                                  class="alert alert-danger my-3" role="alert">
                                                 Registration failed! These tickets are not available anymore.
