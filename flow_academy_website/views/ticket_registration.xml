@@ -17,7 +17,7 @@
             </xpath>
 
             <xpath expr="//div[hasclass('modal-dialog')]" position="attributes">
-                <attribute name="class">modal-dialog modal-lg modal-dialog-centered</attribute>
+                <attribute name="class">modal-dialog modal-dialog-centered</attribute>
             </xpath>
 
             <xpath expr="//div[hasclass('modal-content')]" position="replace">
@@ -29,13 +29,13 @@
                     <!--                </div>-->
                     <div class="row g-0">
                         <div class="col-12 col-md-6 d-none d-md-block p-0">
-                            <img t-attf-src="flow_academy_website/static/src/image/image_popup.png"
+                            <img t-attf-src="/flow_academy_website/static/src/image/image_popup.png"
                                  class="img-fluid h-100 object-fit-cover"
                                  alt="Event Image"/>
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <div class="modal-header border-0 pb-0">
+                            <div class="modal-header border-0 pb-0 mb-4">
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                             </div>
@@ -150,9 +150,9 @@
                                             </button>
                                         </div>
                                     </t>
-                                    <div t-else="" class="o_wevent_registration_single">
-                                        <div class="modal-body row px-3 py-2 mx-0">
-                                            <div class="col-12 col-md-8 p-0" itemscope="itemscope"
+                                    <div t-else="" class="o_wevent_registration_single" style="min-height: 300px;">
+                                        <div class="modal-body collapse show d-flex flex-column justify-content-cente">
+                                            <div class="flex-lg-row mb-1" itemscope="itemscope"
                                                  itemtype="http://schema.org/Offer">
                                                 <h5 itemprop="name" class="my-0 pe-3 o_wevent_single_ticket_name">
                                                     <span t-if="tickets" t-field="tickets.name"/>
@@ -170,21 +170,34 @@
                                                     (<span t-out="tickets.event_id.date_tz"/>)
                                                 </small>
                                             </div>
-                                            <div class="col-md-4 d-flex align-items-center justify-content-between p-0">
+                                            <div class="mb-1 d- flex-lg-row align-items-center justify-content-between p-0">
                                                 <t t-if="event.event_registrations_open">
                                                     <link itemprop="availability" content="http://schema.org/InStock"/>
-                                                    <div class="flex-md-grow-1 me-2 text-end">
+                                                    <div class="flex-md-grow-1 me-2">
                                                         <t t-if="tickets.price">
                                                             <t t-if="(tickets.price - tickets.price_reduce) &gt;0 and website.pricelist_id.discount_policy == 'without_discount'">
-                                                                <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" class="text-danger me-1" t-field="tickets.price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
-                                                                <del t-else="" class="text-danger me-1" t-field="tickets.price_incl" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                                                                <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                                                                     class="text-danger me-1" t-field="tickets.price"
+                                                                     t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                                                                <del t-else="" class="text-danger me-1"
+                                                                     t-field="tickets.price_incl"
+                                                                     t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
                                                             </t>
-                                                            <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" class="badge text-bg-secondary fs-6" t-field="tickets.price_reduce" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
-                                                            <span t-else="" class="badge text-bg-secondary fs-6" t-field="tickets.price_reduce_taxinc" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
-                                                            <span itemprop="price" class="d-none" t-out="tickets.price"/>
-                                                            <span itemprop="priceCurrency" class="d-none" t-out="website.currency_id.name"/>
+                                                            <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                                                                  class="badge text-bg-secondary fs-6"
+                                                                  t-field="tickets.price_reduce"
+                                                                  t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                                                            <span t-else="" class="badge text-bg-secondary fs-6"
+                                                                  t-field="tickets.price_reduce_taxinc"
+                                                                  t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                                                            <span itemprop="price" class="d-none"
+                                                                  t-out="tickets.price"/>
+                                                            <span itemprop="priceCurrency" class="d-none"
+                                                                  t-out="website.currency_id.name"/>
                                                         </t>
-                                                        <span t-else="" class="badge text-bg-secondary fs-6 text-uppercase">Free</span>
+                                                        <span t-else=""
+                                                              class="badge text-bg-secondary fs-6 text-uppercase">Free
+                                                        </span>
                                                     </div>
                                                     <div class="o_wevent_registration_single_select w-auto ms-auto">
                                                         <select t-att-name="'nb_register-%s' % (tickets.id if tickets else 0)"
@@ -210,11 +223,17 @@
                                                 </t>
                                             </div>
                                         </div>
-                                        <div class="modal-footer flex-lg-row border-top">
-                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close
+                                        <div class="modal-footer border-0 flex-lg-row mt-auto">
+
+                                            <button type="button"
+                                                    class="btn btn-fill-custom bg-o-color-2 rounded-circle"
+                                                    style="border-width: 1px; border-style: solid;"
+                                                    data-bs-dismiss="modal">Close
                                             </button>
-                                            <button type="submit" class="btn btn-primary o_wait_lazy_js a-submit"
-                                                    t-attf-id="#{event.id}" disabled="disabled">
+                                            <button type="submit"
+                                                    class="btn btn-primary o_wait_lazy_js a-submit rounded-circle"
+                                                    t-attf-id="#{event.id}" disabled="disabled"
+                                                    style="border-width: 1px; border-style: solid;">
                                                 Register
                                                 <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
                                                     (only
@@ -263,6 +282,16 @@
 
             <xpath expr="//div[hasclass('modal-body')]/h5[1]" position="replace">
             </xpath>
+
+
+            <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-primary')]" position="attributes">
+                <attribute name="class">btn btn-primary rounded-circle</attribute>
+            </xpath>
+
+            <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-secondary')]" position="attributes">
+                <attribute name="class">btn btn-secondary rounded-circle</attribute>
+            </xpath>
+
 
 
         </template>

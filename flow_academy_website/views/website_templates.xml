@@ -30,29 +30,47 @@
                                             </h5>
                                             <br/>
 
-                                            <p class="card-text">
-                                                <i class="fa fa-calendar me-2 fa-lg text-primary text-center"/>
-                                                <span t-field="event.date_begin"
-                                                      t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
-                                                -
-                                                <span t-field="event.date_end"
-                                                      t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
-                                            </p>
+                                            <div class="row mb-2">
+                                                <div class="col-auto text-center">
+                                                    <i class="fa fa-calendar fa-lg text-primary" style="width: 24px;"></i>
+                                                </div>
+                                                <div class="col">
+                                                    <span t-field="event.date_begin" t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
+                                                    -
+                                                    <span t-field="event.date_end" t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
+                                                </div>
+                                            </div>
 
-                                            <p class="card-text ">
-                                                <i class="fa fa-map-marker-alt fa-lg text-primary"/>
-                                                <span t-esc="event.address_inline"/>
+                                            <div class="row mb-2">
+                                                <div class="col-auto text-center">
+                                                    <i class="fa fa-map-marker fa-lg text-primary" style="width: 24px;"></i>
+                                                </div>
+                                                <div class="col">
+                                                    <span t-esc="event.address_inline"/>
 
-                                            </p>
-                                            <p class="card-text ">
-                                                <i class="fa fa-dollar me-2 fa-lg text-primary"/>
-                                                Price: <span t-field="event.price"/>
-                                            </p>
-                                            <p class="card-text ">
-                                                <i class="fa fa-ticket me-2 fa-lg text-primary"/>
-                                                Available Seats:
-                                                <span t-field="event.seats_available"/>
-                                            </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-2">
+                                                <div class="col-auto text-center">
+                                                    <i class="fa fa-dollar fa-lg text-primary" style="width: 24px;"></i>
+                                                </div>
+                                                <div class="col">
+                                                    Price: <span t-field="event.price"/>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-2">
+                                                <div class="col-auto text-center">
+                                                    <i class="fa fa-ticket fa-lg text-primary" style="width: 24px;"></i>
+                                                </div>
+                                                <div class="col">
+                                                    <span t-field="event.seats_available"/>
+
+                                                </div>
+                                            </div>
+
                                         </div>
 
                                         <div class="card-footer bg-white border-top-10">
@@ -594,52 +612,6 @@
 
     </template>
 
-    <template id="sale_address" inherit_id="website_sale.address">
-        <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_name')]" position="before">
-            <div t-attf-class="#{error.get('company_type') and 'o_has_error'} div_company_type col-lg-6 mb-2">
-                <label class="col-form-label" for="company_type">Contact Type</label>
-                <select id="company_type" name="company_type"
-                        t-attf-class="form-select #{error.get('company_type') and 'is-invalid' or ''}"
-                        t-att-mode="mode[1]">
-                    <option value="person">Individual</option>
-                    <option value="company">Company</option>
-                </select>
-            </div>
-        </xpath>
-
-        <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_name')]" position="replace">
-            <div t-attf-class="o_company_field div_name col-lg-12 mb-2 #{error.get('name') and 'o_has_error'}">
-                <label class="col-form-label" for="name">
-                    <span t-if="company_type == 'company'">Company Name</span>
-                    <span t-else="">Full name</span>
-                </label>
-                <input type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}"
-                       t-att-value="'name' in checkout and checkout['name']"/>
-            </div>
-
-            <div class="w-100"/>
-            <div t-attf-class="o_individual_field col-lg-6 mb-2 #{error.get('firstname') and 'o_has_error'}"
-                 t-att-style="company_type == 'company' and 'display: none;' or None">
-                <label class="col-form-label" for="firstname">First Name</label>
-                <input type="text" name="firstname"
-                       t-attf-class="form-control #{error.get('firstname') and 'is-invalid' or ''}"
-                       t-att-value="'firstname' in checkout and checkout['firstname']"/>
-            </div>
-            <div t-attf-class="o_individual_field col-lg-6 mb-2 #{error.get('lastname') and 'o_has_error'}"
-                 t-att-style="company_type == 'company' and 'display: none;' or None">
-                <label class="col-form-label" for="lastname">Surname</label>
-                <input type="text" name="lastname"
-                       t-attf-class="form-control #{error.get('lastname') and 'is-invalid' or ''}"
-                       t-att-value="'lastname' in checkout and checkout['lastname']"/>
-            </div>
-        </xpath>
-
-        <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_vat')]" position="attributes">
-            <attribute name="t-attf-class">#{error.get('vat') and 'o_has_error'} o_company_field div_vat col-lg-6 mb-2
-            </attribute>
-        </xpath>
-
-    </template>
 
 
 

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="sale_address" inherit_id="website_sale.address">
+            <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_name')]" position="before">
+                <div t-attf-class="#{error.get('company_type') and 'o_has_error'} div_company_type col-lg-6 mb-2">
+                    <label class="col-form-label" for="company_type">Contact Type</label>
+                    <select id="company_type" name="company_type"
+                            t-attf-class="form-select #{error.get('company_type') and 'is-invalid' or ''}"
+                            t-att-mode="mode[1]">
+
+                        <option value="company">Company</option>
+                        <option value="person">Individual</option>
+
+                    </select>
+                </div>
+            </xpath>
+
+            <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_name')]" position="replace">
+                <div t-attf-class="o_company_field div_name col-lg-12 mb-2 #{error.get('name') and 'o_has_error'}">
+                    <label class="col-form-label" for="name">
+                        <span t-if="company_type == 'company'">Company Name</span>
+                        <span t-else="">Full name</span>
+                    </label>
+                    <input type="text" name="name"
+                           t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}"
+                           t-att-value="'name' in checkout and checkout['name']"/>
+                </div>
+
+                <div class="w-100"/>
+                <div t-attf-class="o_individual_field col-lg-6 mb-2 #{error.get('firstname') and 'o_has_error'}"
+                     t-att-style="company_type == 'company' and 'display: none;' or None">
+                    <label class="col-form-label" for="firstname">First Name</label>
+                    <input type="text" name="firstname"
+                           t-attf-class="form-control #{error.get('firstname') and 'is-invalid' or ''}"
+                           t-att-value="'firstname' in checkout and checkout['firstname']"/>
+                </div>
+                <div t-attf-class="o_individual_field col-lg-6 mb-2 #{error.get('lastname') and 'o_has_error'}"
+                     t-att-style="company_type == 'company' and 'display: none;' or None">
+                    <label class="col-form-label" for="lastname">Surname</label>
+                    <input type="text" name="lastname"
+                           t-attf-class="form-control #{error.get('lastname') and 'is-invalid' or ''}"
+                           t-att-value="'lastname' in checkout and checkout['lastname']"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//t[@t-if='website._display_partner_b2b_fields()']" position="replace">
+                <t t-if="website._display_partner_b2b_fields()">
+                <div class="w-100"/>
+                <t t-set="vat_warning" t-value="'vat' in checkout and checkout['vat'] and not can_edit_vat"/>
+                <t t-if="(mode == ('new', 'billing') and is_public_order                                                 or mode == ('edit', 'billing') and partner_id == website_sale_order.partner_id.id)                                                 and (can_edit_vat or 'vat' in checkout and checkout['vat'])">
+                    <div t-attf-class="#{error.get('vat') and 'o_has_error'} o_company_field div_vat col-lg-6 mb-2">
+                        <label class="col-form-label fw-normal label-optional" for="vat">VAT</label>
+                        <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if vat_warning else None"/>
+                        <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
+                    </div>
+                    <div t-if="vat_warning" class="col-12 d-none d-lg-block mb-1">
+                        <small class="form-text text-muted">Changing company name or VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
+                    </div>
+                </t>
+            </t>
+
+            </xpath>
+
+            <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_street')]" position="attributes">
+                <attribute name="t-attf-class">#{error.get('street') and 'o_has_error'} o_company_field div_street col-lg-12 mb-2</attribute>
+            </xpath>
+
+            <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_street2')]" position="attributes">
+                <attribute name="t-attf-class">#{error.get('div_street2') and 'o_has_error' or '' } o_company_field col-lg-12 div_street2
+
+                </attribute>
+            </xpath>
+
+
+            <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_city')]" position="attributes">
+                <attribute name="t-attf-class">#{error.get('city') and 'o_has_error' or ''} o_company_field div_city col-md-8 mb-2
+
+                </attribute>
+            </xpath>
+
+<!--            <xpath expr="//form/div[1]//t[@t=if=''zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')']/div" position="attributes">-->
+<!--                <attribute name="t-attf-class">#{error.get('zip') and 'o_has_error'} o_company_field div_zip col-md-4 mb-2-->
+
+<!--                </attribute>-->
+<!--            </xpath>-->
+
+            <xpath expr="//form/div[1]//t[@t-if=&quot;'zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')&quot;]/div" position="attributes">
+                <attribute name="t-attf-class">#{error.get('zip') and 'o_has_error'} o_company_field div_zip col-md-4 mb-2
+
+                </attribute>
+            </xpath>
+
+            <xpath expr="//form/div[1]//t[@t-if=&quot;'zip' in zip_city and zip_city.index('zip') &gt; zip_city.index('city')&quot;]/div" position="attributes">
+                <attribute name="t-attf-class">#{error.get('zip') and 'o_has_error'} o_company_field div_zip col-md-4 mb-2
+
+                </attribute>
+            </xpath>
+
+
+
+            <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_country')]" position="attributes">
+                <attribute name="t-attf-class">#{error.get('country_id') and 'o_has_error'} o_company_field div_country col-md-6 mb-2
+
+                </attribute>
+            </xpath>
+
+            <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_state')]" position="attributes">
+                <attribute name="t-attf-class">#{error.get('state_id') and 'o_has_error'} o_company_field div_state col-md-6 mb-2
+
+                </attribute>
+            </xpath>
+
+            <xpath expr="//form//a[hasclass('btn-outline-secondary')]" position="attributes">
+                <attribute name="class">btn btn-outline-secondary w-100 w-md-auto order-md-1 order-3 rounded-circle</attribute>
+            </xpath>
+
+            <xpath expr="//form//a[hasclass('a-submit')]" position="attributes">
+                <attribute name="class">a-submit a-submit-disable a-submit-loading btn btn-primary w-100 w-md-auto order-1 order-md-3 rounded-circle</attribute>
+            </xpath>
+
+        </template>
+
+
+    </data>
+</odoo>

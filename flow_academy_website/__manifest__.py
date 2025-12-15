@@ -23,6 +23,7 @@
         'views/event.xml',
         'views/website_templates.xml',
         'views/ticket_registration.xml',
+        'views/address_template.xml',
         'security/ir.model.access.csv'
     ],
     'assets': {

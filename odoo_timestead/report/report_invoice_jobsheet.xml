@@ -63,7 +63,7 @@
         <xpath expr="//tbody[hasclass('invoice_tbody')]//tr//td[@name='account_invoice_line_name']" position="replace">
 
             <t t-if="report_type == 'html'">
-                <td name="account_invoice_line_name">
+                <td name="account_invoice_line_name and 'Jobsheet' in line.name">
                     <t t-if="line.move_id.job_ids">
                         <a t-attf-href="/my/jobsheets/#{line.move_id.job_ids[i].id}" target="_blank">
                         <span t-field="line.name" t-options="{'widget': 'text'}"/>

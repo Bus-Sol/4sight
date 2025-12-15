@@ -21,22 +21,3 @@ class EventTypeController(http.Controller):
             'event_category': category,
         })
 
-
-class EventRegistrationController(http.Controller):
-
-    @http.route('/event/get_registration_form/<int:event_id>', type='http', auth="public", website=True)
-    def get_registration_form(self, event_id, **kwargs):
-        """Return the registration form modal for a specific event."""
-        event = request.env['event.event'].browse(event_id).sudo()
-
-        if not event.exists():
-            return request.not_found()
-
-        # Pass the specific event to the template
-        values = {
-            'event': event,
-            'registration_error_code': kwargs.get('registration_error_code', False),
-        }
-
-        # Render just the modal content (not the entire page)
-        return request.render('your_module.modal_ticket_registration_content', values)
