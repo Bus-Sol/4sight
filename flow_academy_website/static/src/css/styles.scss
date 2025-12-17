@@ -1,7 +1,13 @@
 // Flow Academy Stylesheets
 
+// .courses {
+//     .fa {
+//         width: 24px;
+//     }
+// }
 .courses {
-    .fa {
-        width: 24px;
-    }
+  &__icon { // Compiles to .courses__icon
+    width: 24px;
+  }
 }
+
