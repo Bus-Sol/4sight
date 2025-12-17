@@ -29,7 +29,7 @@
     'assets': {
         'web.assets_frontend': [
             'flow_academy_website/static/src/js/website_sale.js',
-            'flow_academy_website/static/src/css/styles.scss',
+            'flow_academy_website/static/src/scss/styles.scss',
         ],
     },
 
