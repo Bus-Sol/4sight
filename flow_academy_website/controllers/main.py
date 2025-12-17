@@ -20,3 +20,4 @@ class EventTypeController(http.Controller):
             'events': events,
             'event_category': category,
         })
+

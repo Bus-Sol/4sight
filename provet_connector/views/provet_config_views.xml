@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_provet_config_form" model="ir.ui.view">
+        <field name="name">provet.config.form</field>
+        <field name="model">provet.config</field>
+        <field name="arch" type="xml">
+            <form string="Provet Configuration">
+                <header>
+                    <button name="test_connection" type="object" string="Test Connection" class="btn-primary"/>
+                    <field name="connection_status" widget="statusbar" statusbar_visible="not_configured,auth_required,connected,expired,error"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="instance_name" placeholder="e.g., Production Instance"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Instance Configuration">
+                            <field name="base_url"/>
+                            <field name="provet_id"/>
+                            <field name="grant_type"/>
+                        </group>
+                        <group string="OAuth2 Credentials">
+                            <field name="client_id"/>
+                            <field name="client_secret" password="true"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Authorization">
+                            <div class="alert alert-info" role="alert">
+                                <strong>Authorization Code Flow:</strong>
+                                Click "Authorize" to open Provet Cloud login page.
+                                After login, you'll be redirected back to Odoo.
+                            </div>
+                            <group>
+                                <group string="Authorization">
+                                    <div class="text-center">
+                                        <button name="generate_auth_url" type="object" string="Authorize with Provet Cloud" class="btn-primary"/>
+                                        <button name="check_auth_status" type="object" string="Check Status" class="btn-secondary"/>
+                                    </div>
+                                    <field name="auth_url" widget="url" readonly="1" string="Authorization URL"/>
+                                    <field name="redirect_uri"/>
+                                    <field name="auth_state" readonly="1"/>
+                                </group>
+                                <group string="Credentials (Optional)">
+                                    <field name="username"/>
+                                    <field name="password" password="true"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Client Credentials">
+                            <div class="alert alert-info" role="alert">
+                                <strong>Client Credentials Flow:</strong>
+                                Direct server-to-server authentication. Click "Get Token" to authenticate.
+                            </div>
+                            <group>
+                                <div class="text-center">
+                                    <button name="get_access_token" type="object" string="Get Token" class="btn-primary"/>
+                                </div>
+                            </group>
+                        </page>
+
+                        <page string="Token Management">
+                            <group>
+                                <group string="Current Tokens">
+                                    <field name="access_token" password="true"/>
+                                    <field name="refresh_token" password="true"/>
+                                    <field name="token_expiry"/>
+                                    <field name="last_sync"/>
+                                </group>
+                                <group string="Actions">
+                                    <div class="text-center">
+                                        <button name="refresh_access_token" type="object" string="Refresh Token" class="btn-secondary"/>
+                                        <button name="get_access_token" type="object" string="Get New Token" class="btn-secondary"/>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="API Endpoints">
+                            <group string="Generated Endpoints">
+                                <field name="authorize_url" readonly="1"/>
+                                <field name="token_url" readonly="1"/>
+                                <field name="revoke_url" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Add QWeb templates for OAuth pages -->
+
+
+
+    <!-- Tree/List View -->
+    <record id="view_provet_config_tree" model="ir.ui.view">
+        <field name="name">provet.config.tree</field>
+        <field name="model">provet.config</field>
+        <field name="arch" type="xml">
+            <tree string="Provet Configurations">
+                <field name="instance_name"/>
+                <field name="base_url"/>
+                <field name="connection_status" widget="badge"/>
+                <field name="last_sync"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_provet_config" model="ir.actions.act_window">
+        <field name="name">Provet Configurations</field>
+        <field name="res_model">provet.config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure your Provet Cloud connection
+            </p>
+            <p>
+                Set up OAuth2 authentication to connect with Provet Cloud API.
+                Use Client Credentials for background integrations or Authorization Code
+                for user-specific access.
+            </p>
+        </field>
+    </record>
+
+    <!-- This Menu Item must have a parent and an action -->
+    <menuitem id="action_provet_config_menu" name="Provet Config" parent="base.menu_administration" action="action_provet_config" sequence="10"/>
+
+</odoo>
