@@ -45,7 +45,7 @@
                                   t-attf-action="/event/#{slug(event)}/registration/new" method="post"
                                   itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                <div id="o_wevent_tickets" class="shadow-sm o_wevent_js_ticket_details">
+                                <div id="o_wevent_tickets" class="o_wevent_js_ticket_details">
                                     <div t-if="registration_error_code == 'insufficient_seats'"
                                          class="alert alert-danger" role="alert">
                                         <p class="mb-0">
@@ -150,7 +150,7 @@
                                             </button>
                                         </div>
                                     </t>
-                                    <div t-else="" class="o_wevent_registration_single" style="min-height: 300px;">
+                                    <div t-else="" class="o_wevent_registration_single">
                                         <div class="modal-body collapse show d-flex flex-column justify-content-cente">
                                             <div class="flex-lg-row mb-1" itemscope="itemscope"
                                                  itemtype="http://schema.org/Offer">
@@ -223,6 +223,7 @@
                                                 </t>
                                             </div>
                                         </div>
+                                        <div class="modal-header border-0 pb-0 mb-4"/>
                                         <div class="modal-footer border-0 flex-lg-row mt-auto">
 
                                             <button type="button"

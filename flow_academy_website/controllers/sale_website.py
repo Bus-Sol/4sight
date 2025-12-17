@@ -5,10 +5,10 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 class WebsiteEventSale(WebsiteSale):
 
     def _get_mandatory_fields_shipping(self, country_id=False):
-        return []
+        return ['email']
 
     def _get_mandatory_fields_billing(self, country_id=False):
-        return []
+        return ['email']
 
     def values_preprocess(self, values):
         new_values = super().values_preprocess(values)
