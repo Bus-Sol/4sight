@@ -2,12 +2,13 @@
 {
     'name': 'Flow Academy ',
     'version': '17.0',
-    'category': '',
+    'category': 'Web Events',
     'description': """
         Flow Academy
     """,
     'author': '4Sight Group| Mohamed Daoud',
     'website': '',
+    'license': 'OPL-1 (Odoo Proprietary License v1.0)',
     'depends': [
         'base',
         'website',
