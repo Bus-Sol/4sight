@@ -24,7 +24,7 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button class="oe_highlight" name="send_sale_proposals" string="Send By Email" type="object" attrs="{'invisible':[('include_quote', '!=', True)]}"/>
+                    <button class="oe_highlight" name="send_sale_proposals" string="Send By Email" type="object" invisible="not include_quote"/>
                 </header>
                 <sheet>
                     <group>
@@ -82,11 +82,11 @@
             <form>
                 <group>
                     <group>
-                        <field name="name"  attrs="{'readonly': [('name', '=', 'Quotation')]}" required="True"/>
+                        <field name="name" readonly="name == 'Quotation'"  required="True"/>
                         <field name="is_quotation" invisible="1"  />
                     </group>
-                    <field name="description" attrs="{'readonly': [('name', '=', 'Quotation')],'required': [('name', '!=', 'Quotation')]}" />
-                    <field name="quotation" invisible="1"  />
+                    <field name="description" readonly="name == 'Quotation'" required="name == 'Quotation'"/>
+                    <field name="quotation" invisible="1"/>
                 </group>
             </form>
         </field>
@@ -97,7 +97,7 @@
         <field name="model">proposal.page</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name" attrs="{'readonly': [('name', '=', 'Quotation')]}" />
+                <field name="name" readonly="name == 'Quotation'"/>
             </tree>
         </field>
     </record>

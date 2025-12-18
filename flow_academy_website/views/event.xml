@@ -12,9 +12,10 @@
                     <field name="event_category_id"/>
                 </xpath>
                  <xpath expr="//field[@name='date_end']" position="after">
-                       <label for="start_time"/>
+                       <label for="start_time" string="Time"/>
                         <div class="o_row">
                             <field name="start_time" class="oe_inline" widget="float_time"/>
+                            <strong class="oe_inline me-2"> ⟶ </strong>
                             <field name="end_time" class="oe_inline" widget="float_time"/>
                         </div>
                  </xpath>

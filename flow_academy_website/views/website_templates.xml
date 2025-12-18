@@ -24,8 +24,8 @@
                             <t t-foreach="events" t-as="event">
                                 <div class="col-md-6 col-lg-4 mb-4">
                                     <div class="card h-100 border border-primary">
-                                        <div class="card-body text-center">
-                                            <h5 class="card-title text-primary">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-primary text-center">
                                                 <strong t-field="event.name"/>
                                             </h5>
                                             <br/>
