@@ -147,8 +147,8 @@
                                                                 <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" class="text-danger me-1" t-field="tickets.price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
                                                                 <del t-else="" class="text-danger me-1" t-field="tickets.price_incl" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
                                                             </t>
-                                                            <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" class="badge fs-6" style="font-color: black; background-color: #d4d3d2;" t-field="tickets.price_reduce" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
-                                                            <span t-else="" class="badge fs-6" style="font-color: black; background-color: #d4d3d2;" t-field="tickets.price_reduce_taxinc" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                                                            <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" class="badge fs-6" style="color: black; background-color: #d4d3d2;" t-field="tickets.price_reduce" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                                                            <span t-else="" class="badge fs-6" style="color: black; background-color: #d4d3d2;" t-field="tickets.price_reduce_taxinc" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
                                                             <span itemprop="price" class="d-none" t-out="tickets.price"/>
                                                             <span itemprop="priceCurrency" class="d-none" t-out="website.currency_id.name"/>
                                                         </t>
@@ -230,11 +230,11 @@
 
 
             <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-primary')]" position="attributes">
-                <attribute name="class">btn btn-primary rounded-circle</attribute>
+                <attribute name="style">border-radius: 6px; font-size: 16px; font-weight: 500; border: none; width: 180px;</attribute>
             </xpath>
 
             <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-secondary')]" position="attributes">
-                <attribute name="class">btn btn-secondary rounded-circle</attribute>
+                <attribute name="style">border-radius: 6px; font-size: 16px; font-weight: 500; border: none; width: 180px;</attribute>
             </xpath>
 
 
