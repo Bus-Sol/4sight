@@ -2,12 +2,13 @@
 {
     'name': 'Flow Academy ',
     'version': '17.0',
-    'category': '',
+    'category': 'Web Events',
     'description': """
         Flow Academy
     """,
     'author': '4Sight Group| Mohamed Daoud',
     'website': '',
+    'license': 'OPL-1',
     'depends': [
         'base',
         'website',
@@ -29,6 +30,7 @@
     'assets': {
         'web.assets_frontend': [
             'flow_academy_website/static/src/js/website_sale.js',
+            'flow_academy_website/static/src/scss/styles.scss',
         ],
     },
 

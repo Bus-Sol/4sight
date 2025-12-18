@@ -7,6 +7,7 @@
     """,
     'author': '4Sight Group',
     'website': '',
+    'license': 'OPL-1',
     'depends': [
         'sale',
         'account',

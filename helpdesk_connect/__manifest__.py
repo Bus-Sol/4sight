@@ -9,6 +9,7 @@
         """,
     'author': '4Sight Group',
     'depends': ['base', 'website', 'website_helpdesk'],
+    'license': 'OPL-1',
     'data': [
         'data/connect_to_portal.xml',
         'views/helpdesk_form_view.xml',
