@@ -6,7 +6,7 @@
     'summary': '',
     'description': """  """,
     'author': '4Sight Group',
-    'license': 'OPL-1 (Odoo Proprietary License v1.0)',
+    'license': 'OPL-1',
     'depends': [
         'contacts', 'product', 'sale_timesheet', 'account', 'portal', 'timer', 'analytic', 'project',
         'helpdesk', 'account_reports'
