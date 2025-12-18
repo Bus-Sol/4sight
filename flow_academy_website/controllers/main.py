@@ -1,5 +1,40 @@
 from odoo import http
 from odoo.http import request
+from odoo.addons.website_event.controllers.main import WebsiteEventController
+
+
+class WebsiteEventControllerInherit(WebsiteEventController):
+
+    @http.route()
+    def registration_confirm(self, event, **post):
+        # 1. Call the super method to let Odoo handle the standard logic
+        res = super(WebsiteEventControllerInherit, self).registration_confirm(event, **post)
+
+        # 2. Re-evaluate the registration data to see if we are in the "Checkout" flow
+        registrations = self._process_attendees_form(event, post)
+
+        # 3. If there are tickets, check the order status
+        if any(info.get('event_ticket_id') for info in registrations):
+            order_sudo = request.website.sale_get_order()
+
+            # CASE: Paid tickets (The original function redirects to /shop/checkout)
+            if order_sudo and order_sudo.amount_total:
+                # --- PASSING DATA VIA SESSION ---
+                # We store a dictionary in the session.
+                # Think of this as your "kwargs" for the next request.
+                request.session['custom_checkout_data'] = {
+                    'event_id': event.id,
+                    'event_name': event.name,
+                    'attendee_count': len(registrations),
+                    'my_custom_flag': True,
+                    'original_post_data': post  # You can even pass the original post data
+                }
+
+                # Explicitly return the redirect to ensure our session data is saved
+                return request.redirect("/shop/checkout")
+
+        # For free tickets or other cases, return the original result
+        return res
 
 
 class EventTypeController(http.Controller):
