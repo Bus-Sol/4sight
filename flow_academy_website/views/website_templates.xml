@@ -23,8 +23,8 @@
                         <t t-if="events">
                             <t t-foreach="events" t-as="event">
                                 <div class="col-md-6 col-lg-4 mb-4">
-                                    <div class="card h-100 shadow-sm">
-                                        <div class="card-body">
+                                    <div class="card h-100 border border-primary">
+                                        <div class="card-body text-center">
                                             <h5 class="card-title text-primary">
                                                 <strong t-field="event.name"/>
                                             </h5>
@@ -36,8 +36,19 @@
                                                 </div>
                                                 <div class="col">
                                                     <span t-field="event.date_begin" t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
-                                                    -
-                                                    <span t-field="event.date_end" t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-2">
+                                                <div class="col-auto text-center">
+                                                    <i class="fa fa-clock-o fa-lg text-primary" style="width: 24px;"/>
+                                                </div>
+                                                <div class="col">
+                                                    <span t-field="event.start_time" t-options='{"widget": "float_time"}'/>
+                                                    - <span t-field="event.end_time" t-options='{"widget": "float_time"}'/>
+
+
                                                 </div>
                                             </div>
 
@@ -66,8 +77,7 @@
                                                     <i class="fa fa-ticket fa-lg text-primary" style="width: 24px;"></i>
                                                 </div>
                                                 <div class="col">
-                                                    <span t-field="event.seats_available"/>
-
+                                                    Available Seats: <span t-field="event.seats_available"/>
                                                 </div>
                                             </div>
 
@@ -82,8 +92,15 @@
                                                  class="alert alert-danger my-3" role="alert">
                                                 Registration failed! These tickets are not available anymore.
                                             </div>
-                                            <p t-if="not event.event_registrations_open">
-                                                NOT AVAILABLE
+                                            <button t-if="not event.event_registrations_open" type="button" class="btn w-100" style="background-color: #d4d3d2;">Not Available
+                                            </button>
+<!--                                            <p t-if="not event.event_registrations_open">-->
+<!--                                                NOT AVAILABLE-->
+<!--                                            </p>-->
+                                        </div>
+                                        <div class="card-footer bg-white text-center">
+                                            <p style="font-size: 11px;">
+                                                * All course dates are indicative and may be amended. FLOW Academy reserves the right to reschedule courses; enrolled participants will be informed of any changes as soon as possible.
                                             </p>
                                         </div>
                                         <t t-call="website_event.modal_ticket_registration">
