@@ -8,6 +8,7 @@
     """,
     'author': '4Sight Group| Mohamed Daoud',
     'website': '',
+    'license': 'OPL-1 (Odoo Proprietary License v1.0)',
     'depends': [
         'project',
         'web',

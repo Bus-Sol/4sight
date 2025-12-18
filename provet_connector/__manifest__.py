@@ -9,6 +9,7 @@
     """,
     'author': 'Mohamed Daoud',
     'depends': ['base','web'],
+    'license': 'OPL-1 (Odoo Proprietary License v1.0)',
     'data': [
         'security/ir.model.access.csv',
         'views/provet_config_views.xml',

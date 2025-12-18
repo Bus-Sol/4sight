@@ -31,7 +31,7 @@
                                             <br/>
 
                                             <div class="row mb-2">
-                                                <div class="col-auto text-center">
+                                                <div class="col-auto text-center course-icon">
                                                     <i class="fa fa-calendar fa-lg text-primary" style="width: 24px;"></i>
                                                 </div>
                                                 <div class="col">
@@ -42,7 +42,7 @@
                                             </div>
 
                                             <div class="row mb-2">
-                                                <div class="col-auto text-center">
+                                                <div class="col-auto text-center course-icon">
                                                     <i class="fa fa-map-marker fa-lg text-primary" style="width: 24px;"></i>
                                                 </div>
                                                 <div class="col">
@@ -52,7 +52,7 @@
                                             </div>
 
                                             <div class="row mb-2">
-                                                <div class="col-auto text-center">
+                                                <div class="col-auto text-center course-icon">
                                                     <i class="fa fa-dollar fa-lg text-primary" style="width: 24px;"></i>
                                                 </div>
                                                 <div class="col">
@@ -62,7 +62,7 @@
                                             </div>
 
                                             <div class="row mb-2">
-                                                <div class="col-auto text-center">
+                                                <div class="col-auto text-center course-icon">
                                                     <i class="fa fa-ticket fa-lg text-primary" style="width: 24px;"></i>
                                                 </div>
                                                 <div class="col">
