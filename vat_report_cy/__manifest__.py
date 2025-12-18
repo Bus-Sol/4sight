@@ -9,7 +9,7 @@
     """,
     'author': '4Sight Group',
     'website': 'https://www.odoo.com/page/accounting',
-    'license': 'OPL-1 (Odoo Proprietary License v1.0)',
+    'license': 'OPL-1',
     'depends': [
         'account',
         'account_reports',
