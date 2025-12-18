@@ -9,6 +9,7 @@
     """,
     'author': '4Sight Group',
     'website': 'https://4sight.mt/',
+    'license': 'OPL-1',
     'depends': [
         'account',
     ],

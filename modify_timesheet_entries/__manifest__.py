@@ -5,6 +5,7 @@
     'category': 'Extra Tools',
     'version': '1.0',
 
+    'license': 'OPL-1',
     'depends': ['base', 'timesheet_grid', 'sale', 'purchase', 'product', 'account', 'odoo_timestead'],
 
     'data': [
