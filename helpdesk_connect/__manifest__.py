@@ -18,7 +18,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            '4sight/helpdesk_connect/static/src/js/submit_button.js',
+            'helpdesk_connect/static/src/js/submit_button.js',
         ],
     },
     'qweb': [
