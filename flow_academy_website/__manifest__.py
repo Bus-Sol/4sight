@@ -8,7 +8,7 @@
     """,
     'author': '4Sight Group| Mohamed Daoud',
     'website': '',
-    'license': 'LGPL-3',
+    'license': 'OPL-1',
     'depends': [
         'base',
         'website',
