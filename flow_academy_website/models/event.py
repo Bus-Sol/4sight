@@ -8,6 +8,9 @@ class Event(models.Model):
 
     price = fields.Monetary(string="price",  currency_field='currency_id', compute="compute_price")
 
+    start_time = fields.Float(string="Start time")
+    end_time = fields.Float(string="End time")
+
     @api.depends('event_ticket_ids', 'event_ticket_ids.price')
     def compute_price(self):
         for rec in self:
