@@ -8,24 +8,30 @@ WebsiteSale.include({
     /**
      * @override
      */
-    init() {
-        this._super(...arguments);
 
-    },
-
-    start() {
+        start() {
 
         this.contactTypeSelect = this.$('#company_type');
-        this.individualFields = this.$('.o_individual_field');
-        this.companyFields = this.$('.o_company_field');
+        // this.individualFields = this.$('.o_individual_field');
+        // this.companyFields = this.$('.o_company_field');
         this.fieldRequiredInput = this.$('input[name="field_required"]');
 
-        console.log('contactTypeSelect', this.contactTypeSelect)
-        console.log('companyFields', this.companyFields)
-        this._updateFieldVisibility(this.contactTypeSelect.val());
+        console.log('contactTypeSelect', this.contactTypeSelect.val())
+        console.log('fieldRequiredInput', this.fieldRequiredInput.val())
+
+
+        const isCompany = this.contactTypeSelect.val() === 'company';
+        if (isCompany) {
+            this.fieldRequiredInput.val('name,street,city,country_id,vat,phone,email');
+        } else {
+            this.fieldRequiredInput.val('firstname,lastname,phone,email');
+        }
 
 
 
+
+
+        console.log('fieldRequiredInput', this.fieldRequiredInput.val())
         // if (document.getElementById("company_type")) {
         //     this._onChangeCompanyType();
         // }
@@ -33,45 +39,29 @@ WebsiteSale.include({
     },
 
 
-
     _updateFieldVisibility: function (companyType) {
         const isCompany = companyType === 'company';
+        const $container = this.$('.o_website_sale_address_form');
 
-        // 1. Toggle field visibility
-        this.individualFields.toggle(!isCompany);
-        this.companyFields.toggle(isCompany);
+        // 1. Switch the parent class (CSS does the rest)
+        $container.toggleClass('o_state_company', isCompany);
+        $container.toggleClass('o_state_individual', !isCompany);
 
-        // 2. Toggle the label for 'name' field
+        // 2. Handle the Label
         const nameLabel = this.$('label[for="name"] span');
-        if (isCompany) {
-            nameLabel.text('Company Name');
-        } else {
-            nameLabel.text('Full name');
-        }
+        nameLabel.text(isCompany ? 'Company Name' : 'Full name');
 
-        // 3. Update the hidden field_required input for server-side validation
-        if (isCompany) {
-            this.fieldRequiredInput.val('name,street,city,country_id,vat,phone,email');
-        } else {
-            this.fieldRequiredInput.val('firstname,lastname,phone,email');
+        // 3. Update required fields
+        const fieldRequiredInput = this.$('input[name="field_required"]');
+        if (fieldRequiredInput.length) {
+            fieldRequiredInput.val(isCompany ?
+                'name,street,city,country_id,vat,phone,email' :
+                'firstname,lastname,phone,email'
+            );
         }
     },
 
-
-
-     _onChangeCompanyType: function(ev) {
-        const companyType = document.querySelector('select[name="company_type"]');
-        const targetValue = ev.currentTarget.value
-        console.log('companyType', companyType)
-        console.log('targetValue', targetValue)
-        var is_company =  targetValue === 'company'
-
-        this._updateFieldVisibility(targetValue);
-
-//        this.individualFields.toggle(!is_company);
-//        this.companyFields.toggle(is_company);
-
+    _onChangeCompanyType: function(ev) {
+        this._updateFieldVisibility($(ev.currentTarget).val());
     },
-
-
 });

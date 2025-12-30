@@ -25,10 +25,18 @@ class WebsiteEventControllerInherit(WebsiteEventController):
                 request.session['custom_checkout_data'] = {
                     'event_id': event.id,
                     'event_name': event.name,
+                    'event_categ_id': event.event_category_id.id,
                     'attendee_count': len(registrations),
                     'my_custom_flag': True,
                     'original_post_data': post  # You can even pass the original post data
                 }
+
+                flow_temp = request.env['sale.order.template'].sudo().search([('is_flow_template','=', True)], limit=1)
+                # 'self' is the current sale.order record
+                order_sudo.write({
+                    'sale_order_template_id': flow_temp and flow_temp.id or False,
+                    # You could also change the salesperson, analytic account, etc.
+                })
 
                 # Explicitly return the redirect to ensure our session data is saved
                 return request.redirect("/shop/checkout")

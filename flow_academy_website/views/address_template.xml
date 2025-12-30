@@ -3,15 +3,23 @@
     <data>
 
         <template id="sale_address" inherit_id="website_sale.address">
+
+
+            <xpath expr="//t[@t-call='website_sale.wizard_checkout']" position="replace">
+            </xpath>
+
+            <xpath expr="//form/div[1]" position="attributes">
+                <attribute name="t-attf-class">row o_website_sale_address_form #{'o_state_company' if 'company_type' in checkout and checkout['company_type'] == 'company' else 'o_state_individual'}</attribute>
+            </xpath>
+
             <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_name')]" position="before">
                 <div t-attf-class="#{error.get('company_type') and 'o_has_error'} div_company_type col-lg-6 mb-2">
                     <label class="col-form-label" for="company_type">Contact Type</label>
-                    <select id="company_type" name="company_type"
-                            t-attf-class="form-select #{error.get('company_type') and 'is-invalid' or ''}"
-                            t-att-mode="mode[1]">
+                    <select id="company_type" name="company_type" t-attf-class="form-select #{error.get('company_type') and 'is-invalid' or ''}" t-att-mode="mode[1]">
 
-                        <option value="company">Company</option>
-                        <option value="person">Individual</option>
+
+                        <option value="person" t-att-selected="'company_type' in checkout and checkout['company_type'] == 'person'">Individual</option>
+                        <option value="company" t-att-selected="'company_type' in checkout and checkout['company_type'] == 'company'">Company</option>
 
                     </select>
                 </div>
@@ -23,25 +31,17 @@
                         <span t-if="company_type == 'company'">Company Name</span>
                         <span t-else="">Full name</span>
                     </label>
-                    <input type="text" name="name"
-                           t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}"
-                           t-att-value="'name' in checkout and checkout['name']"/>
+                    <input type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="'name' in checkout and checkout['name']"/>
                 </div>
 
                 <div class="w-100"/>
-                <div t-attf-class="o_individual_field col-lg-6 mb-2 #{error.get('firstname') and 'o_has_error'}"
-                     t-att-style="company_type == 'company' and 'display: none;' or None">
+                <div t-attf-class="o_individual_field col-lg-6 mb-2 #{error.get('firstname') and 'o_has_error'}" t-att-style="company_type == 'company' and 'display: none;' or None">
                     <label class="col-form-label" for="firstname">First Name</label>
-                    <input type="text" name="firstname"
-                           t-attf-class="form-control #{error.get('firstname') and 'is-invalid' or ''}"
-                           t-att-value="'firstname' in checkout and checkout['firstname']"/>
+                    <input type="text" name="firstname" t-attf-class="form-control #{error.get('firstname') and 'is-invalid' or ''}" t-att-value="'firstname' in checkout and checkout['firstname']"/>
                 </div>
-                <div t-attf-class="o_individual_field col-lg-6 mb-2 #{error.get('lastname') and 'o_has_error'}"
-                     t-att-style="company_type == 'company' and 'display: none;' or None">
+                <div t-attf-class="o_individual_field col-lg-6 mb-2 #{error.get('lastname') and 'o_has_error'}" t-att-style="company_type == 'company' and 'display: none;' or None">
                     <label class="col-form-label" for="lastname">Surname</label>
-                    <input type="text" name="lastname"
-                           t-attf-class="form-control #{error.get('lastname') and 'is-invalid' or ''}"
-                           t-att-value="'lastname' in checkout and checkout['lastname']"/>
+                    <input type="text" name="lastname" t-attf-class="form-control #{error.get('lastname') and 'is-invalid' or ''}" t-att-value="'lastname' in checkout and checkout['lastname']"/>
                 </div>
             </xpath>
 
@@ -65,8 +65,8 @@
 
             <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_street')]" position="attributes">
                 <attribute name="t-attf-class">#{error.get('street') and 'o_has_error'} o_company_field div_street col-lg-12 mb-2</attribute>
-            </xpath>
 
+            </xpath>
             <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_street2')]" position="attributes">
                 <attribute name="t-attf-class">#{error.get('div_street2') and 'o_has_error' or '' } o_company_field col-lg-12 div_street2
 
@@ -78,6 +78,7 @@
                 <attribute name="t-attf-class">#{error.get('city') and 'o_has_error' or ''} o_company_field div_city col-md-8 mb-2
 
                 </attribute>
+
             </xpath>
 
 <!--            <xpath expr="//form/div[1]//t[@t=if=''zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')']/div" position="attributes">-->
@@ -113,6 +114,8 @@
             </xpath>
 
             <xpath expr="//form//a[hasclass('btn-outline-secondary')]" position="attributes">
+
+                <attribute name="t-att-href">mode == ('new', 'billing') and '/shop/clear_and_back' or '/shop/checkout'</attribute>
                 <attribute name="class">btn btn-outline-secondary w-100 w-md-auto order-md-1 order-3 rounded-circle</attribute>
             </xpath>
 
@@ -123,5 +126,9 @@
         </template>
 
 
+        <template id="checkout_layout" inherit_id="website_sale.checkout_layout">
+            <xpath expr="//t[@t-call='website_sale.wizard_checkout']" position="replace">
+            </xpath>
+        </template>
     </data>
 </odoo>
