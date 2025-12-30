@@ -118,6 +118,17 @@
                         </t>
                     </div>
 
+                    <div class="row text-center">
+
+                       <div class="col-12">
+                           <a class="btn btn-outline-secondary rounded-circle btn-lg w-100 w-100 w-md-auto" href="https://www.flowacademy.mt"
+                               data-bs-original-title="" title=""
+                               style="border-width: 1px; border-style: solid;">Back
+                            </a>
+                       </div>
+
+                    </div>
+
                 </div>
 
 

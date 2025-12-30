@@ -79,7 +79,9 @@ class JobSheet(models.Model):
     def compute_start_job(self):
         for rec in self:
             if rec.start_date:
-                rec.jobsheet_start = rec.start_date
+                local_dt = fields.Datetime.context_timestamp(rec, rec.start_date)
+                rec.jobsheet_start = local_dt.date()
+
 
     @api.onchange('start_date', 'end_date')
     def onchange_start_end_date(self):

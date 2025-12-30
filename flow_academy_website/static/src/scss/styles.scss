@@ -10,4 +10,12 @@
     width: 24px;
   }
 }
+.o_state_individual .o_company_field {
+    display: none !important;
+}
+
+/* Hide individual fields when in company mode */
+.o_state_company .o_individual_field {
+    display: none !important;
+}
 
