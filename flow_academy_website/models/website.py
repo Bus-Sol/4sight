@@ -45,15 +45,21 @@ class Website(models.Model):
 
         if flow or categ_id:
             _logger.info("order to check is flow")
-            previous_step = next(
+            payment_step = next(
                 step for step in checkout_steps if 'website_sale.payment' in step[0]
             )
-            _logger.info("previous_step ???  %s", previous_step)
-            previous_step_index = checkout_steps.index(previous_step)
+            checkout_step = next(
+                step for step in checkout_steps if 'website_sale.checkout' in step[0]
+            )
+            payment_step_index = checkout_steps.index(payment_step)
+            checkout_step_index = checkout_steps.index(checkout_step)
 
 
-            checkout_steps[previous_step_index][1]['back_button'] = _lt("Return")
-            checkout_steps[previous_step_index][1]['back_button_href'] = '/shop/clear_and_back'
+            checkout_steps[payment_step_index][1]['back_button'] = _lt("Return")
+            checkout_steps[payment_step_index][1]['back_button_href'] = '/shop/clear_and_back'
+
+            checkout_steps[checkout_step_index][1]['back_button'] = _lt("Return")
+            checkout_steps[checkout_step_index][1]['back_button_href'] = '/shop/clear_and_back'
 
         if current_step:
             return next(
