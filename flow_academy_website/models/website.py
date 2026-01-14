@@ -55,10 +55,10 @@ class Website(models.Model):
             checkout_step_index = checkout_steps.index(checkout_step)
 
 
-            checkout_steps[payment_step_index][1]['back_button'] = _lt("Return")
+            checkout_steps[payment_step_index][1]['back_button'] = _lt("GO Back")
             checkout_steps[payment_step_index][1]['back_button_href'] = '/shop/clear_and_back'
 
-            checkout_steps[checkout_step_index][1]['back_button'] = _lt("Return")
+            checkout_steps[checkout_step_index][1]['back_button'] = _lt("Go Back")
             checkout_steps[checkout_step_index][1]['back_button_href'] = '/shop/clear_and_back'
 
         if current_step:

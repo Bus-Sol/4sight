@@ -1,6 +1,8 @@
-from odoo import http
+from odoo import http,_
 from odoo.http import request
 from odoo.addons.website_event.controllers.main import WebsiteEventController
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class WebsiteEventControllerInherit(WebsiteEventController):
@@ -44,6 +46,46 @@ class WebsiteEventControllerInherit(WebsiteEventController):
         # For free tickets or other cases, return the original result
         return res
 
+    def _process_tickets_form(self, event, form_details):
+        """ Process posted data about ticket order. Generic ticket are supported
+        for event without tickets (generic registration).
+
+        :return: list of order per ticket: [{
+            'id': if of ticket if any (0 if no ticket),
+            'ticket': browse record of ticket if any (None if no ticket),
+            'name': ticket name (or generic 'Registration' name if no ticket),
+            'quantity': number of registrations for that ticket,
+        }, {...}]
+        """
+        ticket_order = {}
+        for key, value in form_details.items():
+            registration_items = key.split('nb_register-')
+            if len(registration_items) != 2:
+                continue
+            ticket_order[int(registration_items[1])] = int(value)
+
+        _logger.info(f"ticket_order >> {ticket_order}")
+
+        ticket_dict = dict((ticket.id, ticket) for ticket in request.env['event.event.ticket'].sudo().search([
+            ('id', 'in', [tid for tid in ticket_order.keys() if tid]),
+            ('event_id', '=', event.id)
+        ]))
+
+        _logger.info(f"ticket_dict >> {ticket_dict}")
+        data = []
+        for tid, count in ticket_order.items():
+            if ticket_dict.get(tid):
+                data.append({
+                    'id': tid if ticket_dict.get(tid) else 0,
+                    'ticket': ticket_dict.get(tid),
+                    'name': ticket_dict[tid]['name'] if ticket_dict.get(tid) else _('Registration'),
+                    'quantity': count,
+                    'price': ticket_dict[tid]['price']
+                })
+
+        _logger.info(f"data >> {data}")
+
+        return data
 
 class EventTypeController(http.Controller):
 
