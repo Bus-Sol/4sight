@@ -55,7 +55,7 @@ WebsiteSale.include({
         const fieldRequiredInput = this.$('input[name="field_required"]');
         if (fieldRequiredInput.length) {
             fieldRequiredInput.val(isCompany ?
-                'name,street,city,country_id,vat,phone,email' :
+                'name,street,city,country_id,vat,zip,phone,email' :
                 'firstname,lastname,phone,email'
             );
         }

@@ -246,7 +246,7 @@
 
 
             <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-primary')]" position="attributes">
-                <attribute name="style">border-radius: 6px; font-size: 16px; font-weight: 500; border: none; width: 2000px;</attribute>
+                <attribute name="style">border-radius: 6px; font-size: 16px; font-weight: 500; border: none; width: 200px;</attribute>
             </xpath>
 
             <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-secondary')]" position="attributes">
