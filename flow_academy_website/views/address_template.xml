@@ -93,11 +93,21 @@
                 </attribute>
             </xpath>
 
+            <xpath expr="//form/div[1]//t[@t-if=&quot;'zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')&quot;]/div/label" position="replace">
+                <label class="col-form-label label-optional" for="zip">Post Code</label>
+            </xpath>
+
+
             <xpath expr="//form/div[1]//t[@t-if=&quot;'zip' in zip_city and zip_city.index('zip') &gt; zip_city.index('city')&quot;]/div" position="attributes">
                 <attribute name="t-attf-class">#{error.get('zip') and 'o_has_error'} o_company_field div_zip col-md-4 mb-2
 
                 </attribute>
             </xpath>
+
+            <xpath expr="//form/div[1]//t[@t-if=&quot;'zip' in zip_city and zip_city.index('zip') &gt; zip_city.index('city')&quot;]/div/label" position="replace">
+                <label class="col-form-label label-optional" for="zip">Post Code</label>
+            </xpath>
+
 
 
 
@@ -128,6 +138,9 @@
 
         <template id="checkout_layout" inherit_id="website_sale.checkout_layout">
             <xpath expr="//t[@t-call='website_sale.wizard_checkout']" position="replace">
+            </xpath>
+            <xpath expr="//div[@id='o_wsale_total_accordion_item']" position="attributes">
+                <attribute name="class">accordion-item p-lg-4 border border-primary</attribute>
             </xpath>
         </template>
     </data>

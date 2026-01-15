@@ -18,122 +18,228 @@
                     </div>
                 </section>
                 <br/>
-                <div class="container course-events">
-                    <div class="row">
-                        <t t-if="events">
-                            <t t-foreach="events" t-as="event">
-                                <div class="col-md-6 col-lg-4 mb-4">
-                                    <div class="card h-100 border border-primary">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-primary text-center">
-                                                <strong t-field="event.name"/>
-                                            </h5>
-                                            <br/>
+                <style>
+                    /* 1. Main Wrapper Positioning */
+                    .position-relative {
+                    padding: 0 50px;
+                    }
 
-                                            <div class="row mb-2">
-                                                <div class="col-auto text-center course-icon">
-                                                    <i class="fa fa-calendar fa-lg text-primary" style="width: 24px;"></i>
-                                                </div>
-                                                <div class="col">
-                                                    <span t-field="event.date_begin" t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
+                    /* 2. Slider Control (merged all duplicates) */
+                    .event-slider-wrapper {
+                    display: flex; /* Added flex to ensure child alignment */
+                    overflow-x: auto;
+                    overflow-y: hidden;
+                    scroll-behavior: smooth;
+                    -webkit-overflow-scrolling: touch;
+                    padding-bottom: 15px;
+
+                    /* Hide Scrollbar for all browsers */
+                    scrollbar-width: none; /* Firefox */
+                    -ms-overflow-style: none; /* IE/Edge */
+                    }
+
+                    .event-slider-wrapper::-webkit-scrollbar {
+                    display: none; /* Chrome, Safari, Opera */
+                    }
+
+                    /* 3. Navigation Buttons */
+                    .slider-nav-btn {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    z-index: 10;
+                    width: 45px;
+                    height: 45px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+                    border: none;
+                    background-color: #004a99; /* Standard Odoo primary or your specific blue */
+                    color: white;
+                    border-radius: 50%;
+                    }
+
+                    .slider-nav-btn:hover {
+                    background-color: #003366;
+                    color: white;
+                    }
+
+                    /* 4. Card Item Sizing */
+                    .event-card-item {
+                    flex: 0 0 auto; /* Crucial: prevents cards from squashing */
+                    }
+                </style>
+                <div class="container course-events mt-5">
+                    <div class="position-relative px-md-5" style="position: relative !important; display: block;">
+
+                        <button type="button" class="btn btn-primary rounded-circle slider-nav-btn prev-btn"
+                                style="position: absolute !important; top: 50% !important; left: 0 !important; transform: translateY(-50%) !important; z-index: 1000 !important; width: 45px; height: 45px;">
+                            <i class="fa fa-chevron-left"/>
+                        </button>
+
+                        <div class="event-slider-wrapper" id="eventSlider">
+                            <div class="row flex-nowrap pb-3">
+                                <t t-if="events">
+                                    <t t-foreach="events" t-as="event">
+                                        <div class="col-11 col-md-6 col-lg-4 mb-4">
+                                            <div class="card h-100 border-2 border-primary">
+                                                <div class="card-body">
+                                                    <h4 class="card-title text-primary text-center">
+                                                        <strong t-field="event.name"/>
+                                                    </h4>
+                                                    <br/>
+
+                                                    <div class="row mb-2">
+                                                        <div class="col-auto text-center course-icon">
+                                                            <i class="fa fa-calendar fa-lg text-primary"
+                                                               style="width: 24px;"/>
+                                                        </div>
+                                                        <div class="col">
+                                                            <span t-field="event.date_begin"
+                                                                  t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mb-2">
+                                                        <div class="col-auto text-center">
+                                                            <i class="fa fa-clock-o fa-lg text-primary"
+                                                               style="width: 24px;"/>
+                                                        </div>
+                                                        <div class="col">
+                                                            <span t-field="event.start_time"
+                                                                  t-options="{&quot;widget&quot;: &quot;float_time&quot;}"/>
+                                                            -
+                                                            <span t-field="event.end_time"
+                                                                  t-options="{&quot;widget&quot;: &quot;float_time&quot;}"/>
+
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mb-2">
+                                                        <div class="col-auto text-center course-icon">
+                                                            <i class="fa fa-map-marker fa-lg text-primary"
+                                                               style="width: 24px;"/>
+                                                        </div>
+                                                        <div class="col">
+                                                            <span t-esc="event.address_inline"/>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mb-2">
+                                                        <div class="col-auto text-center course-icon">
+                                                            <i class="fa fa-dollar fa-lg text-primary"
+                                                               style="width: 24px;"/>
+                                                        </div>
+                                                        <div class="col">
+                                                            Price:
+                                                            <span t-field="event.price"/>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mb-2">
+                                                        <div class="col-auto text-center course-icon">
+                                                            <i class="fa fa-ticket fa-lg text-primary"
+                                                               style="width: 24px;"/>
+                                                        </div>
+                                                        <div class="col">
+                                                            Available Seats:
+                                                            <span t-field="event.seats_available"/>
+                                                        </div>
+                                                    </div>
 
                                                 </div>
+
+                                                <div class="card-footer bg-white border-top-10">
+                                                    <button t-if="event.event_registrations_open" type="button"
+                                                            data-bs-toggle="modal"
+                                                            t-att-data-bs-target="'#modal_ticket_registration_%s' % event.id"
+                                                            class="btn btn-primary w-100">Select Option
+                                                    </button>
+                                                    <div t-if="registration_error_code == 'insufficient_seats'"
+                                                         class="alert alert-danger my-3" role="alert">
+                                                        Registration failed! These tickets are not available anymore.
+                                                    </div>
+                                                    <button t-if="not event.event_registrations_open" type="button"
+                                                            class="btn w-100" style="background-color: #d4d3d2;">Not
+                                                        Available
+                                                    </button>
+                                                    <!--                                            <p t-if="not event.event_registrations_open">-->
+                                                    <!--                                                NOT AVAILABLE-->
+                                                    <!--                                            </p>-->
+                                                </div>
+                                                <div class="card-footer bg-white text-center">
+                                                    <p style="font-size: 11px;">
+                                                        * All course dates are indicative and may be amended. FLOW
+                                                        Academy reserves the right to reschedule courses; enrolled
+                                                        participants will be informed of any changes as soon as
+                                                        possible.
+                                                    </p>
+                                                </div>
+                                                <t t-call="website_event.modal_ticket_registration">
+                                                    <t t-set="event" t-value="event"/>
+                                                </t>
                                             </div>
-
-                                            <div class="row mb-2">
-                                                <div class="col-auto text-center">
-                                                    <i class="fa fa-clock-o fa-lg text-primary" style="width: 24px;"/>
-                                                </div>
-                                                <div class="col">
-                                                    <span t-field="event.start_time" t-options='{"widget": "float_time"}'/>
-                                                    - <span t-field="event.end_time" t-options='{"widget": "float_time"}'/>
-
-
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-2">
-                                                <div class="col-auto text-center course-icon">
-                                                    <i class="fa fa-map-marker fa-lg text-primary" style="width: 24px;"></i>
-                                                </div>
-                                                <div class="col">
-                                                    <span t-esc="event.address_inline"/>
-
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-2">
-                                                <div class="col-auto text-center course-icon">
-                                                    <i class="fa fa-dollar fa-lg text-primary" style="width: 24px;"></i>
-                                                </div>
-                                                <div class="col">
-                                                    Price: <span t-field="event.price"/>
-
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-2">
-                                                <div class="col-auto text-center course-icon">
-                                                    <i class="fa fa-ticket fa-lg text-primary" style="width: 24px;"></i>
-                                                </div>
-                                                <div class="col">
-                                                    Available Seats: <span t-field="event.seats_available"/>
-                                                </div>
-                                            </div>
-
                                         </div>
+                                    </t>
 
-                                        <div class="card-footer bg-white border-top-10">
-                                            <button t-if="event.event_registrations_open" type="button"
-                                                    data-bs-toggle="modal"  t-att-data-bs-target="'#modal_ticket_registration_%s' % event.id"
-                                                    class="btn btn-primary w-100">Select Option
-                                            </button>
-                                            <div t-if="registration_error_code == 'insufficient_seats'"
-                                                 class="alert alert-danger my-3" role="alert">
-                                                Registration failed! These tickets are not available anymore.
-                                            </div>
-                                            <button t-if="not event.event_registrations_open" type="button" class="btn w-100" style="background-color: #d4d3d2;">Not Available
-                                            </button>
-<!--                                            <p t-if="not event.event_registrations_open">-->
-<!--                                                NOT AVAILABLE-->
-<!--                                            </p>-->
-                                        </div>
-                                        <div class="card-footer bg-white text-center">
-                                            <p style="font-size: 11px;">
-                                                * All course dates are indicative and may be amended. FLOW Academy reserves the right to reschedule courses; enrolled participants will be informed of any changes as soon as possible.
-                                            </p>
-                                        </div>
-                                        <t t-call="website_event.modal_ticket_registration">
-                                            <t t-set="event" t-value="event"/>
-                                        </t>
+                                </t>
+
+                                <t t-else="">
+                                    <div class="col-12 text-center alert alert-info">
+                                        No upcoming events found for this type.
                                     </div>
-                                </div>
-                            </t>
-                        </t>
+                                </t>
 
-                        <t t-else="">
-                            <div class="col-12 text-center alert alert-info">
-                                No upcoming events found for this type.
                             </div>
-                        </t>
+                        </div>
+                        <button type="button" class="btn btn-primary rounded-circle slider-nav-btn next-btn"
+                                style="position: absolute !important; top: 50% !important; right: 0 !important; transform: translateY(-50%) !important; z-index: 1000 !important; width: 45px; height: 45px;">
+                            <i class="fa fa-chevron-right"/>
+                        </button>
                     </div>
+
+                    <script>
+                        const slider = document.getElementById('eventSlider');
+                        const nextBtn = document.querySelector('.next-btn');
+                        const prevBtn = document.querySelector('.prev-btn');
+
+                        if (slider &amp;&amp; nextBtn &amp;&amp; prevBtn) {
+                        nextBtn.addEventListener('click', function(e) {
+                        e.preventDefault(); // STOP the button from jumping or submitting
+                        const card = slider.querySelector('.event-card-item');
+                        const scrollAmount = card ? card.offsetWidth : 600;
+                        slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                        });
+
+                        prevBtn.addEventListener('click', function(e) {
+                        e.preventDefault(); // STOP the button from jumping or submitting
+                        const card = slider.querySelector('.event-card-item');
+                        const scrollAmount = card ? card.offsetWidth : 600;
+                        slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                        });
+                        }
+                    </script>
 
                     <div class="row text-center">
 
-                       <div class="col-12">
-                           <p>
-                                <a class="btn btn-outline-secondary rounded-circle btn-lg w-100 w-100 w-md-auto" href="https://www.flowacademy.mt"
-                               data-bs-original-title="" title=""
-                               style="border-width: 1px; border-style: solid;">Back
+                        <div class="col-12">
+                            <p>
+                                <a class="btn btn-outline-secondary rounded-circle btn-lg w-100 w-100 w-md-auto"
+                                   href="https://www.flowacademy.mt" data-bs-original-title="" title=""
+                                   style="border-width: 1px; border-style: solid;">Back
                                 </a>
-                           </p>
-                          
-                       </div>
+                            </p>
+
+                        </div>
 
                     </div>
 
                 </div>
-
 
                 <section class="s_call_to_action o_cc o_cc4 o_colored_level pt24 pb0" data-snippet="s_call_to_action"
                          data-name="Call to Action" style="background-image: none;">
@@ -625,16 +731,9 @@
 
 
             </div>
-
-            <t t-call="website_event.modal_ticket_registration"/>
         </t>
 
     </template>
-
-
-
-
-
 
 
     <template id="event_confirmation" inherit_id="website_event_sale.event_confirmation">
@@ -642,8 +741,6 @@
         </xpath>
 
     </template>
-
-
 
 
 </odoo>

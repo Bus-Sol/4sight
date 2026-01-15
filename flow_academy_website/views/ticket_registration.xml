@@ -21,7 +21,7 @@
             </xpath>
 
             <xpath expr="//div[hasclass('modal-content')]" position="replace">
-                <div class="modal-content p-0 overflow-hidden border-2 border-primary">
+                <div class="modal-content p-0 overflow-hidden border-2 border-primary text-primary" style="border-radius: 10px;">
                     <!--                <div class="modal-header">-->
                     <!--                <div class="o_wevent_registration_title modal-title fs-5" id="staticBackdropLabel">Seats to take</div>-->
                     <!--                <div t-if="len(event.event_ticket_ids) &gt; 2" class="o_wevent_price_range ms-2"/>-->
@@ -123,7 +123,7 @@
                                     <div t-else="" class="o_wevent_registration_single">
                                         <div class="modal-body collapse show d-flex flex-column justify-content-cente">
                                             <div class="flex-lg-row mb-3" itemscope="itemscope" itemtype="http://schema.org/Offer">
-                                                <h4 class="display-6 fw-bold mb-2">Seats</h4>
+                                                <h4 class="display-6 fw-bold mb-2">Places</h4>
                                                 <h5 itemprop="name" class="my-0 pe-3 o_wevent_single_ticket_name">
                                                     <span t-if="tickets" t-field="tickets.name"/>
                                                     <span t-else="">Registration</span>
@@ -217,24 +217,40 @@
 
 
             <xpath expr="//div[hasclass('modal-body')]/h5" position="after">
-                <h5 t-attf-class="mt-1 pb-2 #{'border-bottom' if event.question_ids else ''}">Seat #
-                    <span t-out="counter"/>
-                    <small class="text-muted">-
+
+                    <h5 t-attf-class="mt-1 pb-2 #{'border-bottom' if event.question_ids else ''}">
+                        <span class="badge fs-6" style="color: black; background-color: #d4d3d2;">
+
+                                Seat #<span t-out="counter"/>
+
+
+                        </span>
+
+
+                    <small>-
                         <span t-out="ticket['name']"/>
                     </small>
-                </h5>
+                    </h5>
+
+
+
             </xpath>
 
             <xpath expr="//div[hasclass('modal-body')]/h5[1]" position="replace">
             </xpath>
 
+            <xpath expr="//div[hasclass('modal-content')]" position="attributes">
+                <attribute name="class">modal-content border-3 border-primary text-primary</attribute>
+                <attribute name="style">background: linear-gradient(318deg,rgba(247, 240, 240, 1) 0%, rgba(233, 233, 247, 1) 33%, rgba(230, 240, 242, 1) 100%); border-radius: 10px;"</attribute>
+            </xpath>
+
 
             <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-primary')]" position="attributes">
-                <attribute name="style">border-radius: 6px; font-size: 16px; font-weight: 500; border: none; width: 180px;</attribute>
+                <attribute name="style">border-radius: 6px; font-size: 16px; font-weight: 500; border: none; width: 200px;</attribute>
             </xpath>
 
             <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-secondary')]" position="attributes">
-                <attribute name="style">border-radius: 6px; font-size: 16px; font-weight: 500; border: none; width: 180px;</attribute>
+                <attribute name="style">border-radius: 6px; font-size: 16px; font-weight: 500; border: none; width: 150px;</attribute>
             </xpath>
 
 
