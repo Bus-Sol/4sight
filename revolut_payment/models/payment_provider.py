@@ -1,10 +1,13 @@
 from werkzeug import urls
+from werkzeug.urls import url_encode, url_join, url_parse
+import requests
+from requests.exceptions import HTTPError
+
 from requests.auth import HTTPBasicAuth
 from odoo import _, api, fields, models, service
-from odoo.exceptions import ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.addons.revolut_payment.const import SUPPORTED_CURRENCIES, DEFAULT_PAYMENT_METHODS_CODES
 import logging
-import requests
 import json
 import pprint
 
@@ -105,3 +108,40 @@ class PaymentProvider(models.Model):
             'support_refund': 'partial',
             'support_tokenization': True,
         })
+
+    def action_revolut_verify_apple_pay_domain(self):
+        """ Verify the web domain with Revolut to enable Apple Pay.
+
+        :return dict: A client action with a success message.
+        :raise UserError: If test keys are used to make the request.
+        """
+        self.ensure_one()
+
+        web_domain = url_parse(self.get_base_url()).netloc
+        api_url = self._revolut_endpoint()
+        try:
+            response_content = self._revolut_make_request(endpoint=api_url, path='api/apple-pay/domains/register',
+                                                          data={
+                                                              'domain': web_domain
+                                                          }, method='POST')
+            response_content.raise_for_status()  # Raises an HTTPError for bad responses (4xx or 5xx)
+
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': _("Your web domain was successfully verified."),
+                    'type': 'success',
+                },
+            }
+
+
+        except HTTPError as e:
+            raise ValidationError(f"HTTP error occurred: {e}")
+            # You can also access the response body for more details if needed
+            # print(f"Response body: {e.response.text}")
+        except requests.exceptions.RequestException as e:
+            # Catches other issues like ConnectionError, Timeout, etc.
+            raise ValidationError(f"An error occurred: {e}")
+
+
