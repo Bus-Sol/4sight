@@ -1,4 +1,13 @@
 <odoo>
+
+    <template id="dynamic_logo_template" inherit_id="website.layout">
+        <xpath expr="//a[@class='navbar-brand']/img" position="attributes">
+            <attribute name="t-att-src">
+                "flow_academy_website/static/src/image/flow_logo.jpg" if request.session.get('use_flow_logo') else "flow_academy_website/static/src/image/4sight_logo.jpg"
+            </attribute>
+        </xpath>
+    </template>
+
     <template id="events_by_category" name="Events by Type">
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure oe_empty">

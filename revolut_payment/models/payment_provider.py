@@ -122,7 +122,7 @@ class PaymentProvider(models.Model):
         try:
             response_content = self._revolut_make_request(endpoint=api_url, path='api/apple-pay/domains/register',
                                                           data={
-                                                              'domain': web_domain
+                                                              "domain": web_domain
                                                           }, method='POST')
             response_content.raise_for_status()  # Raises an HTTPError for bad responses (4xx or 5xx)
 

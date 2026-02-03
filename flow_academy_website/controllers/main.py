@@ -100,6 +100,9 @@ class EventTypeController(http.Controller):
             ('website_published', '=', True)
         ])
 
+        request.session['use_flow_logo'] = True
+
+
         # Return the template with the data
         return request.render('flow_academy_website.events_by_category', {
             'events': events,
