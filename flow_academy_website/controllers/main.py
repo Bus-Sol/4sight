@@ -1,8 +1,19 @@
 from odoo import http,_
 from odoo.http import request
 from odoo.addons.website_event.controllers.main import WebsiteEventController
+from odoo.addons.portal.controllers.web import Home
+
 import logging
 _logger = logging.getLogger(__name__)
+
+
+class Website(Home):
+
+    @http.route()
+    def index(self, **kw):
+        response = super(Website, self).index(**kw)
+        response.delete_cookie('logo_preference')
+        return response
 
 
 class WebsiteEventControllerInherit(WebsiteEventController):
@@ -104,8 +115,18 @@ class EventTypeController(http.Controller):
 
 
         # Return the template with the data
-        return request.render('flow_academy_website.events_by_category', {
+        response = request.render('flow_academy_website.events_by_category', {
             'events': events,
             'event_category': category,
         })
+
+        response.set_cookie(
+            'logo_preference',
+            'flow_logo',  # or 'default_logo'
+            max_age=30 * 24 * 60 * 60,  # 30 days in seconds
+            httponly=False,  # Allow JavaScript to read it
+            samesite='Lax'
+        )
+
+        return response
 

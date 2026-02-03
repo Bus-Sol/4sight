@@ -1,10 +1,67 @@
 <odoo>
 
-    <template id="dynamic_logo_template" inherit_id="portal.frontend_layout">
-        <xpath expr="//a[@class='navbar-brand']/img" position="attributes">
-            <attribute name="t-att-src">
-                "flow_academy_website/static/src/image/flow_logo.jpg" if request.session.get('use_flow_logo') else "flow_academy_website/static/src/image/4sight_logo.jpg"
-            </attribute>
+    <template id="dynamic_logo_template" inherit_id="website.option_header_brand_logo">
+        <xpath expr="//a" position="replace">
+        <a data-name="Navbar Logo" href="/" t-attf-class="navbar-brand logo #{_link_class}">
+            <!-- Single img element -->
+            <img id="header_logo"
+                 src="/flow_academy_website/static/src/image/4sight_logo.jpg"
+                 alt="Logo"
+                 style="height: 40px;"/>
+        </a>
+        <script>
+            // Function to get cookie value
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+            }
+
+            // Update logo based on cookie
+            document.addEventListener('DOMContentLoaded', function() {
+                var logoElement = document.getElementById('header_logo');
+                if (!logoElement) return;
+
+                var logoPreference = getCookie('logo_preference');
+
+                if (logoPreference === 'flow_logo') {
+                    logoElement.src = '/flow_academy_website/static/src/image/flow_logo.jpg';
+                }
+                // Default logo is already set in src attribute
+            });
+        </script>
+        </xpath>
+    </template>
+
+    <template id="dynamic_footer_logo" inherit_id="website.template_footer_minimalist">
+
+        <xpath expr="//a[hasclass('o_footer_logo')]" position="replace">
+        <a href="/" class="o_footer_logo logo">
+            <!-- Single img element -->
+                        <img id="footer_logo" src="/flow_academy_website/static/src/image/4sight_logo.jpg" alt="Logo" data-mimetype="image/png" data-mimetype-before-conversion="image/png" data-resize-width="1920" data-quality="0" style="transform: scaleX(0.60) scaleY(0.60); animation-play-state: paused; transition: none; padding: 0px;"/>
+
+        </a>
+        <script>
+            // Function to get cookie value
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+            }
+
+            // Update logo based on cookie
+            document.addEventListener('DOMContentLoaded', function() {
+                var logoElement = document.getElementById('footer_logo');
+                if (!logoElement) return;
+
+                var logoPreference = getCookie('logo_preference');
+
+                if (logoPreference === 'flow_logo') {
+                    logoElement.src = '/flow_academy_website/static/src/image/flow_logo.jpg';
+                }
+                // Default logo is already set in src attribute
+            });
+        </script>
         </xpath>
     </template>
 
