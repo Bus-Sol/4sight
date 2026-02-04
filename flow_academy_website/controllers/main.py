@@ -12,7 +12,9 @@ class Website(Home):
     @http.route()
     def index(self, **kw):
         response = super(Website, self).index(**kw)
-        response.delete_cookie('logo_preference')
+        website = request.website
+        if website.id != 2:
+            response.delete_cookie('logo_preference')
         return response
 
 
