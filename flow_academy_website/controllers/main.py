@@ -15,6 +15,14 @@ class Website(Home):
         website = request.website
         if website.id != 2:
             response.delete_cookie('logo_preference')
+        else:
+            response.set_cookie(
+                'logo_preference',
+                'flow_logo',  # or 'default_logo'
+                max_age= 24 * 60 * 60,
+                httponly=False,  # Allow JavaScript to read it
+                samesite='Lax'
+            )
         return response
 
 
@@ -125,7 +133,7 @@ class EventTypeController(http.Controller):
         response.set_cookie(
             'logo_preference',
             'flow_logo',  # or 'default_logo'
-            max_age=30 * 24 * 60 * 60,  # 30 days in seconds
+            max_age=24 * 60 * 60,  # 30 days in seconds
             httponly=False,  # Allow JavaScript to read it
             samesite='Lax'
         )
