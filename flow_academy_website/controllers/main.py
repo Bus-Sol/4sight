@@ -35,14 +35,27 @@ class CustomerPortalExternalTax(CustomerPortal):
         return response
 
 
-        if 'sale_order' not in response.qcontext:
+    @http.route()
+    def portal_my_invoice_detail(self, *args, **kw):
+        response = super().portal_my_invoice_detail(*args, **kw)
+        if 'invoice' not in response.qcontext:
             return response
 
-        # Update taxes before customers see their quotation. This also ensures that tax validation
-        # works (e.g. customer has valid address, ...). Otherwise, errors will occur during quote
-        # confirmation. Switch company so that property fields are read correctly.
-        so = response.qcontext['sale_order']
-        so.with_company(so.company_id)._get_and_set_external_taxes_on_eligible_records()
+        invoice = response.qcontext['invoice']
+        flow_temp = request.env['sale.order.template'].sudo().search([('is_flow_template', '=', True)], limit=1)
+        # 'self' is the current sale.order record
+        if invoice.sale_order_template_id.id == flow_temp.id:
+            response.set_cookie(
+                'logo_preference',
+                'flow_logo',  # or 'default_logo'
+                max_age=24 * 60 * 60,
+                httponly=False,  # Allow JavaScript to read it
+                samesite='Lax'
+            )
+        else:
+            response.delete_cookie('logo_preference')
+        return response
+
 
 
 
