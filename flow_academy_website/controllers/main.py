@@ -2,9 +2,61 @@ from odoo import http,_
 from odoo.http import request
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.addons.portal.controllers.web import Home
+from odoo.addons.sale.controllers.portal import CustomerPortal
 
 import logging
 _logger = logging.getLogger(__name__)
+
+
+class CustomerPortalExternalTax(CustomerPortal):
+
+
+    @http.route()
+    def portal_order_page(self, *args, **kwargs):
+        response = super().portal_order_page(*args, **kwargs)
+        if 'sale_order' not in response.qcontext:
+            return response
+
+        so = response.qcontext['sale_order']
+        website = request.website
+
+        flow_temp = request.env['sale.order.template'].sudo().search([('is_flow_template', '=', True)], limit=1)
+        # 'self' is the current sale.order record
+        if so.sale_order_template_id.id == flow_temp.id:
+            response.set_cookie(
+                'logo_preference',
+                'flow_logo',  # or 'default_logo'
+                max_age=24 * 60 * 60,
+                httponly=False,  # Allow JavaScript to read it
+                samesite='Lax'
+            )
+        else:
+            response.delete_cookie('logo_preference')
+        return response
+
+
+    @http.route()
+    def portal_my_invoice_detail(self, *args, **kw):
+        response = super().portal_my_invoice_detail(*args, **kw)
+        if 'invoice' not in response.qcontext:
+            return response
+
+        invoice = response.qcontext['invoice']
+        flow_temp = request.env['sale.order.template'].sudo().search([('is_flow_template', '=', True)], limit=1)
+        # 'self' is the current sale.order record
+        if invoice.sale_order_template_id.id == flow_temp.id:
+            response.set_cookie(
+                'logo_preference',
+                'flow_logo',  # or 'default_logo'
+                max_age=24 * 60 * 60,
+                httponly=False,  # Allow JavaScript to read it
+                samesite='Lax'
+            )
+        else:
+            response.delete_cookie('logo_preference')
+        return response
+
+
 
 
 class Website(Home):
