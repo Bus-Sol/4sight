@@ -192,7 +192,7 @@ class EventTypeController(http.Controller):
 
         return response
 
-    @http.route('/new-upcoming-courses',type='http', auth="public", website=True)
+    @http.route('/new-upcoming-courses', type='http', auth="public", website=True)
     def get_upcoming_courses(self, **kw):
         event_categs = request.env['event.category'].search([])
         now = datetime.now()
@@ -201,10 +201,12 @@ class EventTypeController(http.Controller):
             categs_data[categ.id] = []
             events = request.env['event.event'].search([
                 ('event_category_id', '=', categ.id),
-                ('date_begin', '>=', now), ('date_end', '<=', now)
+                ('date_begin', '<=', now), ('date_end', '>=', now)
             ])
             for event in events:
                 categs_data[categ.id].append(event)
+
+        _logger.info(f"categs_data >> {categs_data}")
 
         # return request.render('website.landing-pages', vals)
         return request.render('website.upcoming-courses_e0fcf3', {
