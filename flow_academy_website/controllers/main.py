@@ -200,6 +200,7 @@ class EventTypeController(http.Controller):
         for categ in event_categs:
             categs_data[categ.id] = []
             events = request.env['event.event'].search([
+                ('company_id','=',1),
                 ('event_category_id', '=', categ.id),
                 ('date_begin', '<=', now), ('date_end', '>=', now)
             ])
