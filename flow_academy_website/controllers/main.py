@@ -3,7 +3,7 @@ from odoo.http import request
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.sale.controllers.portal import CustomerPortal
-
+from datetime import datetime,date
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -191,4 +191,22 @@ class EventTypeController(http.Controller):
         )
 
         return response
+
+    @http.route('/new-upcoming-courses',type='http', auth="public", website=True)
+    def get_upcoming_courses(self, **kw):
+        event_categs = request.env['event.category'].search([])
+        now = datetime.now()
+        categs_data = {}
+        for categ in event_categs:
+            categs_data[categ.id] = []
+            events = request.env['event.event'].search([
+                ('event_category_id', '=', categ.id),
+                ('date_begin', '>=', now), ('date_end', '<=', now)
+            ])
+            for event in events:
+                categs_data[categ.id].append(event)
+
+        request.render('website.upcoming-courses_e0fcf3', {
+            'categs_data': categs_data,
+        })
 
