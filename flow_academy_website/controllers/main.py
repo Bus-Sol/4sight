@@ -206,7 +206,8 @@ class EventTypeController(http.Controller):
             for event in events:
                 categs_data[categ.id].append(event)
 
-        request.render('website.upcoming-courses_e0fcf3', {
+        # return request.render('website.landing-pages', vals)
+        return request.render('website.upcoming-courses_e0fcf3', {
             'categs_data': categs_data,
         })
 
