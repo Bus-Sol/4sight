@@ -68,14 +68,28 @@
     <template id="events_by_category" name="Events by Type">
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure oe_empty">
+
                 <section class="s_cover bg-black-50 o_colored_level pb40 pt40 parallax"
                          data-scroll-background-ratio="1.5" data-snippet="s_cover" data-name="Cover"
                          style="background-image: none;">
-                    <span class="s_parallax_bg oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
+                    <t t-if="event_category.cover">
+                        <t t-set="cover_image_url" t-value="image_data_uri(event_category.cover)"/>
+
+
+                        <span class="s_parallax_bg oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
+                          t-att-style="'background-image: url(%s);' % cover_image_url if cover_image_url else ''"
+                          data-mimetype="image/webp" data-original-id="149495"
+                          data-mimetype-before-conversion="image/jpeg" data-resize-width="1920" data-quality="100"/>
+                    </t>
+                    <t t-else="">
+                        <span class="s_parallax_bg oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
                           style="background-image: url(&quot;/web/image/149496-83df35ad/HERO%20BANNER%20ECOM%20BOOKING%20PAGES.webp&quot;);"
                           data-mimetype="image/webp" data-original-id="149495"
                           data-original-src="/web/image/149495-83df35ad/HERO%20BANNER%20ECOM%20BOOKING%20PAGES.jpg"
                           data-mimetype-before-conversion="image/jpeg" data-resize-width="1920" data-quality="100"/>
+
+                    </t>
+
 
                     <div class="o_we_bg_filter bg-black-50"/>
                     <div class="s_allow_columns container">

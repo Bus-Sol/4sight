@@ -6,3 +6,5 @@ class EventCategory(models.Model):
     _rec_name = 'name'
 
     name = fields.Char()
+
+    cover = fields.Binary(string="Cover", attachment=True)
