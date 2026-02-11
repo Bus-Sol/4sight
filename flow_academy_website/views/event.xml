@@ -18,7 +18,10 @@
                             <strong class="oe_inline me-2"> ⟶ </strong>
                             <field name="end_time" class="oe_inline" widget="float_time"/>
                         </div>
+                     <field name="location_type"/>
+                     <field name="trainer"/>
                  </xpath>
+
 
             </field>
         </record>

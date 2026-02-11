@@ -164,6 +164,9 @@
                                                         <div class="col">
                                                             <span t-field="event.date_begin"
                                                                   t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
+                                                            <t t-if="event.location_type">
+                                                                (<span t-field="event.location_type"/>)
+                                                            </t>
 
                                                         </div>
                                                     </div>
@@ -215,6 +218,17 @@
                                                         <div class="col">
                                                             Available Seats:
                                                             <span t-field="event.seats_available"/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mb-2">
+                                                        <div class="col-auto text-center course-icon">
+                                                            <i class="fa fa-user fa-lg text-primary"
+                                                               style="width: 24px;"/>
+                                                        </div>
+                                                        <div class="col">
+                                                            Trainer:
+                                                            <span t-field="event.trainer"/>
                                                         </div>
                                                     </div>
 
