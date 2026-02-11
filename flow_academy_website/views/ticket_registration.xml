@@ -221,7 +221,7 @@
                     <h5 t-attf-class="mt-1 pb-2 #{'border-bottom' if event.question_ids else ''}">
                         <span class="badge fs-6" style="color: black; background-color: #d4d3d2;">
 
-                                Seat #<span t-out="counter"/>
+                                Place #<span t-out="counter"/>
 
 
                         </span>
