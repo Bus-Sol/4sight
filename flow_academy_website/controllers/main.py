@@ -168,9 +168,13 @@ class EventTypeController(http.Controller):
     def list_events_by_type(self, category, **kw):
         # Search for events linked to this specific type
         # We also filter for 'published' events so website visitors don't see drafts
-        events = request.env['event.event'].search([
+        company_1 = request.env['res.company'].sudo().browse(1)
+
+        now = datetime.now()
+
+        events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', category.id),
-            ('website_published', '=', True)
+            ('date_begin', '>=', now),
         ])
 
         request.session['use_flow_logo'] = True
@@ -206,15 +210,32 @@ class EventTypeController(http.Controller):
             events = request.env['event.event'].sudo().with_company(company_1).search([
                 ('company_id', '=', 1),
                 ('event_category_id', '=', categ.id),
-                ('date_begin', '<=', now),
-                ('date_end', '>=', now)
+                ('date_begin', '>=', now),
             ])
             for event in events:
                 categs_data[categ.id].append(event)
 
         _logger.info(f"categs_data >> {categs_data}")
 
-        return request.render('website.upcoming-courses_e0fcf3', {
+        return (request.render('website.upcoming-courses_e0fcf3', {
             'categs_data': categs_data,
+        }))
+
+
+    @http.route('/seo-for-marketers-2026', type='http', auth="public", website=True)
+    def get_upcoming_courses(self, **kw):
+        # Switch to company 1 context
+        company_1 = request.env['res.company'].sudo().browse(1)
+        now = datetime.now()
+
+        seo_events = request.env['event.event'].sudo().with_company(company_1).search([
+            ('event_category_id', '=', 2),
+            ('date_begin', '>=', now),
+        ])
+
+        _logger.info(f"seo_events >> {seo_events}")
+
+        return request.render('website.ai-for-work-1_e38eb1', {
+            'seo_events': seo_events,
         })
 
