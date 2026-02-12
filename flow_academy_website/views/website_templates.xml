@@ -1,13 +1,11 @@
 <odoo>
 
     <template id="dynamic_logo_template" inherit_id="website.option_header_brand_logo">
+
         <xpath expr="//a" position="replace">
-        <a data-name="Navbar Logo" href="/" t-attf-class="navbar-brand logo #{_link_class}">
+        <a data-name="Navbar Logo" href="/" t-attf-class="navbar-brand logo #{_link_class}" id="header_link">
             <!-- Single img element -->
-            <img id="header_logo"
-                 src="/flow_academy_website/static/src/image/4sight_logo.jpg"
-                 alt="Logo"
-                 style="height: 40px;"/>
+            <img id="header_logo" src="/flow_academy_website/static/src/image/4sight_logo.jpg" alt="Logo" style="height: 40px;"/>
         </a>
         <script>
             // Function to get cookie value
@@ -20,23 +18,26 @@
             // Update logo based on cookie
             document.addEventListener('DOMContentLoaded', function() {
                 var logoElement = document.getElementById('header_logo');
+                var linkElement = document.getElementById('header_link');
                 if (!logoElement) return;
 
                 var logoPreference = getCookie('logo_preference');
 
                 if (logoPreference === 'flow_logo') {
                     logoElement.src = '/flow_academy_website/static/src/image/flow_logo.jpg';
+                    linkElement.href = 'https://www.flowacademy.mt/';
                 }
                 // Default logo is already set in src attribute
             });
         </script>
         </xpath>
+
     </template>
 
     <template id="dynamic_footer_logo" inherit_id="website.template_footer_minimalist">
 
         <xpath expr="//a[hasclass('o_footer_logo')]" position="replace">
-        <a href="/" class="o_footer_logo logo">
+        <a href="/" class="o_footer_logo logo" id="footer_link">
             <!-- Single img element -->
                         <img id="footer_logo" src="/flow_academy_website/static/src/image/4sight_logo.jpg" alt="Logo" data-mimetype="image/png" data-mimetype-before-conversion="image/png" data-resize-width="1920" data-quality="0" style="transform: scaleX(0.60) scaleY(0.60); animation-play-state: paused; transition: none; padding: 0px;"/>
 
@@ -52,12 +53,14 @@
             // Update logo based on cookie
             document.addEventListener('DOMContentLoaded', function() {
                 var logoElement = document.getElementById('footer_logo');
+                var linkElement = document.getElementById('footer_link');
                 if (!logoElement) return;
 
                 var logoPreference = getCookie('logo_preference');
 
                 if (logoPreference === 'flow_logo') {
                     logoElement.src = '/flow_academy_website/static/src/image/flow_logo.jpg';
+                    linkElement.href = 'https://www.flowacademy.mt/';
                 }
                 // Default logo is already set in src attribute
             });
@@ -74,8 +77,6 @@
                          style="background-image: none;">
                     <t t-if="event_category.cover">
                         <t t-set="cover_image_url" t-value="image_data_uri(event_category.cover)"/>
-
-
                         <span class="s_parallax_bg oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
                           t-att-style="'background-image: url(%s);' % cover_image_url if cover_image_url else ''"
                           data-mimetype="image/webp" data-original-id="149495"
