@@ -142,6 +142,228 @@
             <xpath expr="//div[@id='o_wsale_total_accordion_item']" position="attributes">
                 <attribute name="class">accordion-item p-lg-4 border border-primary</attribute>
             </xpath>
+
+        <xpath expr="//div[@id='wrap']" position="inside">
+        <style>
+            /* Redirect notification styling */
+            #redirect-countdown {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #25408F;
+                color: white;
+                padding: 20px 25px;
+                border-radius: 10px;
+                box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+                z-index: 9999;
+                font-family: Arial, sans-serif;
+                max-width: 320px;
+                animation: slideIn 0.5s ease-out;
+            }
+
+            @keyframes slideIn {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+
+            #redirect-countdown h4 {
+                margin: 0 0 10px 0;
+                font-size: 16px;
+                font-weight: bold;
+            }
+
+            #redirect-countdown p {
+                margin: 0 0 15px 0;
+                font-size: 14px;
+                line-height: 1.4;
+            }
+
+            #redirect-countdown .countdown-number {
+                font-size: 24px;
+                font-weight: bold;
+                color: #FFD700;
+            }
+
+            #redirect-countdown .btn-cancel {
+                background: white;
+                color: #25408F;
+                border: none;
+                padding: 8px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 13px;
+                transition: all 0.3s ease;
+                width: 100%;
+            }
+
+            #redirect-countdown .btn-cancel:hover {
+                background: #f0f0f0;
+                transform: scale(1.02);
+            }
+
+            /* Mobile responsive */
+            @media (max-width: 576px) {
+                #redirect-countdown {
+                    top: 10px;
+                    right: 10px;
+                    left: 10px;
+                    max-width: none;
+                    padding: 15px;
+                }
+
+                #redirect-countdown h4 {
+                    font-size: 14px;
+                }
+
+                #redirect-countdown p {
+                    font-size: 12px;
+                }
+
+                #redirect-countdown .countdown-number {
+                    font-size: 20px;
+                }
+            }
+        </style>
+
+        <script>
+            (function() {
+                // Function to get cookie value
+                function getCookie(name) {
+                    const value = `; ${document.cookie}`;
+                    const parts = value.split(`; ${name}=`);
+                    if (parts.length === 2) return parts.pop().split(';').shift();
+                }
+
+                // Check if we're on the confirmation page
+                const currentPath = window.location.pathname;
+                if (currentPath === '/shop/confirmation') {
+
+                    // Check logo preference cookie
+                    const logoPreference = getCookie('logo_preference');
+
+                    if (logoPreference === 'flow_logo') {
+                        console.log('Flow logo detected - redirecting in 15 seconds...');
+
+                        // Countdown timer variables
+                        let secondsLeft = 15;
+                        let redirectTimeout;
+                        let countdownInterval;
+                        let isCancelled = false;
+
+                        // Create countdown notification
+                        const redirectMessage = document.createElement('div');
+                        redirectMessage.id = 'redirect-countdown';
+
+                        // Function to update countdown display
+                        function updateCountdown() {
+                            const countdownElement = document.getElementById('countdown');
+                            if (countdownElement &amp;&amp; !isCancelled) {
+                                countdownElement.textContent = secondsLeft;
+                            }
+                        }
+
+                        // Initial HTML
+                        redirectMessage.innerHTML = `
+                            <h4>✓ Order Confirmed!</h4>
+                            <p>You will be redirected to Home Page in <span class="countdown-number"><span id="countdown">${secondsLeft}</span>s</span></p>
+                            <button class="btn-cancel" id="cancel-redirect">Stay on This Page</button>
+                        `;
+
+                        document.body.appendChild(redirectMessage);
+
+                        // Start countdown
+                        function startCountdown() {
+                            countdownInterval = setInterval(function() {
+                                if (!isCancelled) {
+                                    secondsLeft--;
+                                    updateCountdown();
+
+                                    if (secondsLeft &lt;= 0) {
+                                        clearInterval(countdownInterval);
+                                    }
+                                }
+                            }, 1000);
+                        }
+
+                        // Set redirect timeout
+                        function setRedirectTimeout() {
+                            redirectTimeout = setTimeout(function() {
+                                if (!isCancelled) {
+                                    window.location.href = 'https://www.flowacademy.mt/';
+                                }
+                            }, 15000); // 15000 milliseconds = 15 seconds
+                        }
+
+                        // Cancel redirect function
+                        function cancelRedirect() {
+                            isCancelled = true;
+                            clearTimeout(redirectTimeout);
+                            clearInterval(countdownInterval);
+
+                            // Update message
+                            const messageDiv = document.getElementById('redirect-countdown');
+                            if (messageDiv) {
+                                messageDiv.innerHTML = `
+                                    <h4>✓ Redirect Cancelled</h4>
+                                    <p style="margin-bottom: 0;">You can continue browsing this site.</p>
+                                `;
+
+                                // Remove notification after 3 seconds
+                                setTimeout(function() {
+                                    messageDiv.style.animation = 'slideOut 0.5s ease-in';
+                                    setTimeout(function() {
+                                        if (messageDiv &amp;&amp; messageDiv.parentNode) {
+                                            messageDiv.parentNode.removeChild(messageDiv);
+                                        }
+                                    }, 500);
+                                }, 3000);
+                            }
+                        }
+
+                        // Add slideOut animation
+                        const style = document.createElement('style');
+                        style.textContent = `
+                            @keyframes slideOut {
+                                from {
+                                    transform: translateX(0);
+                                    opacity: 1;
+                                }
+                                to {
+                                    transform: translateX(400px);
+                                    opacity: 0;
+                                }
+                            }
+                        `;
+                        document.head.appendChild(style);
+
+                        // Wait a moment for DOM to be ready, then attach event listener
+                        setTimeout(function() {
+                            const cancelBtn = document.getElementById('cancel-redirect');
+                            if (cancelBtn) {
+                                cancelBtn.addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    cancelRedirect();
+                                });
+                            }
+                        }, 100);
+
+                        // Start the countdown and redirect timer
+                        startCountdown();
+                        setRedirectTimeout();
+                    }
+                }
+            })();
+        </script>
+    </xpath>
+
         </template>
     </data>
 </odoo>
