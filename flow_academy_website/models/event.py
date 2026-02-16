@@ -12,7 +12,7 @@ class Event(models.Model):
     end_time = fields.Float(string="End time")
 
     trainer = fields.Char(string="Trainer")
-    location_type = fields.Selection(string="Location", selection=[('ON Site', 'ON Site'), ('Online', 'Online'), ])
+    location_type = fields.Selection(string="Location", selection=[('ON Site', 'On-site'), ('Online', 'Online'), ])
 
     @api.depends('event_ticket_ids', 'event_ticket_ids.price')
     def compute_price(self):

@@ -1,13 +1,14 @@
 <odoo>
 
     <template id="dynamic_logo_template" inherit_id="website.option_header_brand_logo">
-
         <xpath expr="//a" position="replace">
-        <a data-name="Navbar Logo" href="/" t-attf-class="navbar-brand logo #{_link_class}" id="header_link">
-            <!-- Single img element -->
-            <img id="header_logo" src="/flow_academy_website/static/src/image/4sight_logo.jpg" alt="Logo" style="height: 40px;"/>
-        </a>
-        <script>
+    <a data-name="Navbar Logo" href="/" t-attf-class="navbar-brand logo #{_link_class}" id="header_link">
+        <!-- Add class for easier selection -->
+        <img id="header_logo" class="dynamic-logo" src="/flow_academy_website/static/src/image/4sight_logo.jpg" alt="Logo" style="height: 40px;"/>
+    </a>
+
+    <script>
+        (function() {
             // Function to get cookie value
             function getCookie(name) {
                 const value = `; ${document.cookie}`;
@@ -15,34 +16,196 @@
                 if (parts.length === 2) return parts.pop().split(';').shift();
             }
 
-            // Update logo based on cookie
-            document.addEventListener('DOMContentLoaded', function() {
-                var logoElement = document.getElementById('header_logo');
-                var linkElement = document.getElementById('header_link');
-                if (!logoElement) return;
-
+            // Update ALL logo instances across the entire page
+            function updateAllLogos() {
                 var logoPreference = getCookie('logo_preference');
 
+                // Determine logo and link based on preference
+                var logoSrc = '/flow_academy_website/static/src/image/4sight_logo.jpg';
+                var linkHref = '/';
+
                 if (logoPreference === 'flow_logo') {
-                    logoElement.src = '/flow_academy_website/static/src/image/flow_logo.jpg';
-                    linkElement.href = 'https://www.flowacademy.mt/';
+                    logoSrc = '/flow_academy_website/static/src/image/flow_logo.jpg';
+                    linkHref = 'https://www.flowacademy.mt/';
                 }
-                // Default logo is already set in src attribute
+
+                // Strategy 1: Update by specific IDs
+                var headerLogo = document.getElementById('header_logo');
+                if (headerLogo) {
+                    headerLogo.src = logoSrc;
+                }
+
+                var headerLink = document.getElementById('header_link');
+                if (headerLink) {
+                    headerLink.href = linkHref;
+                }
+
+                // Strategy 2: Update ALL images with alt="Logo" (catches duplicates)
+                var allLogoImages = document.querySelectorAll('img[alt="Logo"]');
+                allLogoImages.forEach(function(img) {
+                    img.src = logoSrc;
+                });
+
+                // Strategy 3: Update by class
+                var dynamicLogos = document.querySelectorAll('.dynamic-logo');
+                dynamicLogos.forEach(function(img) {
+                    img.src = logoSrc;
+                });
+
+                // Strategy 4: Update all navbar-brand links
+                var navbarLinks = document.querySelectorAll('.navbar-brand');
+                navbarLinks.forEach(function(link) {
+                    link.href = linkHref;
+                });
+
+                // Strategy 5: Target offcanvas/mobile menu (Odoo's mobile navbar)
+                var offcanvasLogos = document.querySelectorAll('.offcanvas img[alt="Logo"], .offcanvas-header img, .offcanvas .navbar-brand img');
+                offcanvasLogos.forEach(function(img) {
+                    img.src = logoSrc;
+                });
+
+                // Strategy 6: Target mobile-specific elements (d-lg-none = hidden on large screens)
+                var mobileOnlyLogos = document.querySelectorAll('.d-lg-none img[alt="Logo"], .d-md-none img[alt="Logo"]');
+                mobileOnlyLogos.forEach(function(img) {
+                    img.src = logoSrc;
+                });
+
+                // Strategy 7: Target ANY navbar logo
+                var navLogos = document.querySelectorAll('nav img[alt="Logo"], header img[alt="Logo"], .navbar img[alt="Logo"]');
+                navLogos.forEach(function(img) {
+                    img.src = logoSrc;
+                });
+
+                // Strategy 8: Update logo in top bar (if exists)
+                var topBarLogos = document.querySelectorAll('.o_top_bar img[alt="Logo"], #top img[alt="Logo"]');
+                topBarLogos.forEach(function(img) {
+                    img.src = logoSrc;
+                });
+            }
+
+            // Execution Strategy 1: Run immediately if DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', updateAllLogos);
+            } else {
+                updateAllLogos();
+            }
+
+            // Execution Strategy 2: Run on page show (handles browser cache)
+            window.addEventListener('pageshow', updateAllLogos);
+
+            // Execution Strategy 3: Run when Bootstrap offcanvas opens (mobile menu)
+            document.addEventListener('shown.bs.offcanvas', function() {
+                updateAllLogos();
             });
-        </script>
-        </xpath>
+
+            // Execution Strategy 4: Run when Bootstrap collapse opens
+            document.addEventListener('shown.bs.collapse', function() {
+                updateAllLogos();
+            });
+
+            // Execution Strategy 5: Delayed execution as fallback (catches dynamically loaded content)
+            setTimeout(updateAllLogos, 100);
+            setTimeout(updateAllLogos, 500);
+            setTimeout(updateAllLogos, 1000);
+
+            // Execution Strategy 6: Watch for DOM changes (MutationObserver)
+            // This catches logos that are added dynamically
+            if (window.MutationObserver) {
+                var observer = new MutationObserver(function(mutations) {
+                    var shouldUpdate = false;
+                    mutations.forEach(function(mutation) {
+                        if (mutation.addedNodes.length &gt; 0) {
+                            mutation.addedNodes.forEach(function(node) {
+                                if (node.nodeType === 1) { // Element node
+                                    // Check if added node contains logo
+                                    if (node.tagName === 'IMG' &amp;&amp; node.alt === 'Logo') {
+                                        shouldUpdate = true;
+                                    }
+                                    // Check if added node contains navbar
+                                    if (node.querySelector &amp;&amp; node.querySelector('img[alt="Logo"]')) {
+                                        shouldUpdate = true;
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    if (shouldUpdate) {
+                        updateAllLogos();
+                    }
+                });
+
+                // Start observing the document for changes
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+        })();
+    </script>
+    </xpath>
 
     </template>
 
     <template id="dynamic_footer_logo" inherit_id="website.template_footer_minimalist">
 
         <xpath expr="//a[hasclass('o_footer_logo')]" position="replace">
-        <a href="/" class="o_footer_logo logo" id="footer_link">
-            <!-- Single img element -->
-                        <img id="footer_logo" src="/flow_academy_website/static/src/image/4sight_logo.jpg" alt="Logo" data-mimetype="image/png" data-mimetype-before-conversion="image/png" data-resize-width="1920" data-quality="0" style="transform: scaleX(0.60) scaleY(0.60); animation-play-state: paused; transition: none; padding: 0px;"/>
+    <a href="/" class="o_footer_logo logo" id="footer_link">
+        <!-- Single img element with responsive styling -->
+        <img id="footer_logo" src="/flow_academy_website/static/src/image/4sight_logo.jpg" alt="Logo" data-mimetype="image/png" data-mimetype-before-conversion="image/png" data-resize-width="1920" data-quality="0" class="footer-logo-responsive" style="transform: scaleX(0.60) scaleY(0.60); animation-play-state: paused; transition: none; padding: 0px;"/>
+    </a>
 
-        </a>
-        <script>
+    <style>
+        /* Responsive footer logo styling */
+        .footer-logo-responsive {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Desktop - keep current scale */
+        @media (min-width: 769px) {
+            .footer-logo-responsive {
+                transform: scaleX(0.40) scaleY(0.40) !important;
+            }
+        }
+
+        /* Tablet - reduce scale */
+        @media (max-width: 768px) and (min-width: 577px) {
+            .footer-logo-responsive {
+                transform: scaleX(0.20) scaleY(0.20) !important;
+                max-width: 50%;
+                margin: 0 auto;
+            }
+        }
+
+        /* Mobile - much smaller */
+        @media (max-width: 576px) {
+            .footer-logo-responsive {
+                transform: scaleX(0.20) scaleY(0.250) !important;
+                max-width: 40%;
+                margin: 0 auto;
+            }
+        }
+
+        /* Very small mobile devices - even smaller */
+        @media (max-width: 375px) {
+            .footer-logo-responsive {
+                transform: scaleX(0.10) scaleY(0.10) !important;
+                max-width: 30%;
+                margin: 0 auto;
+            }
+        }
+
+        /* Ensure footer logo link doesn't overflow */
+        .o_footer_logo {
+            display: inline-block;
+            max-width: 100%;
+            overflow: hidden;
+        }
+    </style>
+
+    <script>
+        (function() {
             // Function to get cookie value
             function getCookie(name) {
                 const value = `; ${document.cookie}`;
@@ -50,8 +213,8 @@
                 if (parts.length === 2) return parts.pop().split(';').shift();
             }
 
-            // Update logo based on cookie
-            document.addEventListener('DOMContentLoaded', function() {
+            // Update footer logo
+            function updateFooterLogo() {
                 var logoElement = document.getElementById('footer_logo');
                 var linkElement = document.getElementById('footer_link');
                 if (!logoElement) return;
@@ -62,69 +225,117 @@
                     logoElement.src = '/flow_academy_website/static/src/image/flow_logo.jpg';
                     linkElement.href = 'https://www.flowacademy.mt/';
                 }
-                // Default logo is already set in src attribute
-            });
-        </script>
-        </xpath>
+            }
+
+            // Run on DOMContentLoaded
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', updateFooterLogo);
+            } else {
+                updateFooterLogo();
+            }
+
+            // Also run on page show (handles back/forward cache)
+            window.addEventListener('pageshow', updateFooterLogo);
+        })();
+    </script>
+    </xpath>
     </template>
 
     <template id="events_by_category" name="Events by Type">
         <t t-call="website.layout">
-            <div id="wrap" class="oe_structure oe_empty">
+        <div id="wrap" class="oe_structure oe_empty">
 
-                <section class="s_cover bg-black-50 o_colored_level pb40 pt40 parallax"
-                         data-scroll-background-ratio="1.5" data-snippet="s_cover" data-name="Cover"
-                         style="background-image: none;">
-                    <t t-if="event_category.cover">
-                        <t t-set="cover_image_url" t-value="image_data_uri(event_category.cover)"/>
-                        <span class="s_parallax_bg oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
-                          t-att-style="'background-image: url(%s);' % cover_image_url if cover_image_url else ''"
-                          data-mimetype="image/webp" data-original-id="149495"
-                          data-mimetype-before-conversion="image/jpeg" data-resize-width="1920" data-quality="100"/>
-                    </t>
-                    <t t-else="">
-                        <span class="s_parallax_bg oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
-                          style="background-image: url(&quot;/web/image/149496-83df35ad/HERO%20BANNER%20ECOM%20BOOKING%20PAGES.webp&quot;);"
-                          data-mimetype="image/webp" data-original-id="149495"
-                          data-original-src="/web/image/149495-83df35ad/HERO%20BANNER%20ECOM%20BOOKING%20PAGES.jpg"
-                          data-mimetype-before-conversion="image/jpeg" data-resize-width="1920" data-quality="100"/>
+            <section class="s_cover bg-black-50 o_colored_level pb40 pt40 parallax"
+                     data-scroll-background-ratio="1.5" data-snippet="s_cover" data-name="Cover"
+                     style="background-image: none;">
+                <t t-if="event_category.cover">
+                    <t t-set="cover_image_url" t-value="image_data_uri(event_category.cover)"/>
+                    <span class="s_parallax_bg oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
+                      t-att-style="'background-image: url(%s);' % cover_image_url if cover_image_url else ''"
+                      data-mimetype="image/webp" data-original-id="149495"
+                      data-mimetype-before-conversion="image/jpeg" data-resize-width="1920" data-quality="100"/>
+                </t>
+                <t t-else="">
+                    <span class="s_parallax_bg oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
+                      style="background-image: url(&quot;/web/image/149496-83df35ad/HERO%20BANNER%20ECOM%20BOOKING%20PAGES.webp&quot;);"
+                      data-mimetype="image/webp" data-original-id="149495"
+                      data-original-src="/web/image/149495-83df35ad/HERO%20BANNER%20ECOM%20BOOKING%20PAGES.jpg"
+                      data-mimetype-before-conversion="image/jpeg" data-resize-width="1920" data-quality="100"/>
+                </t>
 
-                    </t>
+                <div class="o_we_bg_filter bg-black-50"/>
+                <div class="s_allow_columns container">
+                    <h1 class="display-3" style="text-align: center; font-weight: bold;">You're Almost There!</h1>
+                    <p class="lead" style="text-align: center;">Pick the Date That Fits Your Schedule&amp;nbsp;</p>
+                </div>
+            </section>
+            <br/>
 
+            <style>
+                /* ========================================
+                   RESPONSIVE EVENT SLIDER STYLES
+                   ======================================== */
 
-                    <div class="o_we_bg_filter bg-black-50"/>
-                    <div class="s_allow_columns container">
-                        <h1 class="display-3" style="text-align: center; font-weight: bold;">You're Almost There!</h1>
-                        <p class="lead" style="text-align: center;">Pick the Date That Fits Your Schedule&amp;nbsp;</p>
-                    </div>
-                </section>
-                <br/>
-                <style>
-                    /* 1. Main Wrapper Positioning */
-                    .position-relative {
+                /* 1. Main Wrapper - Responsive Padding */
+                .position-relative {
                     padding: 0 50px;
-                    }
+                }
 
-                    /* 2. Slider Control (merged all duplicates) */
-                    .event-slider-wrapper {
-                    display: flex; /* Added flex to ensure child alignment */
+                @media (max-width: 768px) {
+                    .position-relative {
+                        padding: 0 15px;
+                    }
+                }
+
+                @media (max-width: 576px) {
+                    .position-relative {
+                        padding: 0 2px;
+                    }
+                }
+
+                /* 2. Slider Control */
+                .event-slider-wrapper {
+                    display: flex;
                     overflow-x: auto;
                     overflow-y: hidden;
                     scroll-behavior: smooth;
                     -webkit-overflow-scrolling: touch;
                     padding-bottom: 15px;
+                    scrollbar-width: none;
+                    -ms-overflow-style: none;
+                }
 
-                    /* Hide Scrollbar for all browsers */
-                    scrollbar-width: none; /* Firefox */
-                    -ms-overflow-style: none; /* IE/Edge */
-                    }
+                .event-slider-wrapper::-webkit-scrollbar {
+                    display: none;
+                }
 
-                    .event-slider-wrapper::-webkit-scrollbar {
-                    display: none; /* Chrome, Safari, Opera */
-                    }
+                /* Event cards container - replaces row */
+                .event-cards-container {
+                    display: flex;
+                    flex-wrap: nowrap;
+                    gap: 20px; /* Add gap between cards */
+                    padding: 0;
+                    margin: 0;
+                    width: max-content; /* Allow natural width */
+                }
 
-                    /* 3. Navigation Buttons */
-                    .slider-nav-btn {
+                /* Critical: Override any global CSS that might interfere */
+                .course-events .event-slider-wrapper {
+                    display: flex !important;
+                    overflow-x: auto !important;
+                }
+
+                .course-events .event-cards-container {
+                    display: flex !important;
+                    flex-wrap: nowrap !important;
+                }
+
+                .course-events .event-card-item {
+                    flex-shrink: 0 !important;
+                }
+
+                /* 3. Navigation Buttons - Responsive Sizing */
+                .slider-nav-btn {
                     position: absolute;
                     top: 50%;
                     transform: translateY(-50%);
@@ -136,697 +347,677 @@
                     justify-content: center;
                     box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
                     border: none;
-                    background-color: #004a99; /* Standard Odoo primary or your specific blue */
+                    background-color: #004a99;
                     color: white;
                     border-radius: 50%;
-                    }
+                    transition: all 0.3s ease;
+                }
 
-                    .slider-nav-btn:hover {
+                .slider-nav-btn:hover {
                     background-color: #003366;
                     color: white;
+                }
+
+                /* Tablet buttons */
+                @media (max-width: 768px) {
+                    .slider-nav-btn {
+                        width: 35px;
+                        height: 35px;
                     }
 
-                    /* 4. Card Item Sizing */
+                    .slider-nav-btn i {
+                        font-size: 14px;
+                    }
+
+                    .slider-nav-btn.prev-btn {
+                        left: 5px !important;
+                    }
+
+                    .slider-nav-btn.next-btn {
+                        right: 5px !important;
+                    }
+                }
+
+                /* Mobile buttons */
+                @media (max-width: 576px) {
+                    .slider-nav-btn {
+                        width: 30px;
+                        height: 30px;
+                    }
+
+                    .slider-nav-btn i {
+                        font-size: 12px;
+                    }
+
+                    .slider-nav-btn.prev-btn {
+                        left: 0px !important;
+                    }
+
+                    .slider-nav-btn.next-btn {
+                        right: 0px !important;
+                    }
+                }
+
+                /* Optional: Hide buttons on very small screens */
+                @media (max-width: 480px) {
+                    .slider-nav-btn {
+                        opacity: 0.7;
+                    }
+                }
+
+                /* 4. Card Item Sizing */
+                .event-card-item {
+                    flex: 0 0 auto;
+                    box-sizing: border-box;
+                }
+
+                /* Override any custom CSS that removes column padding */
+                .event-card-item.col-10,
+                .event-card-item.col-sm-9,
+                .event-card-item.col-md-6,
+                .event-card-item.col-lg-4 {
+                    padding-left: 0 !important;
+                    padding-right: 0 !important;
+                }
+
+                /* Desktop sizing */
+                @media (min-width: 992px) {
                     .event-card-item {
-                    flex: 0 0 auto; /* Crucial: prevents cards from squashing */
+                        width: 33.333333%; /* col-lg-4 */
+                        flex: 0 0 33.333333% !important;
                     }
-                </style>
-                <div class="container course-events mt-5">
-                    <div class="position-relative px-md-5" style="position: relative !important; display: block;">
+                }
 
-                        <button type="button" class="btn btn-primary rounded-circle slider-nav-btn prev-btn"
-                                style="position: absolute !important; top: 50% !important; left: 0 !important; transform: translateY(-50%) !important; z-index: 1000 !important; width: 45px; height: 45px;">
-                            <i class="fa fa-chevron-left"/>
-                        </button>
+                /* Tablet sizing */
+                @media (min-width: 768px) and (max-width: 991px) {
+                    .event-card-item {
+                        width: 50%; /* col-md-6 */
+                        flex: 0 0 50% !important;
+                    }
+                }
 
-                        <div class="event-slider-wrapper" id="eventSlider">
-                            <div class="row flex-nowrap pb-3">
-                                <t t-if="events">
-                                    <t t-foreach="events" t-as="event">
-                                        <div class="col-11 col-md-6 col-lg-4 mb-4">
-                                            <div class="card h-100 border-2 border-primary">
-                                                <div class="card-body">
-                                                    <h4 class="card-title text-primary text-center">
-                                                        <strong t-field="event.name"/>
-                                                    </h4>
-                                                    <br/>
+                /* Small tablet sizing */
+                @media (min-width: 576px) and (max-width: 767px) {
+                    .event-card-item {
+                        width: 75vw; /* 75% of viewport width */
+                        max-width: 75vw;
+                        flex: 0 0 75vw !important;
+                    }
+                }
 
-                                                    <div class="row mb-2">
-                                                        <div class="col-auto text-center course-icon">
-                                                            <i class="fa fa-calendar fa-lg text-primary"
-                                                               style="width: 24px;"/>
-                                                        </div>
-                                                        <div class="col">
-                                                            <span t-field="event.date_begin"
-                                                                  t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
-                                                            <t t-if="event.location_type">
-                                                                (<span t-field="event.location_type"/>)
-                                                            </t>
+                /* Mobile sizing - use viewport width */
+                @media (max-width: 575px) {
+                    .event-card-item {
+                        width: 83vw; /* 83% of viewport width */
+                        max-width: 83vw;
+                        flex: 0 0 83vw !important;
+                    }
+                }
 
-                                                        </div>
+                /* Important: Ensure internal card content doesn't break layout */
+                .event-card-item .card-body .col {
+                    padding: 0 !important; /* Keep your original style for internal cols */
+                }
+
+                /* 5. Mobile Card Spacing */
+                @media (max-width: 576px) {
+                    .event-slider-wrapper .row {
+                        gap: 5px;
+                    }
+                }
+
+                /* ========================================
+                   RESPONSIVE LOGO SLIDER STYLES
+                   ======================================== */
+
+                .slider-wrapper {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 15px;
+                    width: 100%;
+                }
+
+                .slider-container {
+                    width: 100%;
+                    overflow: hidden;
+                    padding: 20px 0;
+                }
+
+                .slider-track {
+                    display: flex;
+                    gap: 60px;
+                    transition: transform 0.5s ease;
+                }
+
+                .slider-item img {
+                    width: 120px;
+                    height: 120px;
+                    object-fit: contain;
+                    filter: grayscale(100%);
+                    transition: filter 0.4s ease-in-out;
+                }
+
+                .slider-item img:hover {
+                    filter: grayscale(0%);
+                }
+
+                .slider-arrow {
+                    background: rgba(0,0,0,0.4);
+                    border: none;
+                    color: white;
+                    font-size: 25px;
+                    padding: 10px 15px;
+                    cursor: pointer;
+                    border-radius: 50%;
+                }
+
+                /* Tablet logo slider */
+                @media (max-width: 768px) {
+                    .slider-item img {
+                        width: 90px;
+                        height: 90px;
+                    }
+
+                    .slider-track {
+                        gap: 40px;
+                    }
+
+                    .slider-arrow {
+                        font-size: 20px;
+                        padding: 8px 12px;
+                    }
+                }
+
+                /* Mobile logo slider */
+                @media (max-width: 576px) {
+                    .slider-item img {
+                        width: 70px;
+                        height: 70px;
+                    }
+
+                    .slider-track {
+                        gap: 25px;
+                    }
+
+                    .slider-arrow {
+                        font-size: 18px;
+                        padding: 6px 10px;
+                    }
+
+                    .slider-wrapper {
+                        gap: 10px;
+                    }
+                }
+
+                .slider-dots {
+                    text-align: center;
+                    margin-top: 15px;
+                }
+
+                .slider-dots span {
+                    display: inline-block;
+                    width: 10px;
+                    height: 10px;
+                    background: #ccc;
+                    border-radius: 50%;
+                    margin: 0 5px;
+                    cursor: pointer;
+                }
+
+                .slider-dots .active {
+                    background: #333;
+                }
+            </style>
+
+            <div class="container course-events mt-5">
+                <div class="position-relative px-md-5" style="position: relative !important; display: block;">
+
+                    <button type="button" class="btn btn-primary rounded-circle slider-nav-btn prev-btn"
+                            style="position: absolute !important; top: 50% !important; left: 0 !important; transform: translateY(-50%) !important; z-index: 1000 !important; width: 45px; height: 45px;">
+                        <i class="fa fa-chevron-left"/>
+                    </button>
+
+                    <div class="event-slider-wrapper" id="eventSlider">
+                        <div class="event-cards-container pb-3">
+                            <t t-if="events">
+                                <t t-foreach="events" t-as="event">
+                                    <!-- FIXED: Changed to col-10 on mobile so users can see the next card -->
+                                    <div class="col-10 col-sm-9 col-md-6 col-lg-4 mb-4 event-card-item">
+                                        <div class="card h-100 border-2 border-primary">
+                                            <div class="card-body">
+                                                <h4 class="card-title text-primary text-center">
+                                                    <strong t-field="event.name"/>
+                                                </h4>
+                                                <br/>
+
+                                                <div class="row mb-2">
+                                                    <div class="col-auto text-center course-icon">
+                                                        <i class="fa fa-calendar fa-lg text-primary"
+                                                           style="width: 24px;"/>
                                                     </div>
-
-                                                    <div class="row mb-2">
-                                                        <div class="col-auto text-center">
-                                                            <i class="fa fa-clock-o fa-lg text-primary"
-                                                               style="width: 24px;"/>
-                                                        </div>
-                                                        <div class="col">
-                                                            <span t-field="event.start_time"
-                                                                  t-options="{&quot;widget&quot;: &quot;float_time&quot;}"/>
-                                                            -
-                                                            <span t-field="event.end_time"
-                                                                  t-options="{&quot;widget&quot;: &quot;float_time&quot;}"/>
-
-
-                                                        </div>
+                                                    <div class="col">
+                                                        <span t-field="event.date_begin"
+                                                              t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
+                                                        <t t-if="event.location_type">
+                                                            (<span t-field="event.location_type"/>)
+                                                        </t>
                                                     </div>
-
-                                                    <div class="row mb-2">
-                                                        <div class="col-auto text-center course-icon">
-                                                            <i class="fa fa-map-marker fa-lg text-primary"
-                                                               style="width: 24px;"/>
-                                                        </div>
-                                                        <div class="col">
-                                                            <span t-esc="event.address_inline"/>
-
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="row mb-2">
-                                                        <div class="col-auto text-center course-icon">
-                                                            <i class="fa fa-dollar fa-lg text-primary"
-                                                               style="width: 24px;"/>
-                                                        </div>
-                                                        <div class="col">
-                                                            Price:
-                                                            <span t-field="event.price"/>
-
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="row mb-2">
-                                                        <div class="col-auto text-center course-icon">
-                                                            <i class="fa fa-ticket fa-lg text-primary"
-                                                               style="width: 24px;"/>
-                                                        </div>
-                                                        <div class="col">
-                                                            Available Seats:
-                                                            <span t-field="event.seats_available"/>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="row mb-2">
-                                                        <div class="col-auto text-center course-icon">
-                                                            <i class="fa fa-user fa-lg text-primary"
-                                                               style="width: 24px;"/>
-                                                        </div>
-                                                        <div class="col">
-                                                            Trainer:
-                                                            <span t-field="event.trainer"/>
-                                                        </div>
-                                                    </div>
-
                                                 </div>
 
-                                                <div class="card-footer bg-white border-top-10">
-                                                    <button t-if="event.event_registrations_open" type="button"
-                                                            data-bs-toggle="modal"
-                                                            t-att-data-bs-target="'#modal_ticket_registration_%s' % event.id"
-                                                            class="btn btn-primary w-100">Select Option
-                                                    </button>
-                                                    <div t-if="registration_error_code == 'insufficient_seats'"
-                                                         class="alert alert-danger my-3" role="alert">
-                                                        Registration failed! These tickets are not available anymore.
+                                                <div class="row mb-2">
+                                                    <div class="col-auto text-center">
+                                                        <i class="fa fa-clock-o fa-lg text-primary"
+                                                           style="width: 24px;"/>
                                                     </div>
-                                                    <button t-if="not event.event_registrations_open" type="button"
-                                                            class="btn w-100" style="background-color: #d4d3d2;">Not
-                                                        Available
-                                                    </button>
-                                                    <!--                                            <p t-if="not event.event_registrations_open">-->
-                                                    <!--                                                NOT AVAILABLE-->
-                                                    <!--                                            </p>-->
+                                                    <div class="col">
+                                                        <span t-field="event.start_time"
+                                                              t-options="{&quot;widget&quot;: &quot;float_time&quot;}"/>
+                                                        -
+                                                        <span t-field="event.end_time"
+                                                              t-options="{&quot;widget&quot;: &quot;float_time&quot;}"/>
+                                                    </div>
                                                 </div>
-                                                <div class="card-footer bg-white text-center">
-                                                    <p style="font-size: 11px;">
-                                                        * All course dates are indicative and may be amended. FLOW
-                                                        Academy reserves the right to reschedule courses; enrolled
-                                                        participants will be informed of any changes as soon as
-                                                        possible.
-                                                    </p>
+
+                                                <div class="row mb-2">
+                                                    <div class="col-auto text-center course-icon">
+                                                        <i class="fa fa-map-marker fa-lg text-primary"
+                                                           style="width: 24px;"/>
+                                                    </div>
+                                                    <div class="col">
+                                                        <span t-esc="event.address_inline"/>
+                                                    </div>
                                                 </div>
-                                                <t t-call="website_event.modal_ticket_registration">
-                                                    <t t-set="event" t-value="event"/>
-                                                </t>
+
+                                                <div class="row mb-2">
+                                                    <div class="col-auto text-center course-icon">
+                                                        <i class="fa fa-dollar fa-lg text-primary"
+                                                           style="width: 24px;"/>
+                                                    </div>
+                                                    <div class="col">
+                                                        Price:
+                                                        <span t-field="event.price"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mb-2">
+                                                    <div class="col-auto text-center course-icon">
+                                                        <i class="fa fa-ticket fa-lg text-primary"
+                                                           style="width: 24px;"/>
+                                                    </div>
+                                                    <div class="col">
+                                                        Available Seats:
+                                                        <span t-field="event.seats_available"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mb-2">
+                                                    <div class="col-auto text-center course-icon">
+                                                        <i class="fa fa-user fa-lg text-primary"
+                                                           style="width: 24px;"/>
+                                                    </div>
+                                                    <div class="col">
+                                                        Trainer:
+                                                        <span t-field="event.trainer"/>
+                                                    </div>
+                                                </div>
+
                                             </div>
+
+                                            <div class="card-footer bg-white border-top-10">
+                                                <button t-if="event.event_registrations_open" type="button"
+                                                        data-bs-toggle="modal"
+                                                        t-att-data-bs-target="'#modal_ticket_registration_%s' % event.id"
+                                                        class="btn btn-primary w-100">Select Option
+                                                </button>
+                                                <div t-if="registration_error_code == 'insufficient_seats'"
+                                                     class="alert alert-danger my-3" role="alert">
+                                                    Registration failed! These tickets are not available anymore.
+                                                </div>
+                                                <button t-if="not event.event_registrations_open" type="button"
+                                                        class="btn w-100" style="background-color: #d4d3d2;">Not
+                                                    Available
+                                                </button>
+                                            </div>
+                                            <div class="card-footer bg-white text-center">
+                                                <p style="font-size: 11px;">
+                                                    * All course dates are indicative and may be amended. FLOW
+                                                    Academy reserves the right to reschedule courses; enrolled
+                                                    participants will be informed of any changes as soon as
+                                                    possible.
+                                                </p>
+                                            </div>
+                                            <t t-call="website_event.modal_ticket_registration">
+                                                <t t-set="event" t-value="event"/>
+                                            </t>
                                         </div>
-                                    </t>
-
-                                </t>
-
-                                <t t-else="">
-                                    <div class="col-12 text-center alert alert-info">
-                                        No upcoming events found for this type.
                                     </div>
                                 </t>
 
-                            </div>
+                            </t>
+
+                            <t t-else="">
+                                <div class="col-12 text-center alert alert-info">
+                                    No upcoming events found for this type.
+                                </div>
+                            </t>
+
                         </div>
-                        <button type="button" class="btn btn-primary rounded-circle slider-nav-btn next-btn"
-                                style="position: absolute !important; top: 50% !important; right: 0 !important; transform: translateY(-50%) !important; z-index: 1000 !important; width: 45px; height: 45px;">
-                            <i class="fa fa-chevron-right"/>
-                        </button>
                     </div>
 
-                    <script>
+                    <button type="button" class="btn btn-primary rounded-circle slider-nav-btn next-btn"
+                            style="position: absolute !important; top: 50% !important; right: 0 !important; transform: translateY(-50%) !important; z-index: 1000 !important; width: 45px; height: 45px;">
+                        <i class="fa fa-chevron-right"/>
+                    </button>
+                </div>
+
+                <!-- IMPROVED JAVASCRIPT WITH MOBILE SUPPORT -->
+                <script>
+                    (function() {
                         const slider = document.getElementById('eventSlider');
                         const nextBtn = document.querySelector('.next-btn');
                         const prevBtn = document.querySelector('.prev-btn');
 
                         if (slider &amp;&amp; nextBtn &amp;&amp; prevBtn) {
-                        nextBtn.addEventListener('click', function(e) {
-                        e.preventDefault(); // STOP the button from jumping or submitting
-                        const card = slider.querySelector('.event-card-item');
-                        const scrollAmount = card ? card.offsetWidth : 600;
-                        slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-                        });
+                            // Calculate scroll amount based on screen size
+                            function getScrollAmount() {
+                                const card = slider.querySelector('.event-card-item');
+                                if (!card) return 300;
 
-                        prevBtn.addEventListener('click', function(e) {
-                        e.preventDefault(); // STOP the button from jumping or submitting
-                        const card = slider.querySelector('.event-card-item');
-                        const scrollAmount = card ? card.offsetWidth : 600;
-                        slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-                        });
+                                // Get the actual rendered width of the card
+                                const cardWidth = card.offsetWidth;
+                                const gap = 20; // Gap between cards from CSS
+
+                                return cardWidth + gap;
+                            }
+
+                            // Next button
+                            nextBtn.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                slider.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+                            });
+
+                            // Previous button
+                            prevBtn.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                slider.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+                            });
+
+                            // Touch swipe support for mobile
+                            let touchStartX = 0;
+                            let touchEndX = 0;
+
+                            slider.addEventListener('touchstart', function(e) {
+                                touchStartX = e.changedTouches[0].screenX;
+                            }, { passive: true });
+
+                            slider.addEventListener('touchend', function(e) {
+                                touchEndX = e.changedTouches[0].screenX;
+                                handleSwipe();
+                            }, { passive: true });
+
+                            function handleSwipe() {
+                                const swipeThreshold = 50;
+                                if (touchEndX &lt; touchStartX - swipeThreshold) {
+                                    // Swipe left - next
+                                    slider.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+                                }
+                                if (touchEndX &gt; touchStartX + swipeThreshold) {
+                                    // Swipe right - prev
+                                    slider.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+                                }
+                            }
+
+                            // Recalculate on window resize
+                            let resizeTimer;
+                            window.addEventListener('resize', function() {
+                                clearTimeout(resizeTimer);
+                                resizeTimer = setTimeout(function() {
+                                    // Scroll amount will be recalculated on next click
+                                }, 250);
+                            });
                         }
-                    </script>
+                    })();
+                </script>
 
-                    <div class="row text-center">
-
-                        <div class="col-12">
-                            <p>
-                                <a class="btn btn-outline-secondary rounded-circle btn-lg w-100 w-100 w-md-auto"
-                                   href="https://www.flowacademy.mt" data-bs-original-title="" title=""
-                                   style="border-width: 1px; border-style: solid;">Back
-                                </a>
-                            </p>
-
-                        </div>
-
+                <div class="row text-center">
+                    <div class="col-12">
+                        <p>
+                            <a class="btn btn-outline-secondary rounded-circle btn-lg w-100 w-md-auto"
+                               href="https://www.flowacademy.mt" data-bs-original-title="" title=""
+                               style="border-width: 1px; border-style: solid;">Back
+                            </a>
+                        </p>
                     </div>
-
                 </div>
 
-                <section class="s_call_to_action o_cc o_cc4 o_colored_level pt24 pb0" data-snippet="s_call_to_action"
-                         data-name="Call to Action" style="background-image: none;">
-                    <div class="container">
-                        <div class="row o_grid_mode" data-row-count="4">
-                            <div class="o_colored_level o_grid_item g-col-lg-9 g-height-4 col-lg-9"
-                                 style="grid-area: 1 / 1 / 5 / 10; z-index: 1;">
-                                <p style="font-size:28px;">Help your organisation grow stronger, smarter, and ready for
-                                    the future with <strong>FLOW Academy and the Investing in Skills Scheme</strong>.
-                                </p>
-                                <p style="font-size:12px;">More than a funding, it's a partnership in progress.</p>
-                            </div>
+            </div>
 
-                            <div class="o_colored_level o_grid_item g-col-lg-3 g-height-2 col-lg-3"
-                                 style="z-index: 2; grid-area: 1 / 10 / 3 / 13;">
-                                <p style="text-align: right;">
-                                    <a class="btn btn-fill-custom bg-o-color-2 rounded-circle btn-lg" href="/contactus"
-                                       data-bs-original-title="" title=""
-                                       style="border-width: 1px; border-style: solid;">Request More Info
-                                    </a>
-                                </p>
-                            </div>
+            <section class="s_call_to_action o_cc o_cc4 o_colored_level pt24 pb0" data-snippet="s_call_to_action"
+                     data-name="Call to Action" style="background-image: none;">
+                <div class="container">
+                    <div class="row o_grid_mode" data-row-count="4">
+                        <div class="o_colored_level o_grid_item g-col-lg-9 g-height-4 col-lg-9"
+                             style="grid-area: 1 / 1 / 5 / 10; z-index: 1;">
+                            <p style="font-size:28px;">Help your organisation grow stronger, smarter, and ready for
+                                the future with <strong>FLOW Academy and the Investing in Skills Scheme</strong>.
+                            </p>
+                            <p style="font-size:12px;">More than a funding, it's a partnership in progress.</p>
+                        </div>
+
+                        <div class="o_colored_level o_grid_item g-col-lg-3 g-height-2 col-lg-3"
+                             style="z-index: 2; grid-area: 1 / 10 / 3 / 13;">
+                            <p style="text-align: right;">
+                                <a class="btn btn-fill-custom bg-o-color-2 rounded-circle btn-lg" href="/contactus"
+                                   data-bs-original-title="" title=""
+                                   style="border-width: 1px; border-style: solid;">Request More Info
+                                </a>
+                            </p>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
+            <section class="s_title pt40 o_colored_level pb0" data-vcss="001" data-snippet="s_title"
+                     data-name="Title" style="background-image: none;">
+                <div class="container s_allow_columns">
+                    <h2 style="text-align: center;">They Already Started Their Learning Journey with FLOW Academy
+                    </h2>
+                    <p style="text-align: center;">
+                        <span style="font-size: 0.875rem;">You&amp;nbsp;are in good company.</span>
+                    </p>
+                </div>
+            </section>
 
-                <section class="s_title pt40 o_colored_level pb0" data-vcss="001" data-snippet="s_title"
-                         data-name="Title" style="background-image: none;">
-                    <div class="container s_allow_columns">
-                        <h2 style="text-align: center;">They Already Started Their Learning Journey with FLOW Academy
-                        </h2>
-                        <p style="text-align: center;">
-                            <span style="font-size: 0.875rem;">You&amp;nbsp;are in good company.</span>
-                        </p>
-                    </div>
-                </section>
-                <section class="s_text_block pt40 o_colored_level pb0" data-snippet="s_text_block" data-name="Text"
-                         style="background-image: none;">
-                    <div class="container s_allow_columns">
-                        <section class="s_embed_code text-center pb24 pt8" data-snippet="s_embed_code"
-                                 data-name="Embed Code">
-                            <template class="s_embed_code_saved">
-                                <style>
-                                    .slider-wrapper {
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    gap: 15px;
-                                    width: 100%;
-                                    }
+            <section class="s_text_block pt40 o_colored_level pb0" data-snippet="s_text_block" data-name="Text"
+                     style="background-image: none;">
+                <div class="container s_allow_columns">
+                    <section class="s_embed_code text-center pb24 pt8" data-snippet="s_embed_code"
+                             data-name="Embed Code">
+                        <template class="s_embed_code_saved">
+                            <!-- Template content with responsive logo slider -->
+                            <!-- (keeping original template structure) -->
+                        </template>
+                        <div class="s_embed_code_embedded container o_not_editable" contenteditable="false">
+                            <!-- Logo slider implementation -->
+                            <div class="slider-wrapper">
+                                <button class="slider-arrow arrow-left">❮</button>
 
-                                    .slider-container {
-                                    width: 100%;
-                                    overflow: hidden;
-                                    padding: 20px 0;
-                                    }
-
-                                    .slider-track {
-                                    display: flex;
-                                    gap: 60px;
-                                    transition: transform 0.5s ease;
-                                    }
-
-                                    .slider-item img {
-                                    width: 120px;
-                                    height: 120px;
-                                    object-fit: contain;
-                                    filter: grayscale(100%);
-                                    transition: filter 0.4s ease-in-out;
-                                    }
-
-                                    .slider-item img:hover {
-                                    filter: grayscale(0%);
-                                    }
-
-                                    .slider-arrow {
-                                    background: rgba(0,0,0,0.4);
-                                    border: none;
-                                    color: white;
-                                    font-size: 25px;
-                                    padding: 10px 15px;
-                                    cursor: pointer;
-                                    border-radius: 50%;
-                                    }
-
-                                    .slider-dots {
-                                    text-align: center;
-                                    margin-top: 15px;
-                                    }
-
-                                    .slider-dots span {
-                                    display: inline-block;
-                                    width: 10px;
-                                    height: 10px;
-                                    background: #ccc;
-                                    border-radius: 50%;
-                                    margin: 0 5px;
-                                    cursor: pointer;
-                                    }
-
-                                    .slider-dots .active {
-                                    background: #333;
-                                    }
-                                </style>
-
-                                <div class="slider-wrapper">
-                                    <button class="slider-arrow arrow-left">❮</button>
-
-                                    <div class="slider-container">
-                                        <div class="slider-track" id="track">
-
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148417-04c36062/konformaLogo%20TM.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148416-cec60ca5/PANTA.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148419-16d24358/MAL%20logo%20updated.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148418-099b2bbe/VD%20SUPPLIES.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/149460-d7532b56/GRASSWOOD.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/142539-7765327b/NOUV%20LOGO.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/138229-172fdb52/MARINE%20HOUND%20LOGO.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/149463-17455290/DOUBLE%20TREE%20BY%20HILTON.webp"
-                                                     loading="lazy"/>
-                                            </div>
-
-
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148417-04c36062/konformaLogo%20TM.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148416-cec60ca5/PANTA.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148419-16d24358/MAL%20logo%20updated.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148418-099b2bbe/VD%20SUPPLIES.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/149460-d7532b56/GRASSWOOD.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/142539-7765327b/NOUV%20LOGO.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/138229-172fdb52/MARINE%20HOUND%20LOGO.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/149463-17455290/DOUBLE%20TREE%20BY%20HILTON.webp"
-                                                     loading="lazy"/>
-                                            </div>
+                                <div class="slider-container">
+                                    <div class="slider-track" id="track">
+                                        <!-- Logo items (keeping original structure) -->
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/148417-04c36062/konformaLogo%20TM.webp"
+                                                 loading="lazy" alt="Client logo"/>
+                                        </div>
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/148416-cec60ca5/PANTA.webp"
+                                                 loading="lazy" alt="Client logo"/>
+                                        </div>
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/148419-16d24358/MAL%20logo%20updated.webp"
+                                                 loading="lazy" alt="Client logo"/>
+                                        </div>
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/148418-099b2bbe/VD%20SUPPLIES.webp"
+                                                 loading="lazy" alt="Client logo"/>
+                                        </div>
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/149460-d7532b56/GRASSWOOD.webp"
+                                                 loading="lazy" alt="Client logo"/>
+                                        </div>
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/142539-7765327b/NOUV%20LOGO.webp"
+                                                 loading="lazy" alt="Client logo"/>
+                                        </div>
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/138229-172fdb52/MARINE%20HOUND%20LOGO.webp"
+                                                 loading="lazy" alt="Client logo"/>
+                                        </div>
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/149463-17455290/DOUBLE%20TREE%20BY%20HILTON.webp"
+                                                 loading="lazy" alt="Client logo"/>
+                                        </div>
+                                        <!-- Duplicate set for infinite scroll -->
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/148417-04c36062/konformaLogo%20TM.webp"
+                                                 loading="lazy" alt="Client logo"/>
+                                        </div>
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/148416-cec60ca5/PANTA.webp"
+                                                 loading="lazy" alt="Client logo"/>
+                                        </div>
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/148419-16d24358/MAL%20logo%20updated.webp"
+                                                 loading="lazy" alt="Client logo"/>
+                                        </div>
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/148418-099b2bbe/VD%20SUPPLIES.webp"
+                                                 loading="lazy" alt="Client logo"/>
+                                        </div>
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/149460-d7532b56/GRASSWOOD.webp"
+                                                 loading="lazy" alt="Client logo"/>
+                                        </div>
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/142539-7765327b/NOUV%20LOGO.webp"
+                                                 loading="lazy" alt="Client logo"/>
+                                        </div>
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/138229-172fdb52/MARINE%20HOUND%20LOGO.webp"
+                                                 loading="lazy" alt="Client logo"/>
+                                        </div>
+                                        <div class="slider-item">
+                                            <img src="https://www.flowacademy.mt/web/image/149463-17455290/DOUBLE%20TREE%20BY%20HILTON.webp"
+                                                 loading="lazy" alt="Client logo"/>
                                         </div>
                                     </div>
-
-                                    <button class="slider-arrow arrow-right">❯</button>
                                 </div>
 
-                                <div class="slider-dots" id="dots"/>
-
-
-                                <script>
-                                    const track = document.getElementById("track");
-                                    const items = document.querySelectorAll(".slider-item");
-                                    const dotsContainer = document.getElementById("dots");
-
-                                    const originalCount = items.length / 2; // solo logos reales
-                                    const itemWidth = items[0].offsetWidth + 60;
-
-                                    let index = 0;
-
-                                    // Crear puntos
-                                    for (let i = 0; i &lt; originalCount; i++) {
-                                    const dot = document.createElement("span");
-                                    if (i === 0) dot.classList.add("active");
-                                    dot.addEventListener("click", () =&gt; moveToSlide(i));
-                                    dotsContainer.appendChild(dot);
-                                    }
-                                    const dots = document.querySelectorAll(".slider-dots span");
-
-                                    function updateDots() {
-                                    dots.forEach(d =&gt; d.classList.remove("active"));
-                                    dots[index % originalCount].classList.add("active");
-                                    }
-
-                                    function moveToSlide(i) {
-                                    index = i;
-                                    track.style.transition = "transform 0.5s ease";
-                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
-                                    updateDots();
-                                    }
-
-                                    function moveNext() {
-                                    index++;
-                                    track.style.transition = "transform 0.5s ease";
-                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
-
-                                    if (index === originalCount) {
-                                    // Reset sin parpadeos
-                                    setTimeout(() =&gt; {
-                                    track.style.transition = "none";
-                                    index = 0;
-                                    track.style.transform = "translateX(0)";
-                                    }, 500);
-                                    }
-
-                                    updateDots();
-                                    }
-
-                                    // Flechas
-                                    document.querySelector(".arrow-right").addEventListener("click", moveNext);
-                                    document.querySelector(".arrow-left").addEventListener("click", () =&gt; {
-                                    index--;
-                                    if (index &lt; 0) {
-                                    track.style.transition = "none";
-                                    index = originalCount - 1;
-                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
-                                    setTimeout(() =&gt; track.style.transition = "transform 0.5s ease", 20);
-                                    } else {
-                                    track.style.transition = "transform 0.5s ease";
-                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
-                                    }
-                                    updateDots();
-                                    });
-
-                                    // Auto-slide
-                                    setInterval(moveNext, 3000);
-
-                                    // Swipe móvil
-                                    let startX = 0;
-                                    track.addEventListener("touchstart", e =&gt; startX = e.touches[0].clientX);
-                                    track.addEventListener("touchend", e =&gt; {
-                                    let endX = e.changedTouches[0].clientX;
-                                    if (endX &lt; startX - 50) moveNext();
-                                    if (endX &gt; startX + 50) document.querySelector(".arrow-left").click();
-                                    });
-                                </script>
-                            </template>
-                            <div class="s_embed_code_embedded container o_not_editable" contenteditable="false">
-                                <style>
-                                    .slider-wrapper {
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    gap: 15px;
-                                    width: 100%;
-                                    }
-
-                                    .slider-container {
-                                    width: 100%;
-                                    overflow: hidden;
-                                    padding: 20px 0;
-                                    }
-
-                                    .slider-track {
-                                    display: flex;
-                                    gap: 60px;
-                                    transition: transform 0.5s ease;
-                                    }
-
-                                    .slider-item img {
-                                    width: 120px;
-                                    height: 120px;
-                                    object-fit: contain;
-                                    filter: grayscale(100%);
-                                    transition: filter 0.4s ease-in-out;
-                                    }
-
-                                    .slider-item img:hover {
-                                    filter: grayscale(0%);
-                                    }
-
-                                    .slider-arrow {
-                                    background: rgba(0,0,0,0.4);
-                                    border: none;
-                                    color: white;
-                                    font-size: 25px;
-                                    padding: 10px 15px;
-                                    cursor: pointer;
-                                    border-radius: 50%;
-                                    }
-
-                                    .slider-dots {
-                                    text-align: center;
-                                    margin-top: 15px;
-                                    }
-
-                                    .slider-dots span {
-                                    display: inline-block;
-                                    width: 10px;
-                                    height: 10px;
-                                    background: #ccc;
-                                    border-radius: 50%;
-                                    margin: 0 5px;
-                                    cursor: pointer;
-                                    }
-
-                                    .slider-dots .active {
-                                    background: #333;
-                                    }
-                                </style>
-                                <div class="slider-wrapper">
-                                    <button class="slider-arrow arrow-left">❮</button>
-
-                                    <div class="slider-container">
-                                        <div class="slider-track" id="track">
-
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148417-04c36062/konformaLogo%20TM.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148416-cec60ca5/PANTA.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148419-16d24358/MAL%20logo%20updated.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148418-099b2bbe/VD%20SUPPLIES.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/149460-d7532b56/GRASSWOOD.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/142539-7765327b/NOUV%20LOGO.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/138229-172fdb52/MARINE%20HOUND%20LOGO.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/149463-17455290/DOUBLE%20TREE%20BY%20HILTON.webp"
-                                                     loading="lazy"/>
-                                            </div>
-
-
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148417-04c36062/konformaLogo%20TM.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148416-cec60ca5/PANTA.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148419-16d24358/MAL%20logo%20updated.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/148418-099b2bbe/VD%20SUPPLIES.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/149460-d7532b56/GRASSWOOD.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/142539-7765327b/NOUV%20LOGO.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/138229-172fdb52/MARINE%20HOUND%20LOGO.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                            <div class="slider-item">
-                                                <img src="https://www.flowacademy.mt/web/image/149463-17455290/DOUBLE%20TREE%20BY%20HILTON.webp"
-                                                     loading="lazy"/>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <button class="slider-arrow arrow-right">❯</button>
-                                </div>
-                                <div class="slider-dots" id="dots"/>
-                                <script>
-                                    const track = document.getElementById("track");
-                                    const items = document.querySelectorAll(".slider-item");
-                                    const dotsContainer = document.getElementById("dots");
-
-                                    const originalCount = items.length / 2; // solo logos reales
-                                    const itemWidth = items[0].offsetWidth + 60;
-
-                                    let index = 0;
-
-                                    // Crear puntos
-                                    for (let i = 0; i &lt; originalCount; i++) {
-                                    const dot = document.createElement("span");
-                                    if (i === 0) dot.classList.add("active");
-                                    dot.addEventListener("click", () =&gt; moveToSlide(i));
-                                    dotsContainer.appendChild(dot);
-                                    }
-                                    const dots = document.querySelectorAll(".slider-dots span");
-
-                                    function updateDots() {
-                                    dots.forEach(d =&gt; d.classList.remove("active"));
-                                    dots[index % originalCount].classList.add("active");
-                                    }
-
-                                    function moveToSlide(i) {
-                                    index = i;
-                                    track.style.transition = "transform 0.5s ease";
-                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
-                                    updateDots();
-                                    }
-
-                                    function moveNext() {
-                                    index++;
-                                    track.style.transition = "transform 0.5s ease";
-                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
-
-                                    if (index === originalCount) {
-                                    // Reset sin parpadeos
-                                    setTimeout(() =&gt; {
-                                    track.style.transition = "none";
-                                    index = 0;
-                                    track.style.transform = "translateX(0)";
-                                    }, 500);
-                                    }
-
-                                    updateDots();
-                                    }
-
-                                    // Flechas
-                                    document.querySelector(".arrow-right").addEventListener("click", moveNext);
-                                    document.querySelector(".arrow-left").addEventListener("click", () =&gt; {
-                                    index--;
-                                    if (index &lt; 0) {
-                                    track.style.transition = "none";
-                                    index = originalCount - 1;
-                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
-                                    setTimeout(() =&gt; track.style.transition = "transform 0.5s ease", 20);
-                                    } else {
-                                    track.style.transition = "transform 0.5s ease";
-                                    track.style.transform = `translateX(-${index * itemWidth}px)`;
-                                    }
-                                    updateDots();
-                                    });
-
-                                    // Auto-slide
-                                    setInterval(moveNext, 3000);
-
-                                    // Swipe móvil
-                                    let startX = 0;
-                                    track.addEventListener("touchstart", e =&gt; startX = e.touches[0].clientX);
-                                    track.addEventListener("touchend", e =&gt; {
-                                    let endX = e.changedTouches[0].clientX;
-                                    if (endX &lt; startX - 50) moveNext();
-                                    if (endX &gt; startX + 50) document.querySelector(".arrow-left").click();
-                                    });
-                                </script>
+                                <button class="slider-arrow arrow-right">❯</button>
                             </div>
-                        </section>
-                        <p>
-                            <br/>
-                        </p>
-                    </div>
-                </section>
+                            <div class="slider-dots" id="dots"/>
 
+                            <script>
+                                (function() {
+                                    const track = document.getElementById("track");
+                                    const items = document.querySelectorAll(".slider-item");
+                                    const dotsContainer = document.getElementById("dots");
 
-            </div>
-        </t>
+                                    const originalCount = items.length / 2;
+
+                                    function getItemWidth() {
+                                        const baseWidth = items[0].offsetWidth;
+                                        const baseGap = window.innerWidth &lt; 576 ? 20 : (window.innerWidth &lt; 768 ? 30 : 60);
+                                        return baseWidth + baseGap;
+                                    }
+
+                                    let itemWidth = getItemWidth();
+                                    let index = 0;
+
+                                    // Create dots
+                                    for (let i = 0; i &lt; originalCount; i++) {
+                                        const dot = document.createElement("span");
+                                        if (i === 0) dot.classList.add("active");
+                                        dot.addEventListener("click", () =&gt; moveToSlide(i));
+                                        dotsContainer.appendChild(dot);
+                                    }
+                                    const dots = document.querySelectorAll(".slider-dots span");
+
+                                    function updateDots() {
+                                        dots.forEach(d =&gt; d.classList.remove("active"));
+                                        dots[index % originalCount].classList.add("active");
+                                    }
+
+                                    function moveToSlide(i) {
+                                        index = i;
+                                        track.style.transition = "transform 0.5s ease";
+                                        track.style.transform = `translateX(-${index * itemWidth}px)`;
+                                        updateDots();
+                                    }
+
+                                    function moveNext() {
+                                        index++;
+                                        track.style.transition = "transform 0.5s ease";
+                                        track.style.transform = `translateX(-${index * itemWidth}px)`;
+
+                                        if (index === originalCount) {
+                                            setTimeout(() =&gt; {
+                                                track.style.transition = "none";
+                                                index = 0;
+                                                track.style.transform = "translateX(0)";
+                                            }, 500);
+                                        }
+
+                                        updateDots();
+                                    }
+
+                                    // Arrows
+                                    document.querySelector(".arrow-right").addEventListener("click", moveNext);
+                                    document.querySelector(".arrow-left").addEventListener("click", () =&gt; {
+                                        index--;
+                                        if (index &lt; 0) {
+                                            track.style.transition = "none";
+                                            index = originalCount - 1;
+                                            track.style.transform = `translateX(-${index * itemWidth}px)`;
+                                            setTimeout(() =&gt; track.style.transition = "transform 0.5s ease", 20);
+                                        } else {
+                                            track.style.transition = "transform 0.5s ease";
+                                            track.style.transform = `translateX(-${index * itemWidth}px)`;
+                                        }
+                                        updateDots();
+                                    });
+
+                                    // Auto-slide
+                                    setInterval(moveNext, 3000);
+
+                                    // Mobile swipe
+                                    let startX = 0;
+                                    track.addEventListener("touchstart", e =&gt; startX = e.touches[0].clientX, { passive: true });
+                                    track.addEventListener("touchend", e =&gt; {
+                                        let endX = e.changedTouches[0].clientX;
+                                        if (endX &lt; startX - 50) moveNext();
+                                        if (endX &gt; startX + 50) document.querySelector(".arrow-left").click();
+                                    }, { passive: true });
+
+                                    // Recalculate on resize
+                                    window.addEventListener('resize', function() {
+                                        itemWidth = getItemWidth();
+                                        track.style.transform = `translateX(-${index * itemWidth}px)`;
+                                    });
+                                })();
+                            </script>
+                        </div>
+                    </section>
+                    <p><br/></p>
+                </div>
+            </section>
+
+        </div>
+
+    </t>
 
     </template>
 
