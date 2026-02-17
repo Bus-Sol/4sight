@@ -195,307 +195,307 @@ class EventTypeController(http.Controller):
         )
 
         return response
-
-    @http.route('/new-upcoming-courses', type='http', auth="public", website=True)
-    def get_upcoming_courses(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-
-        event_categs = request.env['event.category'].sudo().with_company(company_1).search([])
-        now = datetime.now()
-        categs_data = {}
-
-        for categ in event_categs:
-            categs_data[categ.id] = []
-            events = request.env['event.event'].sudo().with_company(company_1).search([
-                ('company_id', '=', 1),
-                ('event_category_id', '=', categ.id),
-                ('date_begin', '>=', now),
-            ])
-            for event in events:
-                categs_data[categ.id].append(event)
-
-        _logger.info(f"categs_data >> {categs_data}")
-
-        return (request.render('website.upcoming-courses_e0fcf3', {
-            'categs_data': categs_data,
-        }))
-
-    # Individual Pages
-
-    @http.route('/courses-2026', type='http', auth="public", website=True)
-    def get_upcoming_courses_1(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 1),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"categ 1 events >> {events}")
-
-        return request.render('website.practical-ai-for-the-workplace', {
-            'events': events,
-        })
-
-    @http.route('/seo-for-marketers-2026', type='http', auth="public", website=True)
-    def get_upcoming_courses_2(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        seo_events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 2),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"seo_events >> {seo_events}")
-
-        return request.render('website.ai-for-work-1_e38eb1', {
-            'seo_events': seo_events,
-        })
-
-    @http.route('/master-canva-for-social-media-2026', type='http', auth="public", website=True)
-    def get_upcoming_courses_3(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 3),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"categ 3 events >> {events}")
-
-        return request.render('website.ai-for-work-1_ef4c18', {
-            'events': events,
-        })
-
-    @http.route('/ai-for-business-administrators-personal-assistants', type='http', auth="public", website=True)
-    def get_upcoming_courses_4(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        ai_events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 4),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"ai_events >> {ai_events}")
-
-        return request.render('website.ai-for-work-1_1b3066', {
-            'ai_events': ai_events,
-        })
-
-    @http.route('/blockchain-and-distributed-ledger-technologies', type='http', auth="public", website=True)
-    def get_upcoming_courses_5(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 5),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"categ 5 events >> {events}")
-
-        return request.render('website.ai-for-work-1_56f972', {
-            'events': events,
-        })
-
-
-    @http.route('/transformative-leadership-programme', type='http', auth="public", website=True)
-    def get_upcoming_courses_6(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 6),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"categ 6 events >> {events}")
-
-        return request.render('website.ai-for-work-1_3efddc', {
-            'events': events,
-        })
-
-    @http.route('/public-speaking-foundations', type='http', auth="public", website=True)
-    def get_upcoming_courses_7(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 7),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"categ 7 events >> {events}")
-
-        return request.render('website.ai-for-work-1_6fed98', {
-            'events': events,
-        })
-
-
-
-    @http.route('/content-writing-foundations', type='http', auth="public", website=True)
-    def get_upcoming_courses_8(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 8),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"categ 8 events >> {events}")
-
-        return request.render('website.ai-for-work-1_96645e', {
-            'events': events,
-        })
-
-
-    @http.route('/foundations-in-ai-marketing', type='http', auth="public", website=True)
-    def get_upcoming_courses_9(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 9),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"categ 9 events >> {events}")
-
-        return request.render('website.ai-for-work-1_1b3066_16c2f0', {
-            'events': events,
-        })
-
-    @http.route('/sales-accelerator-foundations', type='http', auth="public", website=True)
-    def get_upcoming_courses_10(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 10),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"categ 1 events >> {events}")
-
-        return request.render('website.ai-for-work-1_1b3066_355d9b', {
-            'events': events,
-        })
-
-    @http.route('/strategic-sales-management-foundations', type='http', auth="public", website=True)
-    def get_upcoming_courses_11(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 11),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"categ 11 events >> {events}")
-
-        return request.render('website.ai-for-work-1_1b3066_355d9b_e2c965', {
-            'events': events,
-        })
-
-    @http.route('/project-management-fundamentals', type='http', auth="public", website=True)
-    def get_upcoming_courses_12(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 12),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"categ 12 events >> {events}")
-
-        return request.render('website.ai-for-work-1_1b3066_13c129_7dfdcb_26adac', {
-            'events': events,
-        })
-
-    @http.route('/foundations-of-agile-at-scale', type='http', auth="public", website=True)
-    def get_upcoming_courses_13(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 13),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"categ 13 events >> {events}")
-
-        return request.render('website.ai-for-work-1_1b3066_13c129_7dfdcb', {
-            'events': events,
-        })
-
-    @http.route('/introduction-to-cyber-security', type='http', auth="public", website=True)
-    def get_upcoming_courses_14(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 14),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"categ 1 events >> {events}")
-
-        return request.render('website.ai-for-work-1_1b3066_1818e3', {
-            'events': events,
-        })
-
-    @http.route('/bi-and-data-science', type='http', auth="public", website=True)
-    def get_upcoming_courses_15(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 15),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"categ 15 events >> {events}")
-
-        return request.render('website.ai-for-work-1_3efddc_1086e0', {
-            'events': events,
-        })
-
-    @http.route('/ai-for-social-media', type='http', auth="public", website=True)
-    def get_upcoming_courses_16(self, **kw):
-        # Switch to company 1 context
-        company_1 = request.env['res.company'].sudo().browse(1)
-        now = datetime.now()
-
-        events = request.env['event.event'].sudo().with_company(company_1).search([
-            ('event_category_id', '=', 16),
-            ('date_begin', '>=', now),
-        ])
-
-        _logger.info(f"categ 16 events >> {events}")
-
-        return request.render('website.ai-for-work-1_1b3066_13c129', {
-            'events': events,
-        })
+    #
+    # @http.route('/new-upcoming-courses', type='http', auth="public", website=True)
+    # def get_upcoming_courses(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #
+    #     event_categs = request.env['event.category'].sudo().with_company(company_1).search([])
+    #     now = datetime.now()
+    #     categs_data = {}
+    #
+    #     for categ in event_categs:
+    #         categs_data[categ.id] = []
+    #         events = request.env['event.event'].sudo().with_company(company_1).search([
+    #             ('company_id', '=', 1),
+    #             ('event_category_id', '=', categ.id),
+    #             ('date_begin', '>=', now),
+    #         ])
+    #         for event in events:
+    #             categs_data[categ.id].append(event)
+    #
+    #     _logger.info(f"categs_data >> {categs_data}")
+    #
+    #     return (request.render('website.upcoming-courses_e0fcf3', {
+    #         'categs_data': categs_data,
+    #     }))
+    #
+    # # Individual Pages
+    #
+    # @http.route('/courses-2026', type='http', auth="public", website=True)
+    # def get_upcoming_courses_1(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 1),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"categ 1 events >> {events}")
+    #
+    #     return request.render('website.practical-ai-for-the-workplace', {
+    #         'events': events,
+    #     })
+    #
+    # @http.route('/seo-for-marketers-2026', type='http', auth="public", website=True)
+    # def get_upcoming_courses_2(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     seo_events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 2),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"seo_events >> {seo_events}")
+    #
+    #     return request.render('website.ai-for-work-1_e38eb1', {
+    #         'seo_events': seo_events,
+    #     })
+    #
+    # @http.route('/master-canva-for-social-media-2026', type='http', auth="public", website=True)
+    # def get_upcoming_courses_3(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 3),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"categ 3 events >> {events}")
+    #
+    #     return request.render('website.ai-for-work-1_ef4c18', {
+    #         'events': events,
+    #     })
+    #
+    # @http.route('/ai-for-business-administrators-personal-assistants', type='http', auth="public", website=True)
+    # def get_upcoming_courses_4(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     ai_events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 4),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"ai_events >> {ai_events}")
+    #
+    #     return request.render('website.ai-for-work-1_1b3066', {
+    #         'ai_events': ai_events,
+    #     })
+    #
+    # @http.route('/blockchain-and-distributed-ledger-technologies', type='http', auth="public", website=True)
+    # def get_upcoming_courses_5(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 5),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"categ 5 events >> {events}")
+    #
+    #     return request.render('website.ai-for-work-1_56f972', {
+    #         'events': events,
+    #     })
+    #
+    #
+    # @http.route('/transformative-leadership-programme', type='http', auth="public", website=True)
+    # def get_upcoming_courses_6(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 6),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"categ 6 events >> {events}")
+    #
+    #     return request.render('website.ai-for-work-1_3efddc', {
+    #         'events': events,
+    #     })
+    #
+    # @http.route('/public-speaking-foundations', type='http', auth="public", website=True)
+    # def get_upcoming_courses_7(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 7),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"categ 7 events >> {events}")
+    #
+    #     return request.render('website.ai-for-work-1_6fed98', {
+    #         'events': events,
+    #     })
+    #
+    #
+    #
+    # @http.route('/content-writing-foundations', type='http', auth="public", website=True)
+    # def get_upcoming_courses_8(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 8),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"categ 8 events >> {events}")
+    #
+    #     return request.render('website.ai-for-work-1_96645e', {
+    #         'events': events,
+    #     })
+    #
+    #
+    # @http.route('/foundations-in-ai-marketing', type='http', auth="public", website=True)
+    # def get_upcoming_courses_9(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 9),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"categ 9 events >> {events}")
+    #
+    #     return request.render('website.ai-for-work-1_1b3066_16c2f0', {
+    #         'events': events,
+    #     })
+    #
+    # @http.route('/sales-accelerator-foundations', type='http', auth="public", website=True)
+    # def get_upcoming_courses_10(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 10),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"categ 1 events >> {events}")
+    #
+    #     return request.render('website.ai-for-work-1_1b3066_355d9b', {
+    #         'events': events,
+    #     })
+    #
+    # @http.route('/strategic-sales-management-foundations', type='http', auth="public", website=True)
+    # def get_upcoming_courses_11(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 11),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"categ 11 events >> {events}")
+    #
+    #     return request.render('website.ai-for-work-1_1b3066_355d9b_e2c965', {
+    #         'events': events,
+    #     })
+    #
+    # @http.route('/project-management-fundamentals', type='http', auth="public", website=True)
+    # def get_upcoming_courses_12(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 12),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"categ 12 events >> {events}")
+    #
+    #     return request.render('website.ai-for-work-1_1b3066_13c129_7dfdcb_26adac', {
+    #         'events': events,
+    #     })
+    #
+    # @http.route('/foundations-of-agile-at-scale', type='http', auth="public", website=True)
+    # def get_upcoming_courses_13(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 13),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"categ 13 events >> {events}")
+    #
+    #     return request.render('website.ai-for-work-1_1b3066_13c129_7dfdcb', {
+    #         'events': events,
+    #     })
+    #
+    # @http.route('/introduction-to-cyber-security', type='http', auth="public", website=True)
+    # def get_upcoming_courses_14(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 14),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"categ 1 events >> {events}")
+    #
+    #     return request.render('website.ai-for-work-1_1b3066_1818e3', {
+    #         'events': events,
+    #     })
+    #
+    # @http.route('/bi-and-data-science', type='http', auth="public", website=True)
+    # def get_upcoming_courses_15(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 15),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"categ 15 events >> {events}")
+    #
+    #     return request.render('website.ai-for-work-1_3efddc_1086e0', {
+    #         'events': events,
+    #     })
+    #
+    # @http.route('/ai-for-social-media', type='http', auth="public", website=True)
+    # def get_upcoming_courses_16(self, **kw):
+    #     # Switch to company 1 context
+    #     company_1 = request.env['res.company'].sudo().browse(1)
+    #     now = datetime.now()
+    #
+    #     events = request.env['event.event'].sudo().with_company(company_1).search([
+    #         ('event_category_id', '=', 16),
+    #         ('date_begin', '>=', now),
+    #     ])
+    #
+    #     _logger.info(f"categ 16 events >> {events}")
+    #
+    #     return request.render('website.ai-for-work-1_1b3066_13c129', {
+    #         'events': events,
+    #     })
 
