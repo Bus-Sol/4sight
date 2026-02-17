@@ -182,7 +182,7 @@ class EventTypeController(http.Controller):
 
         # Return the template with the data
         response = request.render('flow_academy_website.events_by_category', {
-            'events': events,
+            'events': events.sudo(),
             'event_category': category,
         })
 
