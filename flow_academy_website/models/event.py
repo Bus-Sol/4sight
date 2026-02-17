@@ -18,3 +18,11 @@ class Event(models.Model):
     def compute_price(self):
         for rec in self:
             rec.price = max(rec.event_ticket_ids.mapped('price')) if rec.event_ticket_ids else 0
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # If company_ids not provided, default to current company
+            if not vals.get('website_published'):
+                vals['website_published'] = True
+        return super().create(vals_list)
