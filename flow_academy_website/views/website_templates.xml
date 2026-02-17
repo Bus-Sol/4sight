@@ -688,7 +688,7 @@
                                                 </p>
                                             </div>
                                             <t t-call="website_event.modal_ticket_registration">
-                                                <t t-set="event" t-value="event"/>
+                                                <t t-set="event" t-value="event.sudo()"/>
                                             </t>
                                         </div>
                                     </div>
