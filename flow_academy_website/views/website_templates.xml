@@ -181,7 +181,7 @@
         /* Mobile - much smaller */
         @media (max-width: 576px) {
             .footer-logo-responsive {
-                transform: scaleX(0.20) scaleY(0.250) !important;
+                transform: scaleX(0.20) scaleY(0.20) !important;
                 max-width: 40%;
                 margin: 0 auto;
             }
