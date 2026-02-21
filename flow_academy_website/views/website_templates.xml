@@ -245,22 +245,13 @@
         <t t-call="website.layout">
         <div id="wrap" class="oe_structure oe_empty">
 
-            <section class="s_cover bg-black-50 o_colored_level pb40 pt40 parallax"
-                     data-scroll-background-ratio="1.5" data-snippet="s_cover" data-name="Cover"
-                     style="background-image: none;">
+            <section class="s_cover bg-black-50 o_colored_level pb40 pt40 parallax" data-scroll-background-ratio="1.5" data-snippet="s_cover" data-name="Cover" style="background-image: none;">
                 <t t-if="event_category.cover">
                     <t t-set="cover_image_url" t-value="image_data_uri(event_category.cover)"/>
-                    <span class="s_parallax_bg oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
-                      t-att-style="'background-image: url(%s);' % cover_image_url if cover_image_url else ''"
-                      data-mimetype="image/webp" data-original-id="149495"
-                      data-mimetype-before-conversion="image/jpeg" data-resize-width="1920" data-quality="100"/>
+                    <span class="s_parallax_bg oe_img_bg o_bg_img_center o_bg_img_origin_border_box" t-att-style="'background-image: url(%s);' % cover_image_url if cover_image_url else ''" data-mimetype="image/webp" data-original-id="149495" data-mimetype-before-conversion="image/jpeg" data-resize-width="1920" data-quality="100"/>
                 </t>
                 <t t-else="">
-                    <span class="s_parallax_bg oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
-                      style="background-image: url(&quot;/web/image/149496-83df35ad/HERO%20BANNER%20ECOM%20BOOKING%20PAGES.webp&quot;);"
-                      data-mimetype="image/webp" data-original-id="149495"
-                      data-original-src="/web/image/149495-83df35ad/HERO%20BANNER%20ECOM%20BOOKING%20PAGES.jpg"
-                      data-mimetype-before-conversion="image/jpeg" data-resize-width="1920" data-quality="100"/>
+                    <span class="s_parallax_bg oe_img_bg o_bg_img_center o_bg_img_origin_border_box" style="background-image: url(&quot;/web/image/149496-83df35ad/HERO%20BANNER%20ECOM%20BOOKING%20PAGES.webp&quot;);" data-mimetype="image/webp" data-original-id="149495" data-original-src="/web/image/149495-83df35ad/HERO%20BANNER%20ECOM%20BOOKING%20PAGES.jpg" data-mimetype-before-conversion="image/jpeg" data-resize-width="1920" data-quality="100"/>
                 </t>
 
                 <div class="o_we_bg_filter bg-black-50"/>
@@ -303,6 +294,8 @@
                     padding-bottom: 15px;
                     scrollbar-width: none;
                     -ms-overflow-style: none;
+                     scroll-snap-type: x mandatory;
+                    -webkit-scroll-snap-type: x mandatory;
                 }
 
                 .event-slider-wrapper::-webkit-scrollbar {
@@ -409,10 +402,11 @@
                 .event-card-item {
                     flex: 0 0 auto;
                     box-sizing: border-box;
+                    scroll-snap-align: start;
                 }
 
                 /* Override any custom CSS that removes column padding */
-                .event-card-item.col-10,
+                .event-card-item.col-9,
                 .event-card-item.col-sm-9,
                 .event-card-item.col-md-6,
                 .event-card-item.col-lg-4 {
@@ -423,8 +417,8 @@
                 /* Desktop sizing */
                 @media (min-width: 992px) {
                     .event-card-item {
-                        width: 33.333333%; /* col-lg-4 */
-                        flex: 0 0 33.333333% !important;
+                        width: calc(33.333% - 14px) !important;  /* subtract gap */
+                        flex: 0 0 calc(33.333% - 14px) !important;
                     }
                 }
 
@@ -436,23 +430,25 @@
                     }
                 }
 
-                /* Small tablet sizing */
+                /* Small tablet */
                 @media (min-width: 576px) and (max-width: 767px) {
                     .event-card-item {
-                        width: 75vw; /* 75% of viewport width */
-                        max-width: 75vw;
-                        flex: 0 0 75vw !important;
+                        width: calc(100vw - 80px) !important;
+                        max-width: calc(100vw - 80px) !important;
+                        flex: 0 0 calc(100vw - 80px) !important;
                     }
                 }
 
-                /* Mobile sizing - use viewport width */
+                /* Mobile sizing */
                 @media (max-width: 575px) {
                     .event-card-item {
-                        width: 83vw; /* 83% of viewport width */
-                        max-width: 83vw;
-                        flex: 0 0 83vw !important;
+                        width: calc(100vw - 60px) !important;  /* full width minus nav buttons + padding */
+                        max-width: calc(100vw - 60px) !important;
+                        flex: 0 0 calc(100vw - 60px) !important;
                     }
                 }
+
+
 
                 /* Important: Ensure internal card content doesn't break layout */
                 .event-card-item .card-body .col {
@@ -573,8 +569,7 @@
             <div class="container course-events mt-5">
                 <div class="position-relative px-md-5" style="position: relative !important; display: block;">
 
-                    <button type="button" class="btn btn-primary rounded-circle slider-nav-btn prev-btn"
-                            style="position: absolute !important; top: 50% !important; left: 0 !important; transform: translateY(-50%) !important; z-index: 1000 !important; width: 45px; height: 45px;">
+                    <button type="button" class="btn btn-primary rounded-circle slider-nav-btn prev-btn" style="position: absolute !important; top: 50% !important; left: 0 !important; transform: translateY(-50%) !important; z-index: 1000 !important; width: 45px; height: 45px;">
                         <i class="fa fa-chevron-left"/>
                     </button>
 
@@ -583,7 +578,7 @@
                             <t t-if="events">
                                 <t t-foreach="events" t-as="event">
                                     <!-- FIXED: Changed to col-10 on mobile so users can see the next card -->
-                                    <div class="col-10 col-sm-9 col-md-6 col-lg-4 mb-4 event-card-item">
+                                    <div class="col-9 col-sm-9 col-md-6 col-lg-4 mb-4 event-card-item">
                                         <div class="card h-100 border-2 border-primary">
                                             <div class="card-body">
                                                 <h4 class="card-title text-primary text-center">
@@ -593,12 +588,10 @@
 
                                                 <div class="row mb-2">
                                                     <div class="col-auto text-center course-icon">
-                                                        <i class="fa fa-calendar fa-lg text-primary"
-                                                           style="width: 24px;"/>
+                                                        <i class="fa fa-calendar fa-lg text-primary" style="width: 24px;"/>
                                                     </div>
                                                     <div class="col">
-                                                        <span t-field="event.date_begin"
-                                                              t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
+                                                        <span t-field="event.date_begin" t-options="{&quot;format&quot;: &quot;d MMMM y&quot;}"/>
                                                         <t t-if="event.location_type">
                                                             (<span t-field="event.location_type"/>)
                                                         </t>
@@ -607,22 +600,18 @@
 
                                                 <div class="row mb-2">
                                                     <div class="col-auto text-center">
-                                                        <i class="fa fa-clock-o fa-lg text-primary"
-                                                           style="width: 24px;"/>
+                                                        <i class="fa fa-clock-o fa-lg text-primary" style="width: 24px;"/>
                                                     </div>
                                                     <div class="col">
-                                                        <span t-field="event.start_time"
-                                                              t-options="{&quot;widget&quot;: &quot;float_time&quot;}"/>
+                                                        <span t-field="event.start_time" t-options="{&quot;widget&quot;: &quot;float_time&quot;}"/>
                                                         -
-                                                        <span t-field="event.end_time"
-                                                              t-options="{&quot;widget&quot;: &quot;float_time&quot;}"/>
+                                                        <span t-field="event.end_time" t-options="{&quot;widget&quot;: &quot;float_time&quot;}"/>
                                                     </div>
                                                 </div>
 
                                                 <div class="row mb-2">
                                                     <div class="col-auto text-center course-icon">
-                                                        <i class="fa fa-map-marker fa-lg text-primary"
-                                                           style="width: 24px;"/>
+                                                        <i class="fa fa-map-marker fa-lg text-primary" style="width: 24px;"/>
                                                     </div>
                                                     <div class="col">
                                                         <span t-esc="event.address_inline"/>
@@ -631,8 +620,7 @@
 
                                                 <div class="row mb-2">
                                                     <div class="col-auto text-center course-icon">
-                                                        <i class="fa fa-dollar fa-lg text-primary"
-                                                           style="width: 24px;"/>
+                                                        <i class="fa fa-dollar fa-lg text-primary" style="width: 24px;"/>
                                                     </div>
                                                     <div class="col">
                                                         Price:
@@ -642,8 +630,7 @@
 
                                                 <div class="row mb-2">
                                                     <div class="col-auto text-center course-icon">
-                                                        <i class="fa fa-ticket fa-lg text-primary"
-                                                           style="width: 24px;"/>
+                                                        <i class="fa fa-ticket fa-lg text-primary" style="width: 24px;"/>
                                                     </div>
                                                     <div class="col">
                                                         Available Seats:
@@ -653,8 +640,7 @@
 
                                                 <div class="row mb-2">
                                                     <div class="col-auto text-center course-icon">
-                                                        <i class="fa fa-user fa-lg text-primary"
-                                                           style="width: 24px;"/>
+                                                        <i class="fa fa-user fa-lg text-primary" style="width: 24px;"/>
                                                     </div>
                                                     <div class="col">
                                                         Trainer:
@@ -665,17 +651,12 @@
                                             </div>
 
                                             <div class="card-footer bg-white border-top-10">
-                                                <button t-if="event.event_registrations_open" type="button"
-                                                        data-bs-toggle="modal"
-                                                        t-att-data-bs-target="'#modal_ticket_registration_%s' % event.id"
-                                                        class="btn btn-primary w-100">Select Option
+                                                <button t-if="event.event_registrations_open" type="button" data-bs-toggle="modal" t-att-data-bs-target="'#modal_ticket_registration_%s' % event.id" class="btn btn-primary w-100">Select Option
                                                 </button>
-                                                <div t-if="registration_error_code == 'insufficient_seats'"
-                                                     class="alert alert-danger my-3" role="alert">
+                                                <div t-if="registration_error_code == 'insufficient_seats'" class="alert alert-danger my-3" role="alert">
                                                     Registration failed! These tickets are not available anymore.
                                                 </div>
-                                                <button t-if="not event.event_registrations_open" type="button"
-                                                        class="btn w-100" style="background-color: #d4d3d2;">Not
+                                                <button t-if="not event.event_registrations_open" type="button" class="btn w-100" style="background-color: #d4d3d2;">Not
                                                     Available
                                                 </button>
                                             </div>
@@ -705,8 +686,7 @@
                         </div>
                     </div>
 
-                    <button type="button" class="btn btn-primary rounded-circle slider-nav-btn next-btn"
-                            style="position: absolute !important; top: 50% !important; right: 0 !important; transform: translateY(-50%) !important; z-index: 1000 !important; width: 45px; height: 45px;">
+                    <button type="button" class="btn btn-primary rounded-circle slider-nav-btn next-btn" style="position: absolute !important; top: 50% !important; right: 0 !important; transform: translateY(-50%) !important; z-index: 1000 !important; width: 45px; height: 45px;">
                         <i class="fa fa-chevron-right"/>
                     </button>
                 </div>
@@ -785,9 +765,7 @@
                 <div class="row text-center">
                     <div class="col-12">
                         <p>
-                            <a class="btn btn-outline-secondary rounded-circle btn-lg w-100 w-md-auto"
-                               href="https://www.flowacademy.mt" data-bs-original-title="" title=""
-                               style="border-width: 1px; border-style: solid;">Back
+                            <a class="btn btn-outline-secondary rounded-circle btn-lg w-100 w-md-auto" href="https://www.flowacademy.mt" data-bs-original-title="" title="" style="border-width: 1px; border-style: solid;">Back
                             </a>
                         </p>
                     </div>
@@ -795,24 +773,19 @@
 
             </div>
 
-            <section class="s_call_to_action o_cc o_cc4 o_colored_level pt24 pb0" data-snippet="s_call_to_action"
-                     data-name="Call to Action" style="background-image: none;">
+            <section class="s_call_to_action o_cc o_cc4 o_colored_level pt24 pb0" data-snippet="s_call_to_action" data-name="Call to Action" style="background-image: none;">
                 <div class="container">
                     <div class="row o_grid_mode" data-row-count="4">
-                        <div class="o_colored_level o_grid_item g-col-lg-9 g-height-4 col-lg-9"
-                             style="grid-area: 1 / 1 / 5 / 10; z-index: 1;">
+                        <div class="o_colored_level o_grid_item g-col-lg-9 g-height-4 col-lg-9" style="grid-area: 1 / 1 / 5 / 10; z-index: 1;">
                             <p style="font-size:28px;">Help your organisation grow stronger, smarter, and ready for
                                 the future with <strong>FLOW Academy and the Investing in Skills Scheme</strong>.
                             </p>
                             <p style="font-size:12px;">More than a funding, it's a partnership in progress.</p>
                         </div>
 
-                        <div class="o_colored_level o_grid_item g-col-lg-3 g-height-2 col-lg-3"
-                             style="z-index: 2; grid-area: 1 / 10 / 3 / 13;">
+                        <div class="o_colored_level o_grid_item g-col-lg-3 g-height-2 col-lg-3" style="z-index: 2; grid-area: 1 / 10 / 3 / 13;">
                             <p style="text-align: right;">
-                                <a class="btn btn-fill-custom bg-o-color-2 rounded-circle btn-lg" href="/contactus"
-                                   data-bs-original-title="" title=""
-                                   style="border-width: 1px; border-style: solid;">Request More Info
+                                <a class="btn btn-fill-custom bg-o-color-2 rounded-circle btn-lg" href="/contactus" data-bs-original-title="" title="" style="border-width: 1px; border-style: solid;">Request More Info
                                 </a>
                             </p>
                         </div>
@@ -820,8 +793,7 @@
                 </div>
             </section>
 
-            <section class="s_title pt40 o_colored_level pb0" data-vcss="001" data-snippet="s_title"
-                     data-name="Title" style="background-image: none;">
+            <section class="s_title pt40 o_colored_level pb0" data-vcss="001" data-snippet="s_title" data-name="Title" style="background-image: none;">
                 <div class="container s_allow_columns">
                     <h2 style="text-align: center;">They Already Started Their Learning Journey with FLOW Academy
                     </h2>
@@ -831,11 +803,9 @@
                 </div>
             </section>
 
-            <section class="s_text_block pt40 o_colored_level pb0" data-snippet="s_text_block" data-name="Text"
-                     style="background-image: none;">
+            <section class="s_text_block pt40 o_colored_level pb0" data-snippet="s_text_block" data-name="Text" style="background-image: none;">
                 <div class="container s_allow_columns">
-                    <section class="s_embed_code text-center pb24 pt8" data-snippet="s_embed_code"
-                             data-name="Embed Code">
+                    <section class="s_embed_code text-center pb24 pt8" data-snippet="s_embed_code" data-name="Embed Code">
                         <template class="s_embed_code_saved">
                             <!-- Template content with responsive logo slider -->
                             <!-- (keeping original template structure) -->
@@ -849,69 +819,53 @@
                                     <div class="slider-track" id="track">
                                         <!-- Logo items (keeping original structure) -->
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/148417-04c36062/konformaLogo%20TM.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/148417-04c36062/konformaLogo%20TM.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/148416-cec60ca5/PANTA.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/148416-cec60ca5/PANTA.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/148419-16d24358/MAL%20logo%20updated.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/148419-16d24358/MAL%20logo%20updated.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/148418-099b2bbe/VD%20SUPPLIES.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/148418-099b2bbe/VD%20SUPPLIES.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/149460-d7532b56/GRASSWOOD.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/149460-d7532b56/GRASSWOOD.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/142539-7765327b/NOUV%20LOGO.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/142539-7765327b/NOUV%20LOGO.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/138229-172fdb52/MARINE%20HOUND%20LOGO.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/138229-172fdb52/MARINE%20HOUND%20LOGO.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/149463-17455290/DOUBLE%20TREE%20BY%20HILTON.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/149463-17455290/DOUBLE%20TREE%20BY%20HILTON.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                         <!-- Duplicate set for infinite scroll -->
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/148417-04c36062/konformaLogo%20TM.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/148417-04c36062/konformaLogo%20TM.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/148416-cec60ca5/PANTA.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/148416-cec60ca5/PANTA.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/148419-16d24358/MAL%20logo%20updated.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/148419-16d24358/MAL%20logo%20updated.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/148418-099b2bbe/VD%20SUPPLIES.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/148418-099b2bbe/VD%20SUPPLIES.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/149460-d7532b56/GRASSWOOD.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/149460-d7532b56/GRASSWOOD.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/142539-7765327b/NOUV%20LOGO.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/142539-7765327b/NOUV%20LOGO.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/138229-172fdb52/MARINE%20HOUND%20LOGO.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/138229-172fdb52/MARINE%20HOUND%20LOGO.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                         <div class="slider-item">
-                                            <img src="https://www.flowacademy.mt/web/image/149463-17455290/DOUBLE%20TREE%20BY%20HILTON.webp"
-                                                 loading="lazy" alt="Client logo"/>
+                                            <img src="https://www.flowacademy.mt/web/image/149463-17455290/DOUBLE%20TREE%20BY%20HILTON.webp" loading="lazy" alt="Client logo"/>
                                         </div>
                                     </div>
                                 </div>
@@ -1018,6 +972,8 @@
         </div>
 
     </t>
+
+
 
     </template>
 
