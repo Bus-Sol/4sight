@@ -195,32 +195,32 @@ class EventTypeController(http.Controller):
         )
 
         return response
-    #
-    # @http.route('/new-upcoming-courses', type='http', auth="public", website=True)
-    # def get_upcoming_courses(self, **kw):
-    #     # Switch to company 1 context
-    #     company_1 = request.env['res.company'].sudo().browse(1)
-    #
-    #     event_categs = request.env['event.category'].sudo().with_company(company_1).search([])
-    #     now = datetime.now()
-    #     categs_data = {}
-    #
-    #     for categ in event_categs:
-    #         categs_data[categ.id] = []
-    #         events = request.env['event.event'].sudo().with_company(company_1).search([
-    #             ('company_id', '=', 1),
-    #             ('event_category_id', '=', categ.id),
-    #             ('date_begin', '>=', now),
-    #         ])
-    #         for event in events:
-    #             categs_data[categ.id].append(event)
-    #
-    #     _logger.info(f"categs_data >> {categs_data}")
-    #
-    #     return (request.render('website.upcoming-courses_e0fcf3', {
-    #         'categs_data': categs_data,
-    #     }))
-    #
+
+    @http.route('/upcoming-courses', type='http', auth="public", website=True)
+    def get_upcoming_courses(self, **kw):
+        # Switch to company 1 context
+        company_1 = request.env['res.company'].sudo().browse(1)
+
+        event_categs = request.env['event.category'].sudo().with_company(company_1).search([])
+        now = datetime.now()
+        categs_data = {}
+
+        for categ in event_categs:
+            categs_data[categ.id] = []
+            events = request.env['event.event'].sudo().with_company(company_1).search([
+                ('company_id', '=', 1),
+                ('event_category_id', '=', categ.id),
+                ('date_begin', '>=', now),
+            ])
+            for event in events:
+                categs_data[categ.id].append(event)
+
+        _logger.info(f"categs_data >> {categs_data}")
+
+        return (request.render('website.upcoming-courses-1', {
+            'categs_data': categs_data,
+        }))
+
     # # Individual Pages
     #
     # @http.route('/courses-2026', type='http', auth="public", website=True)
