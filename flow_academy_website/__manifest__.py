@@ -25,6 +25,8 @@
         'views/website_templates.xml',
         'views/ticket_registration.xml',
         'views/address_template.xml',
+        'views/email_templates.xml',
+
         'security/ir.model.access.csv'
     ],
     'assets': {
