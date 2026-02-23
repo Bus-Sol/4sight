@@ -3,7 +3,7 @@
     <data>
 
     <record id="flow_event_subscription" model="mail.template">
-    <field name="name">Event: Registration Confirmation</field>
+    <field name="name">Event: Registration Confirmation(Flow)</field>
     <field name="model_id" ref="event.model_event_registration"/>
     <field name="subject">Your registration at {{ object.event_id.name }}</field>
     <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') }}</field>
@@ -35,7 +35,7 @@
                             View Ticket
                         </a>
                     </div>
-                    <img src='/flow_academy_website/static/src/image/flow_logo.jpg' style="padding: 0px; margin: 0px; height: auto; width: 100px;" t-att-alt="Flow Academy"/>
+                    <img src='/flow_academy_website/static/src/image/flow_logo.jpg' style="padding: 0px; margin: 0px; height: auto; width: 100px;" alt="Flow Academy"/>
 
 
                 </td></tr>
@@ -246,10 +246,10 @@
     <t t-if="object.company_id">
         <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
         <tr><td style="text-align: center; font-size: 14px;">
-            Sent by <a target="_blank" t-attf-href="{{ object.company_id.website }}" style="color: #875A7B;" t-out="object.company_id.name or ''">YourCompany</a>
+            Sent by <a target="_blank" href="https://www.flowacademy.mt/" style="color: #875A7B;" >Flow Academy</a>
             <t t-if="is_online">
                 <br />
-                Discover <a href="/event" style="color:#875A7B;">all our events</a>.
+                Discover <a href="https://www.flowacademy.mt/courses" style="color:#875A7B;">all our courses</a>.
             </t>
         </td></tr>
         </table>
