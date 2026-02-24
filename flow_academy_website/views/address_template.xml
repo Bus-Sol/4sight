@@ -133,6 +133,53 @@
                 <attribute name="class">a-submit a-submit-disable a-submit-loading btn btn-primary w-100 w-md-auto order-1 order-md-3 rounded-circle</attribute>
             </xpath>
 
+            <xpath expr="//form/div[1]" position="inside">
+                <div class="w-100"/>
+                <br/>
+                <br/>
+                <div class="col-lg-12" name="privacy">
+                <div class="form-check  mt-2 mb-2">
+                    <label>
+                        <input
+                            type="checkbox"
+                            id="privacy_terms"
+                            class="form-check-input mr8"
+                            name="privacy_terms"
+                            />
+                        <span class="form-check-label">
+                            I confirm that I have read and understood the
+                            <a href="https://www.flowacademy.mt/privacy-policy" target="_blank">
+                                Privacy Policy
+                            </a>
+                            and
+
+                            <a href="https://www.flowacademy.mt/terms-conditions" target="_blank">
+                                Terms &amp; Conditions.
+                            </a>
+
+
+                        </span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-lg-12" name="marketing_subscription">
+                <div class="form-check  mt-2 mb-2">
+                    <label>
+                        <input
+                            type="checkbox"
+                            id="marketing_subscription"
+                            class="form-check-input mr8"
+                            name="marketing_subscription"
+                            />
+                        <span class="form-check-label">
+                            I would like to receive marketing communications from Flow Academy.
+
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            </xpath>
         </template>
 
 
