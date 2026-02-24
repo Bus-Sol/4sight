@@ -167,6 +167,9 @@ class WebsiteEventSale(WebsiteSale):
         if all_values.get('privacy_terms'):
             checkout['privacy_terms'] = all_values.get('privacy_terms')
 
+        if all_values.get('marketing_subscription'):
+            checkout['marketing_subscription'] = all_values.get('marketing_subscription')
+
         Partner = request.env['res.partner']
         if mode[0] == 'new':
             partner_id = Partner.sudo().with_context(tracking_disable=True).create(checkout).id
