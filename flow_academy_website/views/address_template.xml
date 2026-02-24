@@ -137,7 +137,7 @@
                 <div class="w-100"/>
                 <br/>
                 <br/>
-                <div class="col-lg-12" name="privacy">
+                <div t-attf-class="#{error.get('privacy_terms') and 'o_has_error'} col-lg-12 mb-2" name="privacy">
                 <div class="form-check  mt-2 mb-2">
                     <label>
                         <input
@@ -156,6 +156,9 @@
                             <a href="https://www.flowacademy.mt/terms-conditions" target="_blank">
                                 Terms &amp; Conditions.
                             </a>
+                            <span class="text-danger">
+                                *
+                            </span>
 
 
                         </span>

@@ -22,9 +22,9 @@ WebsiteSale.include({
 
         const isCompany = this.contactTypeSelect.val() === 'company';
         if (isCompany) {
-            this.fieldRequiredInput.val('name,street,city,country_id,vat,phone,email, privacy_terms');
+            this.fieldRequiredInput.val('name,street,city,country_id,vat,phone,email,privacy_terms');
         } else {
-            this.fieldRequiredInput.val('firstname,lastname,phone,email, privacy_terms');
+            this.fieldRequiredInput.val('firstname,lastname,phone,email,privacy_terms');
         }
 
 
