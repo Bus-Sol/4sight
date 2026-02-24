@@ -4,7 +4,7 @@
 
         <template id="flow_event_full_page_ticket" inherit_id="event.event_report_template_full_page_ticket">
 
-            <xpath expr="//div[@hasclass('o_event_full_page_left_details')]" position="replace">
+            <xpath expr="//div[hasclass('o_event_full_page_left_details')]" position="replace">
                 <div class="o_event_full_page_left_details ps-3 pt-4 pb-3 pe-2">
                         <table style="width:100%;">
                             <tr>
