@@ -6,7 +6,7 @@
 
             <xpath expr="//div[hasclass('o_event_full_page_left_details')]" position="replace">
                 <div class="o_event_full_page_left_details ps-3 pt-4 pb-3 pe-2">
-                        <table style="width:100%;">
+                        <table style="width:100%; border: none;">
                             <tr>
                                 <td style="width:70%;">
                                     <span itemprop="startDate" t-field="event.date_begin"
