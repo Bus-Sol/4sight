@@ -137,16 +137,12 @@
                 <div class="w-100"/>
                 <br/>
                 <br/>
-                <div t-attf-class="#{error.get('privacy_terms') and 'o_has_error'} col-lg-12 mb-2" name="privacy">
-                <div class="form-check  mt-2 mb-2">
+                <div t-attf-class="#{error.get('privacy_terms') and 'o_has_error'} col-lg-12" name="privacy">
+                <div class="form-check  mt-2">
                     <label>
-                        <input
-                            type="checkbox"
-                            id="privacy_terms"
-                            class="form-check-input mr8"
-                            name="privacy_terms"
-                            />
+                        <input type="checkbox" id="privacy_terms" class="form-check-input mr8" name="privacy_terms"/>
                         <span class="form-check-label">
+                            <strong>
                             I confirm that I have read and understood the
                             <a href="https://www.flowacademy.mt/privacy-policy" target="_blank">
                                 Privacy Policy
@@ -156,6 +152,8 @@
                             <a href="https://www.flowacademy.mt/terms-conditions" target="_blank">
                                 Terms &amp; Conditions.
                             </a>
+                            </strong>
+
                             <span class="text-danger">
                                 *
                             </span>
@@ -168,16 +166,13 @@
             <div class="col-lg-12" name="marketing_subscription">
                 <div class="form-check  mt-2 mb-2">
                     <label>
-                        <input
-                            type="checkbox"
-                            id="marketing_subscription"
-                            class="form-check-input mr8"
-                            name="marketing_subscription"
-                            />
+                        <input type="checkbox" id="marketing_subscription" class="form-check-input mr8" name="marketing_subscription"/>
+                        <strong>
                         <span class="form-check-label">
-                            I would like to receive marketing communications from Flow Academy.
+                            I would like to keep up to date with new courses, dates and latest news from Flow Academy.
 
                         </span>
+                        </strong>
                     </label>
                 </div>
             </div>
