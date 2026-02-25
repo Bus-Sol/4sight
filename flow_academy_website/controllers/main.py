@@ -175,6 +175,7 @@ class EventTypeController(http.Controller):
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', category.id),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         request.session['use_flow_logo'] = True
@@ -211,6 +212,7 @@ class EventTypeController(http.Controller):
                 ('company_id', '=', 1),
                 ('event_category_id', '=', categ.id),
                 ('date_begin', '>=', now),
+                ('stage_id.pipe_end', '=', False)
             ])
             for event in events:
                 categs_data[categ.id].append(event)
@@ -232,6 +234,7 @@ class EventTypeController(http.Controller):
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 1),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"categ 1 events >> {events}")
@@ -249,6 +252,7 @@ class EventTypeController(http.Controller):
         seo_events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 2),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"seo_events >> {seo_events}")
@@ -266,6 +270,7 @@ class EventTypeController(http.Controller):
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 3),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"categ 3 events >> {events}")
@@ -283,6 +288,7 @@ class EventTypeController(http.Controller):
         ai_events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 4),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"ai_events >> {ai_events}")
@@ -300,6 +306,7 @@ class EventTypeController(http.Controller):
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 5),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"categ 5 events >> {events}")
@@ -318,6 +325,7 @@ class EventTypeController(http.Controller):
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 6),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"categ 6 events >> {events}")
@@ -335,6 +343,7 @@ class EventTypeController(http.Controller):
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 7),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"categ 7 events >> {events}")
@@ -354,6 +363,7 @@ class EventTypeController(http.Controller):
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 8),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"categ 8 events >> {events}")
@@ -372,6 +382,7 @@ class EventTypeController(http.Controller):
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 9),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"categ 9 events >> {events}")
@@ -389,6 +400,7 @@ class EventTypeController(http.Controller):
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 10),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"categ 1 events >> {events}")
@@ -406,6 +418,7 @@ class EventTypeController(http.Controller):
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 11),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"categ 11 events >> {events}")
@@ -423,6 +436,7 @@ class EventTypeController(http.Controller):
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 12),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"categ 12 events >> {events}")
@@ -440,6 +454,7 @@ class EventTypeController(http.Controller):
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 13),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"categ 13 events >> {events}")
@@ -457,6 +472,7 @@ class EventTypeController(http.Controller):
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 14),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"categ 1 events >> {events}")
@@ -474,6 +490,7 @@ class EventTypeController(http.Controller):
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 15),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"categ 15 events >> {events}")
@@ -491,6 +508,7 @@ class EventTypeController(http.Controller):
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', 16),
             ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
         ])
 
         _logger.info(f"categ 16 events >> {events}")

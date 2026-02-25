@@ -35,7 +35,7 @@ class Website(models.Model):
         _logger.info("order to check.sale_order_template_id %s", order.sale_order_template_id)
         flow_temp = self.env['sale.order.template'].sudo().search([('is_flow_template' ,'=', True)], limit=1)
 
-        flow = order.sale_order_template_id == flow_temp.id
+        flow = order.sale_order_template_id.id == flow_temp.id
         custom_kwargs = request.session.get('custom_checkout_data', {})
         categ_id = False
 
