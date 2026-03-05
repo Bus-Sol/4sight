@@ -170,6 +170,9 @@ class WebsiteEventSale(WebsiteSale):
         if all_values.get('marketing_subscription'):
             checkout['marketing_subscription'] = all_values.get('marketing_subscription')
 
+        if all_values.get('confirm_flow_fund'):
+            checkout['confirm_flow_fund'] = all_values.get('confirm_flow_fund')
+
         Partner = request.env['res.partner']
         if mode[0] == 'new':
             partner_id = Partner.sudo().with_context(tracking_disable=True).create(checkout).id

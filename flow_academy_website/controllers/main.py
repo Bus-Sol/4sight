@@ -243,7 +243,7 @@ class EventTypeController(http.Controller):
             'events': events,
         })
 
-    @http.route('/marketing-communication/seo-for-marketers', type='http', auth="public", website=True)
+    @http.route('/courses/marketing-communication/seo-for-marketers', type='http', auth="public", website=True)
     def get_upcoming_courses_2(self, **kw):
         # Switch to company 1 context
         company_1 = request.env['res.company'].sudo().browse(1)

@@ -137,6 +137,27 @@
                 <div class="w-100"/>
                 <br/>
                 <br/>
+
+                 <div class="col-lg-12" name="confirm_flow_fund">
+                    <div class="form-check  mt-2 mb-2">
+                        <label>
+                            <input type="checkbox" id="confirm_flow_fund" class="form-check-input mr8" name="confirm_flow_fund"/>
+                            <strong>
+                                <span class="form-check-label">
+                                II confirm we will be applying for the
+                                <a href="https://www.flowacademy.mt/funding" target="_blank">
+                                Investing in Skills
+                                </a>
+
+                                 scheme from Jobsplus.
+
+                                </span>
+                            </strong>
+                        </label>
+                    </div>
+                </div>
+
+
                 <div t-attf-class="#{error.get('privacy_terms') and 'o_has_error'} col-lg-12" name="privacy">
                 <div class="form-check  mt-2">
                     <label>
