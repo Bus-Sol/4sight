@@ -144,13 +144,11 @@
                             <input type="checkbox" id="confirm_flow_fund" class="form-check-input mr8" name="confirm_flow_fund"/>
                             <strong>
                                 <span class="form-check-label">
-                                II confirm we will be applying for the
+                                I confirm we will be applying for the
                                 <a href="https://www.flowacademy.mt/funding" target="_blank">
                                 Investing in Skills
                                 </a>
-
                                  scheme from Jobsplus.
-
                                 </span>
                             </strong>
                         </label>
