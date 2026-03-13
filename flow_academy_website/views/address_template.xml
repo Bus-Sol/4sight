@@ -138,8 +138,8 @@
                 <br/>
                 <br/>
 
-                 <div class="col-lg-12" name="confirm_flow_fund">
-                    <div class="form-check  mt-2 mb-2">
+                 <div class="o_company_field col-lg-12" name="confirm_flow_fund">
+                    <div class="form-check  mt-2">
                         <label>
                             <input type="checkbox" id="confirm_flow_fund" class="form-check-input mr8" name="confirm_flow_fund"/>
                             <strong>
