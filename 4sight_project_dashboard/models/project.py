@@ -1,3 +1,4 @@
+import ast
 from odoo import api, fields, models
 
 
@@ -30,13 +31,18 @@ class Project(models.Model):
         for rec in self:
             rec.is_account_manager = self.env.user.has_group('account.group_account_manager')
 
+
     def action_open_project(self):
         self.ensure_one()
-        action = self.env['ir.actions.act_window']._for_xml_id('project.open_view_project_all')
+        action = self.env['ir.actions.act_window'].with_context(active_id=self.id)._for_xml_id('project.open_view_project_all')
         action["views"] = [
             (self.env.ref("project.edit_project").id, "form")
         ]
         action['res_id'] = self.id
+        context = action['context'].replace('active_id', str(self.id))
+        context = ast.literal_eval(context)
+
+        action['context'] = context
         return action
 
     @api.depends('sale_order_id','sale_order_id.invoice_ids')
