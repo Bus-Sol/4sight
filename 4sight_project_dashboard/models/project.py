@@ -1,3 +1,4 @@
+import ast
 from odoo import api, fields, models
 
 
@@ -32,10 +33,12 @@ class Project(models.Model):
 
     def action_open_project(self):
         self.ensure_one()
-        action = self.env['ir.actions.act_window']._for_xml_id('project.open_view_project_all')
+        action = self.env['ir.actions.act_window'].with_context(active_id=self.id)._for_xml_id(
+            '4sight_project_dashboard.project_project_action_view')
         action["views"] = [
             (self.env.ref("project.edit_project").id, "form")
         ]
+
         action['res_id'] = self.id
         return action
 
