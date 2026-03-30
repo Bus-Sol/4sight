@@ -28,6 +28,8 @@
                     <field name="tasks_remaining_hours"  widget="float_time" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user" column_invisible="1" sum="Total"/>
                     <field name="project_remaining_hours"  widget="float_time" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user" sum="Total"/>
                     <field name="remaining_from_paid" widget="float_time" decoration-danger="paid_progress &gt;= 100" decoration-warning="paid_progress &gt;= 80 and paid_progress &lt; 100" sum="Total" groups="account.group_account_manager, project.group_project_manager"/>
+                    <field name="last_update_status" string="Status" nolabel="1" optional="show" widget="project_state_selection"/>
+                    <field name="last_update_status" string="Status" nolabel="1" optional="show"/>
                     <field name="paid_progress" string="Paid Progress" widget="progressbar"  options="{'overflow_class': 'bg-danger'}" groups="account.group_account_manager, project.group_project_manager"/>
                     <field name="progress" string="Project Progress" widget="project_task_progressbar" options="{'overflow_class': 'bg-danger'}" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="sale_order_id"/>
