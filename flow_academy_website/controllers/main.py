@@ -513,6 +513,25 @@ class EventTypeController(http.Controller):
 
         _logger.info(f"categ 16 events >> {events}")
 
+        return (request.render('website.ai-for-work-1_1b3066_13c129', {
+            'events': events,
+        }))
+
+
+    @http.route('/courses/leadership-change-delivery/agile-fundamentals', type='http', auth="public", website=True)
+    def get_upcoming_courses_17(self, **kw):
+        # Switch to company 1 context
+        company_1 = request.env['res.company'].sudo().browse(1)
+        now = datetime.now()
+
+        events = request.env['event.event'].sudo().with_company(company_1).search([
+            ('event_category_id', '=', 17),
+            ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
+        ])
+
+        _logger.info(f"categ 16 events >> {events}")
+
         return request.render('website.ai-for-work-1_1b3066_13c129', {
             'events': events,
         })
