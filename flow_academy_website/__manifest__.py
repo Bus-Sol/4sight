@@ -15,6 +15,7 @@
         'web',
         'crm',
         'sale_crm',
+        'sale_management',
         'event',
         'event_sale',
         'website_event',
@@ -24,6 +25,7 @@
     ],
     'data': [
         'views/crm_lead.xml',
+        'views/crm_team.xml',
         'views/event_category.xml',
         'views/event.xml',
         'views/event_question.xml',
