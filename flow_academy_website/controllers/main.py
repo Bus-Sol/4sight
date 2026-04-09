@@ -530,9 +530,9 @@ class EventTypeController(http.Controller):
             ('stage_id.pipe_end', '=', False)
         ])
 
-        _logger.info(f"categ 16 events >> {events}")
+        _logger.info(f"categ 17 events >> {events}")
 
-        return request.render('website.ai-for-work-1_1b3066_13c129', {
+        return request.render('website.ai-for-work-1_1b3066_13c129_7dfdcb_390e93', {
             'events': events,
         })
 
