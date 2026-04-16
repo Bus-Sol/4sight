@@ -8,8 +8,8 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <tree string="Projects" editable="bottom" create="false" default_order="partner_id, name">
-                    <field name="partner_id" optional="show" string="Customer" widget="res_partner_many2one"/>
-                    <field name="display_name" string="Name" class="fw-bold"/>
+                    <field name="partner_id" optional="show" string="Customer" class="text-wrap text-start"/>
+                    <field name="display_name" string="Name" class="fw-bold text-wrap"/>
                     <button string="View" name="action_open_project" type="object"/>
 
                     <field name="name" string="Name" column_invisible="1"/>
