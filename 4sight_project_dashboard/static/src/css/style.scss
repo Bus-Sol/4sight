@@ -27,9 +27,9 @@
     .o_list_col_w_20rem,
     .o_list_col_w_24rem,
     .o_list_col_w_30rem {
-        width: var(--o-list-column-width);
-        min-width: var(--o-list-column-width);
-        max-width: var(--o-list-column-width);
+        width: var(--o-list-column-width) !important;
+        min-width: var(--o-list-column-width) !important;
+        max-width: var(--o-list-column-width) !important;
     }
 
     .o_list_col_w_6rem {
