@@ -8,19 +8,19 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <tree string="Projects" editable="bottom" create="false" default_order="partner_id, name">
-                    <field name="partner_id" optional="show" string="Customer" class="text-wrap text-start o_list_col_w_12rem"/>
+                    <field name="partner_id" string="Customer" class="text-wrap text-start o_list_col_w_10rem"/>
                     <field name="display_name" string="Name" class="fw-bold text-wrap o_list_col_w_16rem"/>
                     <button string="View" name="action_open_project" type="object"/>
 
                     <field name="name" string="Name" column_invisible="1"/>
                     <field name="is_account_manager" column_invisible="1"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
-                    <field name="user_id" optional="show" string="Project Manager" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}" class="fw-bold text-wrap o_list_col_w_16rem"/>
+                    <field name="user_id" string="Project Manager" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}" class="fw-bold text-wrap o_list_col_w_10rem"/>
                     <field name="company_id" optional="hide" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="date_start" string="Planned Date" widget="daterange" options="{'end_date_field': 'date', 'always_range': '1'}" optional="hide"/>
-                    <field name="stage_id" options="{'no_open': True}" domain="[('company_id', 'in', (company_id, False))]" optional="show"/>
-                    <field name="allocated_hours" widget="float_time" sum="Total" optional="show"/>
+                    <field name="stage_id" options="{'no_open': True}" domain="[('company_id', 'in', (company_id, False))]"/>
+                    <field name="allocated_hours" widget="float_time" sum="Total"/>
                     <field name="tasks_allocated_hours" widget="float_time" column_invisible="1" sum="Total"/>
                     <field name="invoiced_hours" widget="float_time"  column_invisible="1" groups="account.group_account_manager,project.group_project_manager"/>
                     <field name="paid_hours" widget="float_time" readonly="not is_account_manager" groups="account.group_account_manager,project.group_project_manager" sum="Total" optional="show"/>
@@ -30,17 +30,17 @@
                     <field name="remaining_from_paid" widget="float_time" decoration-danger="paid_progress &gt;= 100" decoration-warning="paid_progress &gt;= 80 and paid_progress &lt; 100" sum="Total" groups="account.group_account_manager, project.group_project_manager" optional="show"/>
                     <field name="last_update_status" string="Status" nolabel="1" optional="show" widget="project_state_selection"/>
                     <field name="last_update_status" string="Status" nolabel="1" optional="show"/>
-                    <field name="paid_progress" string="Paid Progress" widget="progressbar"  options="{'overflow_class': 'bg-danger'}" groups="account.group_account_manager, project.group_project_manager" optional="show"/>
-                    <field name="progress" string="Project Progress" widget="project_task_progressbar" options="{'overflow_class': 'bg-danger'}" groups="hr_timesheet.group_hr_timesheet_user" optional="show"/>
+                    <field name="paid_progress" string="Paid Progress" widget="progressbar"  options="{'overflow_class': 'bg-danger'}" groups="account.group_account_manager, project.group_project_manager"/>
+                    <field name="progress" string="Project Progress" widget="project_task_progressbar" options="{'overflow_class': 'bg-danger'}" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="sale_order_id" optional="show"/>
                     <field name="invoice_ids" widget="many2many_tags" groups="account.group_account_manager" optional="hide"/>
                     <field name="invoice_total" groups="account.group_account_manager" sum="Total" optional="show"/>
                     <field name="invoice_due" groups="account.group_account_manager" sum="Total" optional="show"/>
 
-                    <field name="achievements" optional="show"/>
-                    <field name="next_deliverables" optional="show"/>
-                    <field name="dependencies" optional="show"/>
-                    <field name="action_items" optional="show"/>
+                    <field name="achievements" optional="show" class="text-wrap text-start o_list_col_w_20rem"/>
+                    <field name="next_deliverables" optional="show" class="text-wrap text-start o_list_col_w_20rem"/>
+                    <field name="dependencies" optional="show" class="text-wrap text-start o_list_col_w_20rem"/>
+                    <field name="action_items" optional="show" class="text-wrap text-start o_list_col_w_20rem"/>
 
                     <button string="View Tasks" name="action_view_tasks" type="object"/>
                 </tree>
