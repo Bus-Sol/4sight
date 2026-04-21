@@ -27,6 +27,7 @@
             '4sight_project_dashboard/static/src/components/**/*.js',
             '4sight_project_dashboard/static/src/components/**/*.xml',
             '4sight_project_dashboard/static/src/components/**/*.scss',
+            '4sight_project_dashboard/static/src/js/**/*.js',
             '4sight_project_dashboard/static/src/css/style.scss',
         ],
     },

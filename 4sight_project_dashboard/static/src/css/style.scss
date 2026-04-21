@@ -1,5 +1,74 @@
-.o_list_view th {
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: unset !important;
+.o_list_view .o_list_renderer .o_list_table thead th {
+    vertical-align: top;
+
+    .text-truncate {
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .fa,
+    .oi {
+        flex-shrink: 0;
+        margin-top: 0.15rem;
+    }
+}
+
+.o_list_view .o_list_renderer .o_list_table {
+    .o_list_col_w_6rem,
+    .o_list_col_w_8rem,
+    .o_list_col_w_10rem,
+    .o_list_col_w_12rem,
+    .o_list_col_w_14rem,
+    .o_list_col_w_16rem,
+    .o_list_col_w_18rem,
+    .o_list_col_w_20rem,
+    .o_list_col_w_24rem,
+    .o_list_col_w_30rem {
+        width: var(--o-list-column-width);
+        min-width: var(--o-list-column-width);
+        max-width: var(--o-list-column-width);
+    }
+
+    .o_list_col_w_6rem {
+        --o-list-column-width: 6rem;
+    }
+
+    .o_list_col_w_8rem {
+        --o-list-column-width: 8rem;
+    }
+
+    .o_list_col_w_10rem {
+        --o-list-column-width: 10rem;
+    }
+
+    .o_list_col_w_12rem {
+        --o-list-column-width: 12rem;
+    }
+
+    .o_list_col_w_14rem {
+        --o-list-column-width: 14rem;
+    }
+
+    .o_list_col_w_16rem {
+        --o-list-column-width: 16rem;
+    }
+
+    .o_list_col_w_18rem {
+        --o-list-column-width: 18rem;
+    }
+
+    .o_list_col_w_20rem {
+        --o-list-column-width: 20rem;
+    }
+
+    .o_list_col_w_24rem {
+        --o-list-column-width: 24rem;
+    }
+
+    .o_list_col_w_30rem {
+        --o-list-column-width: 30rem;
+    }
 }
