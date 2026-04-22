@@ -536,3 +536,79 @@ class EventTypeController(http.Controller):
             'events': events,
         })
 
+
+
+    @http.route('/courses/leadership-change-delivery/transformative-leadership-1', type='http', auth="public", website=True)
+    def get_upcoming_courses_19(self, **kw):
+        # Switch to company 1 context
+        company_1 = request.env['res.company'].sudo().browse(1)
+        now = datetime.now()
+
+        events = request.env['event.event'].sudo().with_company(company_1).search([
+            ('event_category_id', '=', 19),
+            ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
+        ])
+
+        _logger.info(f"categ 19 events >> {events}")
+
+        return request.render('website.ai-for-work-1_3efddc_c6cf19', {
+            'events': events,
+        })
+
+    @http.route('/courses/leadership-change-delivery/transformative-leadership-2', type='http', auth="public",
+                website=True)
+    def get_upcoming_courses_20(self, **kw):
+        # Switch to company 1 context
+        company_1 = request.env['res.company'].sudo().browse(1)
+        now = datetime.now()
+
+        events = request.env['event.event'].sudo().with_company(company_1).search([
+            ('event_category_id', '=', 20),
+            ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
+        ])
+
+        _logger.info(f"categ 20 events >> {events}")
+
+        return request.render('website.ai-for-work-1_3efddc_c6cf19_29177f', {
+            'events': events,
+        })
+
+    @http.route('/courses/leadership-change-delivery/transformative-leadership-3', type='http', auth="public",
+                website=True)
+    def get_upcoming_courses_21(self, **kw):
+        # Switch to company 1 context
+        company_1 = request.env['res.company'].sudo().browse(1)
+        now = datetime.now()
+
+        events = request.env['event.event'].sudo().with_company(company_1).search([
+            ('event_category_id', '=', 21),
+            ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
+        ])
+
+        _logger.info(f"categ 21 events >> {events}")
+
+        return request.render('website.ai-for-work-1_3efddc_c6cf19_f67ebe', {
+            'events': events,
+        })
+
+    @http.route('/courses/leadership-change-delivery/transformative-leadership-4', type='http', auth="public",
+                website=True)
+    def get_upcoming_courses_22(self, **kw):
+        # Switch to company 1 context
+        company_1 = request.env['res.company'].sudo().browse(1)
+        now = datetime.now()
+
+        events = request.env['event.event'].sudo().with_company(company_1).search([
+            ('event_category_id', '=', 22),
+            ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
+        ])
+
+        _logger.info(f"categ 22 events >> {events}")
+
+        return request.render('website.ai-for-work-1_3efddc_c6cf19_29177f_f1504e', {
+            'events': events,
+        })
