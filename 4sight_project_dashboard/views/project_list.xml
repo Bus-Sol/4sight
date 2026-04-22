@@ -20,29 +20,28 @@
                     <field name="company_id" column_invisible="True"/>
                     <field name="date_start" string="Planned Date" widget="daterange" options="{'end_date_field': 'date', 'always_range': '1'}" optional="hide"/>
                     <field name="stage_id" options="{'no_open': True}" domain="[('company_id', 'in', (company_id, False))]"/>
-                    <field name="allocated_hours" widget="float_time" sum="Total"/>
-                    <field name="tasks_allocated_hours" widget="float_time" column_invisible="1" sum="Total"/>
-                    <field name="invoiced_hours" widget="float_time"  column_invisible="1" groups="account.group_account_manager,project.group_project_manager"/>
-                    <field name="paid_hours" widget="float_time" readonly="not is_account_manager" groups="account.group_account_manager,project.group_project_manager" sum="Total" optional="show"/>
-                    <field name="effective_hours" widget="float_time" sum="Total"/>
-                    <field name="tasks_remaining_hours"  widget="float_time" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user" column_invisible="1" sum="Total"/>
-                    <field name="project_remaining_hours"  widget="float_time" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user" sum="Total" optional="show"/>
-                    <field name="remaining_from_paid" widget="float_time" decoration-danger="paid_progress &gt;= 100" decoration-warning="paid_progress &gt;= 80 and paid_progress &lt; 100" sum="Total" groups="account.group_account_manager, project.group_project_manager" optional="show"/>
+                    <field name="allocated_hours" widget="float_time" sum="Total" class="fw-bold text-wrap o_list_col_w_8rem"/>
+                    <field name="tasks_allocated_hours" widget="float_time" column_invisible="1" sum="Total" class="fw-bold text-wrap o_list_col_w_8rem"/>
+                    <field name="invoiced_hours" widget="float_time" column_invisible="1" groups="account.group_account_manager,project.group_project_manager" class="fw-bold text-wrap o_list_col_w_8rem"/>
+                    <field name="paid_hours" widget="float_time" readonly="not is_account_manager" groups="account.group_account_manager,project.group_project_manager" sum="Total" optional="show" class="fw-bold text-wrap o_list_col_w_8rem"/>
+                    <field name="effective_hours" widget="float_time" sum="Total" class="fw-bold text-wrap o_list_col_w_8rem"/>
+                    <field name="tasks_remaining_hours" widget="float_time" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user" column_invisible="1" sum="Total" class="fw-bold text-wrap o_list_col_w_8rem"/>
+                    <field name="project_remaining_hours" widget="float_time" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" groups="hr_timesheet.group_hr_timesheet_user" sum="Total" optional="show" class="fw-bold text-wrap o_list_col_w_8rem"/>
+                    <field name="remaining_from_paid" widget="float_time" decoration-danger="paid_progress &gt;= 100" decoration-warning="paid_progress &gt;= 80 and paid_progress &lt; 100" sum="Total" groups="account.group_account_manager, project.group_project_manager" optional="show" class="fw-bold text-wrap o_list_col_w_8rem"/>
                     <field name="last_update_status" string="Status" nolabel="1" optional="show" widget="project_state_selection"/>
-                    <field name="last_update_status" string="Status" nolabel="1" optional="show"/>
-                    <field name="paid_progress" string="Paid Progress" widget="progressbar"  options="{'overflow_class': 'bg-danger'}" groups="account.group_account_manager, project.group_project_manager"/>
-                    <field name="progress" string="Project Progress" widget="project_task_progressbar" options="{'overflow_class': 'bg-danger'}" groups="hr_timesheet.group_hr_timesheet_user"/>
-                    <field name="sale_order_id" optional="show"/>
-                    <field name="invoice_ids" widget="many2many_tags" groups="account.group_account_manager" optional="hide"/>
-                    <field name="invoice_total" groups="account.group_account_manager" sum="Total" optional="show"/>
-                    <field name="invoice_due" groups="account.group_account_manager" sum="Total" optional="show"/>
+                    <field name="last_update_status" string="Status" nolabel="1" optional="show" class="fw-bold text-wrap o_list_col_w_6rem"/>
+                    <field name="paid_progress" string="Paid Progress" widget="progressbar" options="{'overflow_class': 'bg-danger'}" groups="account.group_account_manager, project.group_project_manager" class="fw-bold text-wrap o_list_col_w_10rem"/>
+                    <field name="progress" string="Project Progress" widget="project_task_progressbar" options="{'overflow_class': 'bg-danger'}" groups="hr_timesheet.group_hr_timesheet_user" class="fw-bold text-wrap o_list_col_w_10rem"/>
+                    <field name="sale_order_id" optional="show" class="fw-bold text-wrap o_list_col_w_8rem"/>
+                    <field name="invoice_ids" widget="many2many_tags" groups="account.group_account_manager" optional="hide" class="fw-bold text-wrap o_list_col_w_8rem"/>
+                    <field name="invoice_total" groups="account.group_account_manager" sum="Total" optional="show" class="fw-bold text-wrap o_list_col_w_8rem"/>
+                    <field name="invoice_due" groups="account.group_account_manager" sum="Total" optional="show" class="fw-bold text-wrap o_list_col_w_8rem"/>
 
-                    <field name="achievements" optional="show" class="text-wrap text-start o_list_col_w_20rem"/>
-                    <field name="next_deliverables" optional="show" class="text-wrap text-start o_list_col_w_20rem"/>
-                    <field name="dependencies" optional="show" class="text-wrap text-start o_list_col_w_20rem"/>
-                    <field name="action_items" optional="show" class="text-wrap text-start o_list_col_w_20rem"/>
+                    <field name="achievements" optional="show" class="text-wrap text-start o_list_col_w_16rem"/>
+                    <field name="next_deliverables" optional="show" class="text-wrap text-start o_list_col_w_16rem"/>
+                    <field name="dependencies" optional="show" class="text-wrap text-start o_list_col_w_16rem"/>
+                    <field name="action_items" optional="show" class="text-wrap text-start o_list_col_w_16rem"/>
 
-                    <button string="View Tasks" name="action_view_tasks" type="object"/>
                 </tree>
             </field>
         </record>
