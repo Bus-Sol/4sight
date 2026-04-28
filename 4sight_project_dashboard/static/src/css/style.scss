@@ -1,20 +1,20 @@
-.o_list_view .o_list_renderer .o_list_table thead th {
-    vertical-align: top;
-
-    .text-truncate {
-        white-space: normal !important;
-        overflow: visible !important;
-        text-overflow: unset !important;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-    }
-
-    .fa,
-    .oi {
-        flex-shrink: 0;
-        margin-top: 0.15rem;
-    }
-}
+// .o_list_view .o_list_renderer .o_list_table thead th {
+//     vertical-align: top;
+//
+//     .text-truncate {
+//         white-space: normal !important;
+//         overflow: visible !important;
+//         text-overflow: unset !important;
+//         overflow-wrap: anywhere;
+//         word-break: break-word;
+//     }
+//
+//     .fa,
+//     .oi {
+//         flex-shrink: 0;
+//         margin-top: 0.15rem;
+//     }
+// }
 
 .o_list_view .o_list_renderer .o_list_table {
     .o_list_col_w_6rem,
