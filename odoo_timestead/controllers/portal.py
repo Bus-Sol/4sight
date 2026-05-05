@@ -40,7 +40,7 @@ class PortalJobsheet(CustomerPortal):
     ):
         Service = request.env['jobsheet.service'].sudo()
 
-        partner = request.env.user.partner_id
+        partner = request.env.user.partner_id.commercial_partner_id
         values = self._prepare_portal_layout_values()
 
 
