@@ -5,6 +5,10 @@
 
         <template id="modal_ticket_registration" inherit_id="website_event.modal_ticket_registration">
 
+            <xpath expr="//div[hasclass('modal-content')]" position="before">
+                <t t-set="event" t-value="event.sudo()"/>
+                <t t-set="website" t-value="website.sudo()"/>
+            </xpath>
 
             <!--<xpath expr="//div[hasclass('o_wevent_registration_title')]" position="after">-->
             <!--    <div class="o_wevent_registration_title modal-title fs-5" id="staticLabel">Seats</div>-->
