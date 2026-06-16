@@ -172,11 +172,20 @@ class EventTypeController(http.Controller):
 
         now = datetime.now()
 
+        website_sudo = request.website.sudo().with_company(company_1)
+        pricelist = website_sudo.pricelist_ids[:1] or request.env['product.pricelist'].sudo().with_company(company_1).search([
+            '|',
+            ('company_id', '=', False),
+            ('company_id', '=', company_1.id),
+        ], limit=1)
+
         events = request.env['event.event'].sudo().with_company(company_1).search([
             ('event_category_id', '=', category.id),
             ('date_begin', '>=', now),
             ('stage_id.pipe_end', '=', False)
         ])
+        if pricelist:
+            events = events.with_context(pricelist=pricelist.id)
 
         request.session['use_flow_logo'] = True
 
@@ -184,7 +193,7 @@ class EventTypeController(http.Controller):
         # Return the template with the data
         response = request.render('flow_academy_website.events_by_category', {
             'events': events.sudo(),
-            'event_category': category,
+            'event_category': category.sudo(),
         })
 
         response.set_cookie(
