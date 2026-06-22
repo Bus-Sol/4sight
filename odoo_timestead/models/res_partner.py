@@ -43,18 +43,18 @@ class ResPartner(models.Model):
         res = super(ResPartner, self).write(vals)
         if 'child_ids' in vals:
             for child_id in self.child_ids:
-                job_ids = self.env['client.jobsheet'].search([('partner_id', '=', child_id.parent_id.id)])
+                job_ids = self.env['client.jobsheet'].sudo().search([('partner_id', '=', child_id.parent_id.id)])
                 for job in job_ids:
                     if child_id.receive_jobsheet:
                         job.sudo().message_subscribe(partner_ids=[child_id.id])
                     else:
                         job.sudo().message_unsubscribe(partner_ids=[child_id.id])
-                invoice_ids = self.env['account.move'].search([('partner_id', '=', child_id.parent_id.id)])
+                invoice_ids = self.env['account.move'].sudo().search([('partner_id', '=', child_id.parent_id.id)])
                 for inv in invoice_ids:
                     if child_id.receive_invoice:
-                        inv.message_subscribe(partner_ids=[child_id.id])
+                        inv.sudo().message_subscribe(partner_ids=[child_id.id])
                     else:
-                        inv.message_unsubscribe(partner_ids=[child_id.id])
+                        inv.sudo().message_unsubscribe(partner_ids=[child_id.id])
 
         return res
 
