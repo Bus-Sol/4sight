@@ -2,6 +2,8 @@ import ast
 from odoo import api, fields, models
 
 
+
+
 class Project(models.Model):
     _inherit = 'project.project'
 
@@ -77,3 +79,9 @@ class Project(models.Model):
             rec.progress = (rec.effective_hours * 100 ) / rec.allocated_hours if rec.allocated_hours > 0 else 0
             rec.paid_progress = (rec.effective_hours * 100 ) / rec.paid_hours if rec.paid_hours > 0 else 0
 
+
+class Task(models.Model):
+    _inherit = 'project.task'
+
+    paid_hours = fields.Float(string="Client Paid Hours", related="project_id.paid_hours", store=True, group_operator='min',)
+    remaining_from_paid = fields.Float(string="Remaining hours from Client Paid",related="project_id.remaining_from_paid",store=True, group_operator='min',)

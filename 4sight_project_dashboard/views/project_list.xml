@@ -97,6 +97,21 @@
             </field>
         </record>
 
+        <record id="view_task_tree_inherited" model="ir.ui.view">
+            <field name="name">project.task.tree</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="hr_timesheet.view_task_tree2_inherited"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='allocated_hours']" position="after">
+
+                   <field name="paid_hours" widget="timesheet_uom" column_invisible="not context.get('allow_timesheets', True)"/>
+                   <field name="remaining_from_paid" widget="timesheet_uom" column_invisible="not context.get('allow_timesheets', True)"/>
+                </xpath>
+
+            </field>
+        </record>
+
 
     </data>
 </odoo>
