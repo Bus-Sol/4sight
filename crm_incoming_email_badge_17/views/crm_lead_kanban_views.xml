@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="crm_lead_kanban_incoming_email_badge" model="ir.ui.view">
+        <field name="name">crm.lead.kanban.incoming.email.badge</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+
+            <xpath expr="//kanban" position="inside">
+                <field name="incoming_email_count"/>
+                <field name="email_reply_status"/>
+                <field name="last_customer_email_date"/>
+                <field name="last_internal_reply_date"/>
+            </xpath>
+
+            <!-- Badge is kept in the normal card flow to avoid covering details. -->
+            <xpath expr="//t[@t-name='kanban-box']//div[contains(@class, 'oe_kanban_content')]" position="inside">
+                <div t-if="record.email_reply_status.raw_value == 'waiting'"
+                     class="o_crm_email_status_row"
+                     title="Customer email is waiting for your reply">
+                    <span class="badge rounded-pill text-bg-danger o_crm_email_status_badge">
+                        <i class="fa fa-envelope me-1"
+                           role="img"
+                           aria-label="Waiting customer email"/>
+                        <t t-esc="record.incoming_email_count.value"/>
+                        <span class="ms-1">
+                            <t t-if="record.incoming_email_count.raw_value == 1">Email waiting</t>
+                            <t t-else="">Emails waiting</t>
+                        </span>
+                    </span>
+                </div>
+
+                <div t-if="record.email_reply_status.raw_value == 'replied'"
+                     class="o_crm_email_status_row"
+                     title="You have replied after the latest customer email">
+                    <span class="badge rounded-pill text-bg-success o_crm_email_status_badge">
+                        <i class="fa fa-check me-1"
+                           role="img"
+                           aria-label="Replied"/>
+                        <span>Replied</span>
+                    </span>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
