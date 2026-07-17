@@ -24,6 +24,7 @@
         'website_event_sale'
     ],
     'data': [
+        'security/security.xml',
         'views/crm_lead.xml',
         'views/crm_team.xml',
         'views/event_category.xml',

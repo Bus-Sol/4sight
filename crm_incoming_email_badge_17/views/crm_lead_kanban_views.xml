@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="crm_lead_kanban_incoming_email_badge" model="ir.ui.view">
+        <field name="name">crm.lead.kanban.incoming.email.badge</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+        <field name="priority">99</field>
+
+        <field name="arch" type="xml">
+
+            <xpath expr="//kanban" position="inside">
+                <field name="incoming_email_count"/>
+                <field name="email_reply_status"/>
+                <field name="last_customer_email_date"/>
+                <field name="last_internal_reply_date"/>
+            </xpath>
+
+            <!-- Place badge beside priority and activity controls. -->
+            <xpath expr="//t[@t-name='kanban-box']//div[contains(@class, 'oe_kanban_bottom_left')]"
+                   position="inside">
+
+                <span t-if="record.email_reply_status.raw_value == 'waiting'"
+                      class="badge rounded-pill text-bg-danger ms-2"
+                      title="Customer email is waiting for your reply"
+                      style="
+                          display: inline-flex;
+                          align-items: center;
+                          vertical-align: middle;
+                          padding: 5px 8px;
+                          font-size: 12px;
+                          line-height: 1;
+                      ">
+                    <i class="fa fa-envelope me-1"
+                       role="img"
+                       aria-label="Waiting customer email"/>
+                    <t t-esc="record.incoming_email_count.value"/>
+                </span>
+
+                <span t-if="record.email_reply_status.raw_value == 'replied'"
+                      class="badge rounded-pill text-bg-success ms-2"
+                      title="An internal user replied after the latest customer email"
+                      style="
+                          display: inline-flex;
+                          align-items: center;
+                          vertical-align: middle;
+                          padding: 5px 8px;
+                          font-size: 12px;
+                          line-height: 1;
+                      ">
+                    <i class="fa fa-check me-1"
+                       role="img"
+                       aria-label="Replied"/>
+                    <span>Replied</span>
+                </span>
+
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
