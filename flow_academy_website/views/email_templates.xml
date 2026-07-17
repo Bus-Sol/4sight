@@ -281,10 +281,7 @@
             <td style="padding: 6px 0;"><strong>Customer</strong></td>
             <td style="padding: 6px 0;"><t t-out="object.partner_id.name or ''"/></td>
         </tr>
-        <tr>
-            <td style="padding: 6px 0;"><strong>Website</strong></td>
-            <td style="padding: 6px 0;"><t t-out="object.website_id.name or ''"/></td>
-        </tr>
+
         <tr>
             <td style="padding: 6px 0;"><strong>Total</strong></td>
             <td style="padding: 6px 0;">
