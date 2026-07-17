@@ -269,10 +269,10 @@
             <field name="email_from">{{ object.company_id.email_formatted or user.email_formatted }}</field>
             <field name="description">Sent to the internal notification group when a website event ticket sale order is confirmed.</field>
             <field name="body_html" type="html">
-<div style="font-family: Arial, sans-serif; font-size: 14px; color: #454748;">
+<div style="font-family: Arial, sans-serif; font-size: 16px; color: #454748;">
     <p>Hello,</p>
     <p>A new website event ticket sale order has been confirmed.</p>
-    <table style="border-collapse: collapse; width: 100%; max-width: 650px; font-family: Arial, sans-serif; font-size: 14px; color: #454748;">
+    <table style="border-collapse: collapse; width: 100%; max-width: 650px; font-family: Arial, sans-serif; font-size: 16px; color: #454748;">
         <tr>
             <td style="padding: 6px 0; width: 160px;"><strong>Order</strong></td>
             <td style="padding: 6px 0;"><t t-out="object.name"/></td>
@@ -294,10 +294,10 @@
             </td>
         </tr>
     </table>
-    <p style="margin-top: 8px; font-family: Arial, sans-serif; font-size: 14px; color: #454748;"><strong>Tickets</strong></p>
+    <p style="margin-top: 8px; font-family: Arial, sans-serif; font-size: 16px; color: #454748;"><strong>Tickets</strong></p>
     <ul>
         <t t-foreach="object.order_line.filtered('event_ticket_id')" t-as="line">
-            <li>
+            <li style="font-family: Arial, sans-serif; font-size: 16px; color: #454748;">
                 <t t-out="line.product_uom_qty"/> x
                 <t t-out="line.event_ticket_id.name"/>
                 <t t-if="line.event_id">
