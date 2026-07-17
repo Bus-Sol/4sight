@@ -262,6 +262,58 @@
             <field name="lang">{{ object.event_id.lang or object.partner_id.lang }}</field>
         </record>
 
+        <record id="mail_template_website_event_sale_order_notification" model="mail.template">
+            <field name="name">Website Event Sale Order: Internal Notification</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">New website event order {{ object.name }}</field>
+            <field name="email_from">{{ object.company_id.email_formatted or user.email_formatted }}</field>
+            <field name="description">Sent to the internal notification group when a website event ticket sale order is confirmed.</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; font-size: 14px; color: #454748;">
+    <p>Hello,</p>
+    <p>A new website event ticket sale order has been confirmed.</p>
+    <table style="border-collapse: collapse; width: 100%; max-width: 650px;">
+        <tr>
+            <td style="padding: 6px 0; width: 160px;"><strong>Order</strong></td>
+            <td style="padding: 6px 0;"><t t-out="object.name"/></td>
+        </tr>
+        <tr>
+            <td style="padding: 6px 0;"><strong>Customer</strong></td>
+            <td style="padding: 6px 0;"><t t-out="object.partner_id.name or ''"/></td>
+        </tr>
+        <tr>
+            <td style="padding: 6px 0;"><strong>Website</strong></td>
+            <td style="padding: 6px 0;"><t t-out="object.website_id.name or ''"/></td>
+        </tr>
+        <tr>
+            <td style="padding: 6px 0;"><strong>Total</strong></td>
+            <td style="padding: 6px 0;">
+                <t t-out="object.amount_total" t-options="{'widget': 'monetary', 'display_currency': object.currency_id}"/>
+            </td>
+        </tr>
+    </table>
+    <p style="margin-top: 16px;"><strong>Tickets</strong></p>
+    <ul>
+        <t t-foreach="object.order_line.filtered('event_ticket_id')" t-as="line">
+            <li>
+                <t t-out="line.product_uom_qty"/> x
+                <t t-out="line.event_ticket_id.name"/>
+                <t t-if="line.event_id">
+                    - <t t-out="line.event_id.name"/>
+                </t>
+            </li>
+        </t>
+    </ul>
+    <p>
+        <a t-att-href="'/web#id=%s&amp;model=sale.order&amp;view_type=form' % object.id"
+           style="background-color: #875A7B; color: #FFFFFF; padding: 8px 12px; text-decoration: none; border-radius: 3px;">
+            View Sale Order
+        </a>
+    </p>
+</div>
+            </field>
+        </record>
+
 
 
     </data>
