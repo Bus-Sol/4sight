@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="crm_sales_communication_guard_19.CrmSalesGuardSystray">
+    <t t-name="crm_incoming_email_badge_17.CrmSalesGuardSystray">
         <div class="o_navbar_item">
             <button t-if="state.permission !== 'granted'"
                     type="button"
