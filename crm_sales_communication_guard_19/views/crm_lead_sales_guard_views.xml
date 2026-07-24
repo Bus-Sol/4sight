@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- =========================================================
+         CRM opportunity form extension
+         ========================================================= -->
+
+    <record id="crm_lead_form_sales_communication_guard"
+            model="ir.ui.view">
+
+        <field name="name">
+            crm.lead.form.sales.communication.guard
+        </field>
+
+        <field name="model">crm.lead</field>
+
+        <field name="inherit_id"
+               ref="crm.crm_lead_view_form"/>
+
+        <field name="priority">99</field>
+
+        <field name="arch" type="xml">
+
+            <xpath expr="//header"
+                   position="inside">
+
+                <button name="action_mark_communication_read"
+                        type="object"
+                        string="Mark Communication Read"
+                        class="btn-primary"
+                        invisible="my_total_unread_count == 0"/>
+
+                <button name="action_recalculate_sales_communication"
+                        type="object"
+                        string="Recalculate Communication"
+                        class="btn-secondary"
+                        groups="base.group_system"/>
+
+            </xpath>
+
+            <xpath expr="//sheet"
+                   position="inside">
+
+                <group name="sales_communication_guard"
+                       string="Sales Communication">
+
+                    <group string="Customer Communication">
+
+                        <field name="email_reply_status"/>
+
+                        <field name="incoming_email_count"
+                               invisible="email_reply_status != 'waiting'"/>
+
+                        <field name="last_customer_email_date"/>
+
+                        <field name="last_internal_reply_date"/>
+
+                    </group>
+
+                    <group string="Internal Notes">
+
+                        <field name="internal_note_count"/>
+
+                        <field name="last_internal_note_date"/>
+
+                        <field name="last_internal_note_author_id"/>
+
+                    </group>
+
+                    <group string="My Unread Communication">
+
+                        <field name="my_customer_unread_count"
+                               readonly="1"/>
+
+                        <field name="my_internal_note_unread_count"
+                               readonly="1"/>
+
+                        <field name="my_total_unread_count"
+                               readonly="1"/>
+
+                    </group>
+
+                    <group string="Sales Follow-up">
+
+                        <field name="sales_followup_status"/>
+
+                        <field name="sales_attention_status"/>
+
+                        <field name="sales_attention_reason"/>
+
+                    </group>
+
+                </group>
+
+            </xpath>
+
+        </field>
+
+    </record>
+
+
+    <!-- =========================================================
+         Sales Attention list view
+         ========================================================= -->
+
+    <record id="crm_lead_sales_attention_list"
+            model="ir.ui.view">
+
+        <field name="name">
+            crm.lead.sales.attention.list
+        </field>
+
+        <field name="model">crm.lead</field>
+
+        <field name="arch" type="xml">
+
+            <list string="Sales Attention"
+                  default_order="priority desc, expected_revenue desc"
+                  create="false"
+                  edit="true"
+                  delete="false">
+
+                <field name="name"/>
+
+                <field name="partner_id"/>
+
+                <field name="user_id"
+                       widget="many2one_avatar_user"/>
+
+                <field name="team_id"/>
+
+                <field name="stage_id"/>
+
+                <field name="expected_revenue"
+                       sum="Expected Revenue"/>
+
+                <field name="email_reply_status"/>
+
+                <field name="incoming_email_count"/>
+
+                <field name="internal_note_count"
+                       optional="show"/>
+
+                <field name="my_customer_unread_count"
+                       optional="show"/>
+
+                <field name="my_internal_note_unread_count"
+                       optional="show"/>
+
+                <field name="my_total_unread_count"
+                       optional="hide"/>
+
+                <field name="sales_followup_status"/>
+
+                <field name="sales_attention_status"/>
+
+                <field name="sales_attention_reason"/>
+
+                <field name="activity_date_deadline"
+                       optional="show"/>
+
+            </list>
+
+        </field>
+
+    </record>
+
+
+    <!-- =========================================================
+         Sales Attention search view
+         ========================================================= -->
+
+    <record id="crm_lead_sales_attention_search"
+            model="ir.ui.view">
+
+        <field name="name">
+            crm.lead.sales.attention.search
+        </field>
+
+        <field name="model">crm.lead</field>
+
+        <field name="arch" type="xml">
+
+            <search string="Sales Attention">
+
+                <field name="name"/>
+
+                <field name="partner_id"/>
+
+                <field name="user_id"/>
+
+                <field name="team_id"/>
+
+                <field name="stage_id"/>
+
+                <separator/>
+
+                <filter name="customer_waiting"
+                        string="Customer Waiting"
+                        domain="[('email_reply_status', '=', 'waiting')]"/>
+
+                <filter name="activity_overdue"
+                        string="Activity Overdue"
+                        domain="[('sales_followup_status', '=', 'overdue')]"/>
+
+                <filter name="no_next_action"
+                        string="No Next Activity"
+                        domain="[('sales_followup_status', '=', 'none')]"/>
+
+                <filter name="needs_attention"
+                        string="Needs Sales Attention"
+                        domain="[('sales_attention_status', '!=', 'normal')]"/>
+
+                <separator/>
+
+                <group>
+
+                    <filter name="group_salesperson"
+                            string="Salesperson"
+                            context="{'group_by': 'user_id'}"/>
+
+                    <filter name="group_team"
+                            string="Sales Team"
+                            context="{'group_by': 'team_id'}"/>
+
+                    <filter name="group_stage"
+                            string="Stage"
+                            context="{'group_by': 'stage_id'}"/>
+
+                    <filter name="group_attention"
+                            string="Attention Status"
+                            context="{'group_by': 'sales_attention_status'}"/>
+
+                    <filter name="group_followup"
+                            string="Follow-up Status"
+                            context="{'group_by': 'sales_followup_status'}"/>
+
+                </group>
+
+            </search>
+
+        </field>
+
+    </record>
+
+
+    <!-- =========================================================
+         Sales Attention window action
+         ========================================================= -->
+
+    <record id="action_crm_sales_attention"
+            model="ir.actions.act_window">
+
+        <field name="name">Sales Attention</field>
+
+        <field name="res_model">crm.lead</field>
+
+        <field name="view_mode">
+            list,kanban,form,activity
+        </field>
+
+        <field name="domain">
+            [
+                ('type', '=', 'opportunity'),
+                ('active', '=', True)
+            ]
+        </field>
+
+        <field name="search_view_id"
+               ref="crm_lead_sales_attention_search"/>
+
+        <field name="context">
+            {
+                'default_type': 'opportunity',
+                'search_default_needs_attention': 1
+            }
+        </field>
+
+    </record>
+
+
+    <!-- Force the dedicated list view to open first -->
+
+    <record id="action_crm_sales_attention_list_view"
+            model="ir.actions.act_window.view">
+
+        <field name="sequence">1</field>
+
+        <field name="view_mode">list</field>
+
+        <field name="view_id"
+               ref="crm_lead_sales_attention_list"/>
+
+        <field name="act_window_id"
+               ref="action_crm_sales_attention"/>
+
+    </record>
+
+
+    <!-- =========================================================
+         CRM menu
+         ========================================================= -->
+
+    <menuitem id="menu_crm_sales_attention"
+              name="Sales Attention"
+              parent="crm.crm_menu_root"
+              action="action_crm_sales_attention"
+              sequence="35"
+              groups="sales_team.group_sale_salesman"/>
+
+</odoo>
