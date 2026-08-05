@@ -302,11 +302,11 @@ class JobSheet(models.Model):
     def trigger_send_quotation(self, last_progress, progress, remaining_hour, current_service):
 
         if progress <= last_progress:
-            pass
-        else:
-            if last_progress >= 100:
-                print("\n ++++++++++ 1 ++++++++++")
-                raise UserError(_('You cannot go over 100%, please contact your administrator'))
+            return
+
+        if last_progress >= 100:
+            print("\n ++++++++++ 1 ++++++++++")
+            raise UserError(_('You cannot go over 100%, please contact your administrator'))
         print("\n +++++++ progress last_progress ++++++++", progress, last_progress, remaining_hour)
         if progress >= 75 and last_progress < 75:
             #### if we're surpassing 75% #####
@@ -348,6 +348,12 @@ class JobSheet(models.Model):
                 self.get_email_template_and_send(self.sale_order_id)
 
     def create_account_analytic_line(self, values):
+        self.ensure_one()
+        affected_tasks = [{
+            'jobsheet': self,
+            'task': self.task_id,
+            'last_progress': self.task_id.progress,
+        }]
         #### This is only in Prepaid mode ###
         if self.type == 'prepaid' and values['unit_amount'] > self.remaining_hours:
             #### if hours surpass progress we have to look if there is a confirmed sales to put in the remaining hours####
@@ -365,6 +371,7 @@ class JobSheet(models.Model):
                 ('id', '!=', self.task_id.id),
                 ('remaining_hours', '>', 0)
             ], limit=1)
+            next_task_last_progress = task.progress if task else 0.0
             if task:
                 sale_order = task.sudo().sale_line_id.sudo().order_id
                 check_next_sale_order = sale_order[0] if sale_order else False
@@ -379,17 +386,22 @@ class JobSheet(models.Model):
                     'type': 'prepaid',
                     'user_id': self.user_id.id,
                     'start_date': self.start_date,
-                    'end_date': self.start_date + datetime.timedelta(minutes=remaining_hours),
+                    'end_date': self.start_date + datetime.timedelta(hours=remaining_hours),
                     'brief': self.brief,
                     'details': self.details,
                     'jobsheet_start': self.start_date,
-                    'task_id': check_next_sale_order.tasks_ids[0].id
+                    'task_id': task.id
                 })
-                new_job.task_id = check_next_sale_order.tasks_ids[0].id
+                new_job.task_id = task.id
                 copy_vals['job_id'] = new_job.id
                 copy_vals['unit_amount'] = remaining_hours
-                copy_vals['task_id'] = check_next_sale_order.tasks_ids[0].id
+                copy_vals['task_id'] = task.id
                 self.env['account.analytic.line'].create(copy_vals)
+                affected_tasks.append({
+                    'jobsheet': new_job,
+                    'task': task,
+                    'last_progress': next_task_last_progress,
+                })
                 message = _(
                     "The current task has been completed with the remaining hours, the rest of the allocated hours are registered in a new jobsheet : <a href=# data-oe-model=client.jobsheet data-oe-id=%d>%s</a>.") % (
                               new_job.id, new_job.name)
@@ -400,6 +412,7 @@ class JobSheet(models.Model):
                 self.env['account.analytic.line'].create(values)
         else:
             self.env['account.analytic.line'].create(values)
+        return affected_tasks
 
     @api.model
     def create(self, vals):
@@ -432,12 +445,18 @@ class JobSheet(models.Model):
             }
             if res.partner_id.jobsheet_type == 'prepaid' and not res.task_id:
                 raise UserError(_('No task found to allocate hours.'))
-            last_progress = res.task_id.progress
             current_service = res.partner_id.service_ids.filtered(
                 lambda s: s.product_id == res.service_id)[0]
-            res.create_account_analytic_line(values)
+            affected_tasks = res.create_account_analytic_line(values)
             if res.type == 'prepaid':
-                res.trigger_send_quotation(last_progress, res.task_id.progress, res.remaining_hours, current_service)
+                for allocation in affected_tasks:
+                    task = allocation['task']
+                    allocation['jobsheet'].trigger_send_quotation(
+                        allocation['last_progress'],
+                        task.progress,
+                        task.remaining_hours,
+                        current_service,
+                    )
         return res
 
     @api.model
@@ -469,11 +488,12 @@ class JobSheet(models.Model):
             if self.partner_id.jobsheet_type == 'prepaid' and not self.task_id:
                 raise UserError(_('No task found to allocate hours.'))
             last_progress = self.task_id.progress
+            affected_tasks = []
             timesheet_id = self.timesheet_ids[0] if self.timesheet_ids else None
             if timesheet_id:
                 timesheet_id.write(values)
             else:
-                self.create_account_analytic_line(values)
+                affected_tasks = self.create_account_analytic_line(values)
             if 'hours' in vals:
                 vals['hours'] = self.effective_hours
             else:
@@ -483,7 +503,22 @@ class JobSheet(models.Model):
                 lambda s: s.product_id == self.service_id)[0]
             type = vals.get('type') if vals.get('type') else self.type
             if type == 'prepaid':
-                self.trigger_send_quotation(last_progress, progress, self.task_id.remaining_hours, current_service)
+                if affected_tasks:
+                    for allocation in affected_tasks:
+                        task = allocation['task']
+                        allocation['jobsheet'].trigger_send_quotation(
+                            allocation['last_progress'],
+                            task.progress,
+                            task.remaining_hours,
+                            current_service,
+                        )
+                else:
+                    self.trigger_send_quotation(
+                        last_progress,
+                        progress,
+                        self.task_id.remaining_hours,
+                        current_service,
+                    )
 
         if vals.get('brief'):
             for rec in self.timesheet_ids:
