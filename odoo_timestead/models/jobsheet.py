@@ -310,7 +310,7 @@ class JobSheet(models.Model):
         print("\n +++++++ progress last_progress ++++++++", progress, last_progress, remaining_hour)
         if progress >= 75 and last_progress < 75:
             #### if we're surpassing 75% #####
-            if remaining_hour < 0:
+            if round(remaining_hour, 2) < 0:
                 buffer = current_service.extra_hour
                 if abs(remaining_hour) > buffer or buffer <= 0:
                     print(abs(remaining_hour))
@@ -334,7 +334,7 @@ class JobSheet(models.Model):
                     self.sudo().sale_order_id = sale_order[0]
         ###########"
         if last_progress >= 75:
-            if remaining_hour < 0:
+            if round(remaining_hour, 2) < 0:
                 buffer = current_service.extra_hour
                 if abs(remaining_hour) > buffer or buffer <= 0:
                     print(abs(remaining_hour))
@@ -764,9 +764,11 @@ class JobSheet(models.Model):
     @api.onchange('start_date', 'end_date')
     def onchange_compute_hours(self):
         for rec in self:
-            duration = 0
+            duration = 0.0
             if rec.start_date and rec.end_date:
-                duration = (rec.end_date - rec.start_date).total_seconds() / 3600
+                start_date = rec.start_date.replace(second=0, microsecond=0)
+                end_date = rec.end_date.replace(second=0, microsecond=0)
+                duration = (end_date - start_date).total_seconds() / 3600
             rec.hours = duration
 
     def preview_jobsheet(self):
