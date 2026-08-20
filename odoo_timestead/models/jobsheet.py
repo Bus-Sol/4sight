@@ -6,6 +6,8 @@ import datetime
 import logging
 import pytz
 
+from .base_automation import SKIP_JOBSHEET_SPLIT_ROUNDING_CONTEXT_KEY
+
 _logger = logging.getLogger(__name__)
 
 
@@ -59,7 +61,7 @@ class JobSheet(models.Model):
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True,
                                    help="Time spent on this task, excluding its sub-tasks.")
     task_id = fields.Many2one('project.task', compute='compute_task_id', store=True)
-    planned_hours = fields.Float(string='planned hours') # changed related='task_id.planned_hours'
+    planned_hours = fields.Float(string='planned hours')  # changed related='task_id.planned_hours'
     remaining_hours = fields.Float(related='task_id.remaining_hours')
     progress = fields.Float(related='task_id.progress')
     sale_order_id = fields.Many2one('sale.order', string='Next Sale Order',
@@ -81,7 +83,6 @@ class JobSheet(models.Model):
             if rec.start_date:
                 local_dt = fields.Datetime.context_timestamp(rec, rec.start_date)
                 rec.jobsheet_start = local_dt.date()
-
 
     @api.onchange('start_date', 'end_date')
     def onchange_start_end_date(self):
@@ -195,14 +196,15 @@ class JobSheet(models.Model):
             if obj._name == 'account.move':
                 template = self.env.ref('account.email_template_edi_invoice')
             values = template.sudo()._generate_template([obj.id],
-                ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to',
-                 'attachment_ids', 'mail_server_id']
-            )[obj.id]
+                                                        ['subject', 'body_html', 'email_from', 'email_to', 'partner_to',
+                                                         'email_cc', 'reply_to',
+                                                         'attachment_ids', 'mail_server_id']
+                                                        )[obj.id]
             body = None
             if 'body' in values:
                 body = values['body']
             if 'body_html' in values:
-                body = values['body_html'] 
+                body = values['body_html']
             mail_composer = self.env['mail.compose.message'].with_context(
                 default_use_template=bool(template.id),
                 mark_so_as_sent=True,
@@ -215,7 +217,7 @@ class JobSheet(models.Model):
                 default_template_id=template.id,
                 default_composition_mode='comment',
                 model_description=obj.type_name,
-                active_ids = obj.ids
+                active_ids=obj.ids
             ).sudo().create({
                 'subject': values['subject'],
                 'body': body,
@@ -285,7 +287,8 @@ class JobSheet(models.Model):
                     "product_id": service.product_id.id,
                     "product_uom_qty": service.quantity,
                     "price_unit": service.hour,
-                    'tax_id': [(6, 0, self.service_id.taxes_id.filtered(lambda t: t.country_id.id == self.company_id.country_id.id).ids)],
+                    'tax_id': [(6, 0, self.service_id.taxes_id.filtered(
+                        lambda t: t.country_id.id == self.company_id.country_id.id).ids)],
                 }]]
             })
             if not self.env.user.has_group('odoo_timestead.group_jobsheet_manager'):
@@ -300,27 +303,37 @@ class JobSheet(models.Model):
             self.get_email_template_and_send(order_id)
 
     def trigger_send_quotation(self, last_progress, progress, remaining_hour, current_service):
-
         if progress <= last_progress:
             return
 
         if last_progress >= 100:
             print("\n ++++++++++ 1 ++++++++++")
-            raise UserError(_('You cannot go over 100%, please contact your administrator'))
+            raise UserError(_('1.You cannot go over 100%, please contact your administrator'))
         print("\n +++++++ progress last_progress ++++++++", progress, last_progress, remaining_hour)
         if progress >= 75 and last_progress < 75:
+            task = self.task_id.sudo()
+            self.env.cr.execute(
+                "SELECT id FROM project_task WHERE id = %s FOR UPDATE",
+                [task.id],
+            )
+            task.invalidate_recordset(['next_pack_quotation_email_sent'])
+            should_send_quotation = not task.next_pack_quotation_email_sent
+            if should_send_quotation:
+                task.next_pack_quotation_email_sent = True
+
             #### if we're surpassing 75% #####
             if round(remaining_hour, 2) < 0:
                 buffer = current_service.extra_hour
                 if abs(remaining_hour) > buffer or buffer <= 0:
                     print(abs(remaining_hour))
                     print("\n ++++++++++ 2 ++++++++++")
-                    raise UserError(_('You cannot go over 100%, please contact your administrator'))
+                    raise UserError(_('2.You cannot go over 100%, please contact your administrator'))
                 else:
                     current_service.extra_hour = 0
-                    self.create_sale_order_from_job(self)
+                    if should_send_quotation:
+                        self.create_sale_order_from_job(self)
                     self.create_invoice_from_job(abs(remaining_hour))
-            else:
+            elif should_send_quotation:
                 self.create_sale_order_from_job(self)
         ##### Get Sale Order: Look if we already create next Sales to be sent as a remainder ###
         if not self.sudo().sale_order_id:
@@ -339,23 +352,24 @@ class JobSheet(models.Model):
                 if abs(remaining_hour) > buffer or buffer <= 0:
                     print(abs(remaining_hour))
                     print("\n ++++++++++ 3 ++++++++++")
-                    raise UserError(_('You cannot go over 100%, please contact your administrator'))
+                    raise UserError(_('3.You cannot go over 100%, please contact your administrator'))
                 else:
                     current_service.extra_hour = 0
                     self.create_invoice_from_job(abs(remaining_hour))
-                    self.get_email_template_and_send(self.sale_order_id)
-            else:
-                self.get_email_template_and_send(self.sale_order_id)
 
     def create_account_analytic_line(self, values):
         self.ensure_one()
-        affected_tasks = [{
+        current_task_allocation = {
             'jobsheet': self,
             'task': self.task_id,
             'last_progress': self.task_id.progress,
-        }]
+        }
+        affected_tasks = [current_task_allocation]
         #### This is only in Prepaid mode ###
         if self.type == 'prepaid' and values['unit_amount'] > self.remaining_hours:
+            current_task_remaining_hours = max(self.remaining_hours, 0.0)
+            _logger.info(f"remaining is not enough >> {current_task_remaining_hours}")
+
             #### if hours surpass progress we have to look if there is a confirmed sales to put in the remaining hours####
             copy_vals = values.copy()
             SaleOrderLine = self.env['sale.order.line']
@@ -371,14 +385,24 @@ class JobSheet(models.Model):
                 ('id', '!=', self.task_id.id),
                 ('remaining_hours', '>', 0)
             ], limit=1)
+            _logger.info(f"next task to check ?? {task}")
+            _logger.info(f"next_task_last_progress ?? {task.progress}")
             next_task_last_progress = task.progress if task else 0.0
             if task:
                 sale_order = task.sudo().sale_line_id.sudo().order_id
                 check_next_sale_order = sale_order[0] if sale_order else False
+            _logger.info("check_next_sale_order >> %s", check_next_sale_order)
             if check_next_sale_order:
-                remaining_hours = values['unit_amount'] - self.remaining_hours
-                values['unit_amount'] = self.remaining_hours
-                self.env['account.analytic.line'].create(values)
+                remaining_hours = values['unit_amount'] - current_task_remaining_hours
+                values['unit_amount'] = current_task_remaining_hours
+                split_timesheets = self.env['account.analytic.line'].with_context(
+                    **{SKIP_JOBSHEET_SPLIT_ROUNDING_CONTEXT_KEY: True}
+                )
+                split_timesheets.create(values)
+                current_task_allocation.update({
+                    'progress': 100.0,
+                    'remaining_hour': 0.0,
+                })
                 new_job = self.env['client.jobsheet'].create({
                     'partner_id': self.partner_id.id,
                     'service_id': self.service_id.id,
@@ -396,11 +420,13 @@ class JobSheet(models.Model):
                 copy_vals['job_id'] = new_job.id
                 copy_vals['unit_amount'] = remaining_hours
                 copy_vals['task_id'] = task.id
-                self.env['account.analytic.line'].create(copy_vals)
+                split_timesheets.create(copy_vals)
                 affected_tasks.append({
                     'jobsheet': new_job,
                     'task': task,
                     'last_progress': next_task_last_progress,
+                    'progress': task.progress,
+                    'remaining_hour': task.remaining_hours,
                 })
                 message = _(
                     "The current task has been completed with the remaining hours, the rest of the allocated hours are registered in a new jobsheet : <a href=# data-oe-model=client.jobsheet data-oe-id=%d>%s</a>.") % (
@@ -412,6 +438,9 @@ class JobSheet(models.Model):
                 self.env['account.analytic.line'].create(values)
         else:
             self.env['account.analytic.line'].create(values)
+        for allocation in affected_tasks:
+            allocation.setdefault('progress', allocation['task'].progress)
+            allocation.setdefault('remaining_hour', allocation['task'].remaining_hours)
         return affected_tasks
 
     @api.model
@@ -433,6 +462,9 @@ class JobSheet(models.Model):
             ticket.job_id = res.id
         if vals.get('hours_overtime'):
             raise ValidationError(_('Please save Jobsheet before entering Overtime.'))
+        _logger.info(f"res.task_id {res.task_id}")
+        _logger.info(f"vals.get('hours') ?? {vals.get('hours')}")
+
         if vals.get('hours') and vals.get('hours') > 0:
             values = {
                 'job_id': res.id,
@@ -448,13 +480,17 @@ class JobSheet(models.Model):
             current_service = res.partner_id.service_ids.filtered(
                 lambda s: s.product_id == res.service_id)[0]
             affected_tasks = res.create_account_analytic_line(values)
+            _logger.info(f"create affected_tasks >>> {affected_tasks}")
             if res.type == 'prepaid':
                 for allocation in affected_tasks:
                     task = allocation['task']
+                    _logger.info(f"task to trigger send quot >>> {task}")
+                    _logger.info(f"task prgress to trigger send quot >>> {task.progress}")
+                    _logger.info(f"task last progress to trigger send quot >>> {allocation['last_progress']}")
                     allocation['jobsheet'].trigger_send_quotation(
                         allocation['last_progress'],
-                        task.progress,
-                        task.remaining_hours,
+                        allocation['progress'],
+                        allocation['remaining_hour'],
                         current_service,
                     )
         return res
@@ -463,7 +499,7 @@ class JobSheet(models.Model):
     def convert_datetime_to_date(self, datetime_with_tz):
         # Get the current user's timezone
         user_timezone = self.env.user.tz or 'UTC'  # Default to UTC if no timezone is set
-        
+
         # Convert the datetime to the user's timezone
         localized_datetime = fields.Datetime.to_datetime(datetime_with_tz).astimezone(pytz.timezone(user_timezone))
         # Extract the date
@@ -508,8 +544,8 @@ class JobSheet(models.Model):
                         task = allocation['task']
                         allocation['jobsheet'].trigger_send_quotation(
                             allocation['last_progress'],
-                            task.progress,
-                            task.remaining_hours,
+                            allocation['progress'],
+                            allocation['remaining_hour'],
                             current_service,
                         )
                 else:
@@ -584,7 +620,7 @@ class JobSheet(models.Model):
             job_id.access_url = '/my/jobsheets/%s' % (job_id.id)
 
     def _get_share_url(self, redirect=False, signup_partner=False, pid=None, share_token=True):
-    # def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
+        # def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
         self.ensure_one()
         if self:
             auth_param = url_encode(self.partner_id.signup_get_auth_param()[self.partner_id.id])
@@ -703,7 +739,8 @@ class JobSheet(models.Model):
             'product_uom_id': self.env.ref('uom.product_uom_hour').id,
             'quantity': self.effective_hours,
             'price_unit': current_service.hour,
-            'tax_ids': [(6, 0, self.service_id.taxes_id.filtered(lambda t: t.country_id.id == self.company_id.country_id.id).ids)],
+            'tax_ids': [(6, 0, self.service_id.taxes_id.filtered(
+                lambda t: t.country_id.id == self.company_id.country_id.id).ids)],
         }
         return res
 
@@ -790,7 +827,7 @@ class JobSheetline(models.Model):
     product_id = fields.Many2one(
         'product.product', string='Product',
         domain="[('sale_ok', '=', True),('type', '=', 'consu')]",
-        change_default=True, ondelete='restrict') # , check_company=True
+        change_default=True, ondelete='restrict')  # , check_company=True
     product_uom_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True, default=1.0)
 
     def _prepare_account_move_line(self):
@@ -800,7 +837,8 @@ class JobSheetline(models.Model):
             'product_id': self.product_id.id,
             'quantity': self.product_uom_qty,
             'price_unit': self.price_unit,
-            'tax_ids': [(6, 0, self.product_id.taxes_id.filtered(lambda t: t.country_id.id == self.jobsheet_id.company_id.country_id.id).ids)],
+            'tax_ids': [(6, 0, self.product_id.taxes_id.filtered(
+                lambda t: t.country_id.id == self.jobsheet_id.company_id.country_id.id).ids)],
         }
         return res
 
