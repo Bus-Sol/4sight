@@ -68,6 +68,11 @@ class Task(models.Model):
     related_service_id = fields.Many2one('product.template', related='sale_line_id.product_id.product_tmpl_id',
                                          store=True)
     planned_hours = fields.Float("Initially Planned Hours", help='Time planned to achieve this task (including its sub-tasks).', tracking=True)
+    next_pack_quotation_email_sent = fields.Boolean(
+        string="Next Pack Quotation Email Sent",
+        copy=False,
+        help="Prevents sending the next hours-pack quotation more than once for this task.",
+    )
 
     @api.depends('remaining_hours')
     def compute_balanced_task(self):
