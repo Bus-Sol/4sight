@@ -10,6 +10,8 @@ from .base_automation import SKIP_JOBSHEET_SPLIT_ROUNDING_CONTEXT_KEY
 
 _logger = logging.getLogger(__name__)
 
+SINGLE_QUOTATION_EMAIL_MAX_PACK_HOURS = 20.0
+
 
 class JobSheet(models.Model):
     _name = "client.jobsheet"
@@ -312,14 +314,17 @@ class JobSheet(models.Model):
         print("\n +++++++ progress last_progress ++++++++", progress, last_progress, remaining_hour)
         if progress >= 75 and last_progress < 75:
             task = self.task_id.sudo()
-            self.env.cr.execute(
-                "SELECT id FROM project_task WHERE id = %s FOR UPDATE",
-                [task.id],
-            )
-            task.invalidate_recordset(['next_pack_quotation_email_sent'])
-            should_send_quotation = not task.next_pack_quotation_email_sent
-            if should_send_quotation:
-                task.next_pack_quotation_email_sent = True
+            restrict_to_one_email = task.allocated_hours <= SINGLE_QUOTATION_EMAIL_MAX_PACK_HOURS
+            should_send_quotation = True
+            if restrict_to_one_email:
+                self.env.cr.execute(
+                    "SELECT id FROM project_task WHERE id = %s FOR UPDATE",
+                    [task.id],
+                )
+                task.invalidate_recordset(['next_pack_quotation_email_sent'])
+                should_send_quotation = not task.next_pack_quotation_email_sent
+                if should_send_quotation:
+                    task.next_pack_quotation_email_sent = True
 
             #### if we're surpassing 75% #####
             if round(remaining_hour, 2) < 0:
@@ -347,6 +352,7 @@ class JobSheet(models.Model):
                     self.sudo().sale_order_id = sale_order[0]
         ###########"
         if last_progress >= 75:
+            restrict_to_one_email = self.task_id.allocated_hours <= SINGLE_QUOTATION_EMAIL_MAX_PACK_HOURS
             if round(remaining_hour, 2) < 0:
                 buffer = current_service.extra_hour
                 if abs(remaining_hour) > buffer or buffer <= 0:
@@ -356,6 +362,10 @@ class JobSheet(models.Model):
                 else:
                     current_service.extra_hour = 0
                     self.create_invoice_from_job(abs(remaining_hour))
+                    if not restrict_to_one_email:
+                        self.get_email_template_and_send(self.sale_order_id)
+            elif not restrict_to_one_email:
+                self.get_email_template_and_send(self.sale_order_id)
 
     def create_account_analytic_line(self, values):
         self.ensure_one()
