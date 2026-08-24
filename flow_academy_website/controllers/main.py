@@ -396,7 +396,11 @@ class EventTypeController(http.Controller):
 
         _logger.info(f"categ 9 events >> {events}")
 
-        return request.render('website.ai-for-work-1_1b3066_16c2f0', {
+        # return request.render('website.ai-for-work-1_1b3066_16c2f0', {
+        #     'events': events,
+        # })
+
+        return request.render('website.practical-ai-for-the-workplace_98b110_5ed383_1c31c7_1ffeda', {
             'events': events,
         })
 
