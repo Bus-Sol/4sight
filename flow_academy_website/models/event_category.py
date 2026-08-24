@@ -8,3 +8,5 @@ class EventCategory(models.Model):
     name = fields.Char()
 
     cover = fields.Binary(string="Cover", attachment=True)
+
+    info_link = fields.Char(string="Info Link")
