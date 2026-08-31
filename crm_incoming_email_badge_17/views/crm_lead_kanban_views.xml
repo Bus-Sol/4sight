@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="crm_lead_kanban_incoming_email_badge" model="ir.ui.view">
+        <field name="name">crm.lead.kanban.sales.communication.guard</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="inside">
+                <field name="incoming_email_count"/>
+                <field name="internal_note_count"/>
+                <field name="my_customer_unread_count"/>
+                <field name="my_internal_note_unread_count"/>
+                <field name="my_total_unread_count"/>
+                <field name="show_customer_waiting_badge"/>
+                <field name="show_customer_replied_badge"/>
+                <field name="show_overdue_activity_badge"/>
+                <field name="show_no_next_activity_badge"/>
+            </xpath>
+
+            <xpath expr="//t[@t-name='kanban-box']//div[contains(@class, 'oe_kanban_bottom_left')]" position="inside">
+                <div class="o_crm_sales_guard_badges">
+                    <span t-if="record.show_customer_waiting_badge.raw_value"
+                          class="o_crm_sales_guard_badge o_crm_sales_guard_badge--waiting"
+                          title="Customer email is waiting for a reply">
+                        <i class="fa fa-envelope" role="img" aria-label="Waiting customer email"/>
+                        <t t-esc="record.incoming_email_count.value"/>
+                        <span>Waiting</span>
+                    </span>
+
+                    <span t-if="record.my_customer_unread_count.raw_value"
+                          class="o_crm_sales_guard_badge o_crm_sales_guard_badge--unread-customer"
+                          title="You have unread customer messages">
+                        <i class="fa fa-envelope-open-o" role="img" aria-label="Unread customer messages"/>
+                        <t t-esc="record.my_customer_unread_count.value"/>
+                        <span>Unread</span>
+                    </span>
+
+                    <!-- Global note count: visible to everyone, including the note author. -->
+                    <span t-if="record.internal_note_count.raw_value"
+                          class="o_crm_sales_guard_badge o_crm_sales_guard_badge--notes"
+                          title="Internal notes exist on this opportunity">
+                        <i class="fa fa-sticky-note-o" role="img" aria-label="Internal notes"/>
+                        <t t-esc="record.internal_note_count.value"/>
+                        <span>Notes</span>
+                    </span>
+
+                    <!-- Per-user unread note count: the author is intentionally excluded. -->
+                    <span t-if="record.my_internal_note_unread_count.raw_value"
+                          class="o_crm_sales_guard_badge o_crm_sales_guard_badge--new-note"
+                          title="You have unread internal notes">
+                        <i class="fa fa-sticky-note" role="img" aria-label="Unread internal notes"/>
+                        <t t-esc="record.my_internal_note_unread_count.value"/>
+                        <span>New Note</span>
+                    </span>
+
+                    <span t-if="record.show_customer_replied_badge.raw_value"
+                          class="o_crm_sales_guard_badge o_crm_sales_guard_badge--replied"
+                          title="An internal user replied after the latest customer email">
+                        <i class="fa fa-check" role="img" aria-label="Replied"/>
+                        <span>Replied</span>
+                    </span>
+
+                    <span t-if="record.show_overdue_activity_badge.raw_value"
+                          class="o_crm_sales_guard_badge o_crm_sales_guard_badge--overdue"
+                          title="A sales activity is overdue">
+                        <i class="fa fa-clock-o" role="img" aria-label="Overdue activity"/>
+                        <span>Overdue</span>
+                    </span>
+
+                    <span t-if="record.show_no_next_activity_badge.raw_value"
+                          class="o_crm_sales_guard_badge o_crm_sales_guard_badge--no-action"
+                          title="No next sales activity is scheduled">
+                        <i class="fa fa-exclamation-triangle" role="img" aria-label="No next activity"/>
+                        <span>No Next Action</span>
+                    </span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

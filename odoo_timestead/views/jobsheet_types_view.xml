@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_jobsheet_type_tree" model="ir.ui.view">
+            <field name="name">jobsheet.type.tree</field>
+            <field name="model">jobsheet.type</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="nominal_code"/>
+                    <field name="tax_code"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_open_jobsheet_type" model="ir.actions.act_window">
+            <field name="name">Jobsheets Types</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">jobsheet.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new jobsheet
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_jobsheet_type" name="Jobsheets Types" action="action_open_jobsheet_type"
+                  parent="contacts.res_partner_menu_config" sequence="8"/>
+    </data>
+</odoo>

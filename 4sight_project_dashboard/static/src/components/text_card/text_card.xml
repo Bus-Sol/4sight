@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="owl.TextCard" owl="1">
+        <div class="col-lg-6 m-0 p-0">
+            <div class="shadow-sm border m-2 p-4 bg-white text-center cursor-pointer">
+                <div class="h3 fw-bold text-dark" style="font-size: 24px"><span t-esc="props.name"/></div>
+                <div class="h5 text-muted"><pre t-esc="props.value"/></div>
+
+            </div>
+        </div>
+    </t>
+</templates>

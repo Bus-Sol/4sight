@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Odoo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat"
+          rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+          rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+          crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap"
+          rel="stylesheet">
+    <link href="https://apps.odoocdn.com/web/content/7247337-184ae0e/1/web.assets_frontend.css"
+          rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<!-- odoo description page css -->
+
+<body>
+<!-- Header -->
+<header class="py-2">
+    <div class="row align-items-center">
+        <div class="col-12 col-md-4">
+                    <span class="btn pr-2">
+                        <img alt="Abrus-Digital-logo"
+                             src="images/abrus-digital.png"
+                             style="height:50px">
+                    </span>
+        </div>
+        <div class="col-12 col-md">
+            <div class="text-md-right">
+                <a class="btn btn-sm py-2 px-md-3"
+                   href="https://apps.odoo.com/apps/modules/browse?search=Abrus Digital"
+                   style="font-size: 14px; background-color: #08104D;color:#fff;"
+                   target="_blank"><i class="fa fa-bars mr-1"></i>
+                    <span class="d-none d-sm-inline">Abrus Digital</span> All
+                    Apps
+                </a>
+            </div>
+        </div>
+    </div>
+    <hr class="mb-0"/>
+</header>
+<div id="loempia_tabs" class="container pb-5 py-4 oe_styling_v8"
+     style="color: #401C6F;font-family: 'Open sans','sans-serif';">
+    <div class="row mb-4">
+        <div class="col-12 col-12 text-center text-md-left">
+            <h1 class="text-center" style="color: #203038;"><u>Sales
+                Proposal</u></h1>
+        </div>
+        <div class="col-12 col-md-6 text-center text-md-right">
+            <img class="img-fluid" src="./img/html-css-js.png" alt="">
+        </div>
+    </div>
+    <div class="row align-items-center mb-4">
+        <div class="col-12">
+
+            <h4 style="font-weight: 401;">
+                The proposal management module provides a more efficient way to
+                create, store, and manage your proposal creation & submission
+                process with better insight into the sales pipeline and
+                performance. Most sales executives spend hours and hours
+                drafting proposals by curating content & images, outlining the
+                scope, creating timelines, and inputting estimates, etc. — only
+                to do it all over again for the next prospect.
+
+                <br/>
+                <br/>
+                <br/>
+                With our module, we eliminate this and allow you to easily
+                create a sales proposal within the Odoo sales module. The
+                modules allow you to set up a default proposal template which
+                you can again customize if needed on a case-to-case basis. With
+                proposal management, you can create multiple pages such as
+                executive summary, introduction, solution description, etc. and
+                you can only choose the pages you need per proposal. Also, all
+                the proposals will remain inside the Odoo sales module for
+                future reference and revisions. With this mode, you no more
+                need to work on external word or excel files to create and
+                submit your proposals.
+            </h4>
+
+            <br>
+        </div>
+    </div>
+    <!-- tab view start -->
+
+    <section id="sh_tab"
+             style="padding-top: 30px;background-color: transparent;">
+        <div class="">
+            <ul class="nav nav-tabs justify-content-center" role="tablist"
+                style="justify-content: center;padding-bottom: 10px;background-color: transparent;">
+
+                <li class="nav-item rounded"
+                    style="cursor:pointer; background-color: #ff4b36;color: #fff;border-radius: 0;font-weight: 600;font-size: 14px;margin: 0 2px;border-radius: 0.25rem !important;">
+                    <span class="nav-link  rounded" data-toggle="tab"
+                          href="#Configurations"
+                          style="cursor: pointer;border: 1px solid #ff4b36;padding: 10px 20px;border-top-left-radius: 0px;border-top-right-radius: 0px;">Setup</span>
+                </li>
+                <li class="nav-item rounded"
+                    style="cursor:pointer; background-color: #ff4b36;color: #fff;border-radius: 0;font-weight: 600;font-size: 14px;margin: 0 2px;border-radius: 0.25rem !important;">
+                    <span class="nav-link active rounded" data-toggle="tab"
+                          href="#Working"
+                          style="cursor: pointer;border: 1px solid #ff4b36;padding: 10px 20px;border-top-left-radius: 0px;border-top-right-radius: 0px;">Working</span>
+                </li>
+                <li class="nav-item rounded"
+                    style="cursor:pointer; background-color: #ff4b36;color: #fff;border-radius: 0;font-weight: 600;font-size: 14px;margin: 0 2px;border-radius: 0.25rem !important;">
+                    <span class="nav-link rounded" data-toggle="tab"
+                          href="#Support"
+                          style="cursor: pointer;border: 1px solid #ff4b36;padding: 10px 20px;border-top-left-radius: 0px;border-top-right-radius: 0px;">Support</span>
+                </li>
+            </ul>
+            <div class="tab-content"
+                 style="padding-top: 30px;background-color: transparent;padding-bottom: 30px;">
+
+                <!-- tab 2 -->
+                <div id="Configurations" class="tab-pane ">
+                    <section id="sh_configuration">
+                        <div class="container">
+                            <div class="text-center">
+                                <h4>Setup &amp; Customize Template </h4>
+                                <p style="color: #1b325f;font-size: 20px;max-width: 75%;margin: auto;margin-bottom: 20px;letter-spacing: .5px;">
+                                    Go to Sale --> Configurations --> Proposal
+                                    Management --> Pages
+                                </p>
+                                <p>
+From here, you can design and add content to the pages for your proposal templates. You can easily create a page such as Executive summary, About us, Our Team, etc. for each section which you can reuse for each proposal
+                                </p>
+                                <div class="col-md-12">
+                                    <img class="img-responsive rounded shadow"
+                                         src="working/img/configuration.png"
+                                         style="width: 100%;"/>
+                                </div>
+                                <br/>
+                                <p style="color: #1b325f;font-size: 20px;max-width: 75%;margin: auto;margin-bottom: 20px;letter-spacing: .5px;">
+                                    Creating Pages
+                                </p>
+                                <p>
+                                    Here you can design each page with relevant content with styling such as header, body, etc., and add images if needed
+                                </p>
+                                <div class="col-md-12">
+                                    <img class="img-responsive rounded shadow"
+                                         src="working/img/styles-edit.png"
+                                         style="width: 100%;"/>
+                                </div>
+                                <br/>
+
+                                <div class="col-md-12">
+                                    <img class="img-responsive rounded shadow"
+                                         src="working/img/heading.png"
+                                         style="width: 100%;"/>
+                                </div>
+                                <br/>
+                                <p style="color: #1b325f;font-size: 20px;max-width: 75%;margin: auto;margin-bottom: 20px;letter-spacing: .5px;">
+                                    You can design the pages with names and
+                                    contents. By typing the “/” for choosing
+                                    the variety of commands for managing the
+                                    basic blocks, medias, etc.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div id="Working" class="tab-pane active">
+                    <section id="sh_working">
+                        <div class="container">
+                            <div class="text-center">
+                                <!--	<h4>WORKING</h4> -->
+                                <p style="color: #1b325f;font-size: 20px;max-width: 75%;margin: auto;margin-bottom: 20px;letter-spacing: .5px;">
+                                    Once the sales quotation is created on the
+                                    system, then you can trigger directly in to
+                                    the proposal screen by simply clicking on
+                                    the smart button
+                                </p>
+
+                                <div class="col-md-12">
+                                    <img class="img-responsive rounded shadow"
+                                         src="working/img/sales-edit.png"
+                                         style="width: 100%;"/>
+                                </div>
+
+
+                                <br/>
+                                <h4>Creating Sales Proposal</h4>
+                                <p style="color: #1b325f;font-size: 20px;max-width: 75%;margin: auto;margin-bottom: 20px;letter-spacing: .5px;">
+                                   Here you can create and edit the proposal and choose only the pages you would like to include
+                                </p>
+                                <div class="col-md-12">
+                                    <img class="img-responsive rounded shadow"
+                                         src="working/img/pages1.png"
+                                         style="width: 100%;"/>
+                                </div>
+                                <br/>
+                                <p style="color: #1b325f;font-size: 20px;max-width: 75%;margin: auto;margin-bottom: 20px;letter-spacing: .5px;">
+                                    We can add as many pages as we want in this proposal screen and mix and match to add only the required pages and save the proposal, then the proposal reference number will be auto-generated.
+                                </p>
+                                <div class="col-md-12">
+                                    <img class="img-responsive rounded shadow"
+                                         src="working/img/drag-edit1.png"
+                                         style="width: 100%;"/>
+                                </div>
+                                <br/>
+                                <!--	<p>
+                                                <h4>Assigning Brands to Products</h4>
+                                                </p> -->
+                                <p style="color: #1b325f;font-size: 20px;max-width: 75%;margin: auto;margin-bottom: 20px;letter-spacing: .5px;">
+                                  You can use the check box “Include Quotation” to attach the quotation directly from the sales module. You can also adjust the proposal page positions by the simple drag and drop option.
+                                    <br/>
+Once done you have the option to send by email or print it as a pdf
+                                </p>
+                                <div class="col-md-12">
+                                    <img class="img-responsive rounded shadow"
+                                         src="working/img/pages1-edit email.png"
+                                         style="width: 100%;"/>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <img class="img-responsive rounded shadow"
+                                         src="working/img/em.png"
+                                         style="width: 100%;"/>
+                                </div>
+                                <br/>
+
+                                <div class="col-md-12">
+                                    <img class="img-responsive rounded shadow"
+                                         src="working/img/print-edit.png"
+                                         style="width: 100%;"/>
+                                </div>
+                                <br/>
+                                <p style="color: #1b325f;font-size: 20px;max-width: 75%;margin: auto;margin-bottom: 20px;letter-spacing: .5px;">
+                                   We can take the printout of the proposal in PDF format.
+                                </p>
+                               <div class="col-md-12">
+                                    <img style=" width: 60%;" class="img-responsive rounded shadow"
+                                         src="images/proposal.gif"
+                                         style="width: 100%;"/>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+
+                <div id="Support" class="tab-pane">
+                    <section id="sh_support">
+                        <div class="container">
+                            <div class="col-md">
+                                <div class="sh_content shadow rounded bg-white"
+                                     style="padding: 20px;margin-bottom: 0px;">
+                                    <h4 class="mb-0"><a
+                                            href="mailto:support@abrusnetworks.com"
+                                            style="text-decoration: none;color: #212121;font-size: 18px;font-weight: 600;letter-spacing: 1px;"><span
+                                            class="fa fa-envelope"
+                                            style="color: #ff4b36;padding-right: 10px;font-size: 20px;"></span>
+                                        Mail us for support on <b
+                                                style="color: #ff4b36">support@abrusnetworks.com</b></a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <!-- tab 5 -->
+            </div>
+        </div>
+    </section>
+
+
+    <section class="card shadow-sm mb-5">
+        <div class="card-body">
+            <h2 class="my-3 w-100 text-center"
+                style="color: #0b3b52; font-weight: 400;">Abrus Digital
+                Suggested Apps</h2>
+            <div class="text-center w-100 mb-4">
+                <img alt="Abrus Digital" src="images/line.png">
+            </div>
+            <div id="demo" class="carousel slide pb-5 col-12 col-lg-8 mx-auto"
+                 data-ride="carousel">
+                <!-- Indicators -->
+                <ul class="carousel-indicators">
+                    <li data-target="#demo" style="background-color: #0b3b52;"
+                        data-slide-to="0" class="active"></li>
+                    <li data-target="#demo" style="background-color: #0b3b52;"
+                        data-slide-to="1"></li>
+                </ul>
+                <!-- The slideshow -->
+                <div class="carousel-inner pt-4 pt-lg-5 ">
+                    <div class="carousel-item px-4 active"
+                         style="min-height: 354px;">
+                        <div class="row pb-sm-4 no-lg-gutters">
+                            <div class="col-6 col-sm-3 text-center">
+                                <a href="https://apps.odoo.com/apps/modules/14.0/oxy_gym/"
+                                   class="d-block"
+                                   target="_blank"
+                                   style="text-decoration: none;">
+                                    <img src="images/app-logo/gym.png"
+                                         alt="dashboard-ninja">
+                                    <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                        <h5 class="card-text m-0"
+                                            style="font-size: 16px; font-weight: 600">
+                                            Gym Management
+                                            <br> System</h5>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-sm-3 text-center">
+                                <a href="https://apps.odoo.com/apps/modules/14.0/minutes_of_meeting/"
+                                   target="_blank"
+                                   style="text-decoration: none;">
+                                    <img src="images/app-logo/minut.png"
+                                         alt="list-view-manager">
+                                    <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                        <h5 class="card-text m-0"
+                                            style="font-size: 16px; font-weight: 600">
+                                            Minutes Of
+                                            <br> Meeting</h5>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-sm-3 text-center">
+                                <a href="https://apps.odoo.com/apps/modules/14.0/sales_margin_global/"
+                                   class="d-block"
+                                   target="_blank"
+                                   style="text-decoration: none;">
+                                    <img src="images/app-logo/glob.png"
+                                         alt="sticky-pivot-view">
+                                    <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                        <h5 class="card-text m-0"
+                                            style="font-size: 16px; font-weight: 600">
+                                            Sales Global <br>Margin
+                                        </h5>
+                                    </div>
+                                </a>
+                            </div>
+
+
+                            <div class="col-6 col-sm-3 text-center">
+                                <a href="https://apps.odoo.com/apps/modules/15.0/abrus_vendor_limit/"
+                                   class="d-block"
+                                   target="_blank"
+                                   style="text-decoration: none;">
+                                    <img src="images/app-logo/vendor.png"
+                                         alt="sticky-pivot-view">
+                                    <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                        <h5 class="card-text m-0"
+                                            style="font-size: 16px; font-weight: 600">
+                                            Vendor Credit Limit
+                                        </h5>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-6 col-sm-3 text-center">
+                                <a href="https://apps.odoo.com/apps/modules/15.0/attendance_custom/"
+                                   class="d-block"
+                                   target="_blank"
+                                   style="text-decoration: none;">
+                                    <img src="images/app-logo/Attendance.png"
+                                         style="width:40%;"
+                                         alt="sticky-pivot-view">
+                                    <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                        <h5 class="card-text m-0"
+                                            style="font-size: 16px; font-weight: 600">
+                                            Project Attendance Management
+                                        </h5>
+                                    </div>
+                                </a>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- Left and right controls -->
+                <a class="carousel-control-prev" href="#demo" data-slide="prev"
+                   style="left: -5%; width: 60px;">
+                    <i class="fa fa-angle-left"
+                       style="font-size: 5vw;color: #333;"></i>
+                </a>
+                <a class="carousel-control-next" href="#demo" data-slide="next"
+                   style="right: -5%; width: 60px;">
+                    <i class="fa fa-angle-right"
+                       style="font-size: 5vw;color: #333;"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="row pb-sm-5 px-1 pb-4">
+        <h2 class="w-100 text-center my-3" style="font-weight: 400;">Abrus
+            Digital Odoo Services</h2>
+        <div class="text-center w-100 mb-4">
+            <img src="images/line.png" alt="Abrus Digital">
+        </div>
+        <div class="col-12 col-sm-6 col-md-4" style="margin-bottom: 20px;">
+            <div class="card text-center bg-info" style="min-height: 90px;">
+                <div class="pt-4">
+                    <img src="assets/1.png" alt="support">
+                </div>
+                <div class="px-3 pt-3 pb-2">
+                    <h5 class="card-title text-white"
+                        style="font-size: 19px; font-weight: 400;"> Odoo
+                        Customization </h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4" style="margin-bottom: 20px;">
+            <div class="card text-center"
+                 style="min-height: 90px; background-color: #2ebeb4">
+                <div class="pt-4">
+                    <img src="assets/2.png" alt="apps">
+                </div>
+                <div class="px-3 pt-3 pb-2">
+                    <h5 class="card-title text-white"
+                        style="font-size: 19px; font-weight: 400;"> Odoo
+                        Implementation </h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4" style="margin-bottom: 20px;">
+            <div class="card text-center"
+                 style="min-height: 90px;background-color: #00a393; background-color: #98b1c4; ">
+                <div class="pt-4">
+                    <img src="assets/3.png" alt="support2">
+                </div>
+                <div class="px-3 pt-3 pb-2">
+                    <h5 class="card-title text-white"
+                        style="font-size: 19px; font-weight: 400;"> Odoo
+                        Integration </h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4" style="margin-bottom: 20px;">
+            <div class="card text-center"
+                 style="min-height: 90px; background-color: #2f4e6f;">
+                <div class="pt-4">
+                    <img src="assets/4.png" alt="custom">
+                </div>
+                <div class="px-3 pt-3 pb-2">
+                    <h5 class="card-title text-white"
+                        style="font-size: 19px; font-weight: 400;"> Odoo
+                        Support </h5>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4" style="margin-bottom: 20px;">
+
+            <div class="card text-center"
+                 style="min-height: 90px; background-color: #f89c24;">
+                <div class="pt-4">
+                    <img src="assets/5.png" alt="integrated">
+                </div>
+                <div class="px-3 pt-3 pb-2">
+                    <h5 class="card-title text-white"
+                        style="font-size: 19px; font-weight: 400;"> Odoo
+                        Developer Outsourcing </h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4" style="margin-bottom: 20px;">
+
+            <div class="card text-center"
+                 style="min-height: 90px; background-color: #2477f8b3;">
+                <div class="pt-4">
+                    <img src="assets/4.png" alt="integrated">
+                </div>
+                <div class="px-3 pt-3 pb-2">
+                    <h5 class="card-title text-white"
+                        style="font-size: 19px; font-weight: 400;"> Odoo
+                        Consultation </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="oe_container">
+        <div>
+            <div>
+                <h2 class="oe_slogan">Free Support</h2>
+                <h3 class="oe_slogan"
+                    style="font-size: 21px; color: #000000 !important;">You
+                    will get 90 Days free support incase any bugs or issue
+                    (Except data recovery).</h3>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="oe_container lead">
+        <div>
+            <div>
+                <div class="img img-responsive text-center">
+                    <a href="https://www.abrus.digital" target="new"
+                       style="display: grid;">
+                        <img src="images/abrus-digital.png"
+                             style="margin: auto;max-width: 350px;">
+                    </a>
+                </div>
+            </div>
+            <div class="oe_slogan oe_spaced text-center">
+                <a class="btn mt8" title="Demo Request"
+                   style="background-color: #ff4b36;color: #FFFFFF !important;font-size: 20px;font-weight: bold;"
+                   href="mailto:support@abrusnetworks.com?Subject=Demo Request for Sales Proposal"
+                   target="_blank">Demo Request</a>
+                <a class="btn mt8" title="Support Request"
+                   style="background-color: #ff4b36;color: #FFFFFF !important;font-size: 20px;font-weight: bold;"
+                   href="mailto:support@abrusnetworks.com?Subject=Support Request for Sales Proposal"
+                   target="_blank">Support Request</a></div>
+        </div>
+    </section>
+
+
+    <div class="row no-gutters mx-0 justify-content-sm-between justify-content-center"
+         style="border-top: 1px solid black;">
+        <div class="mb-sm-0 mb-3 d-flex align-items-center">
+            <img src="images/letter.svg"
+                 style="width: 35px;height: 35px;margin-right: 20px">
+            <span style="font-size: 18px;">support@abrusnetworks.com</span>
+        </div>
+        <div class="d-flex align-items-center">
+            <span style="font-size: 18px;">+971 4 323 2397‬</span>
+            <img src="images/smartphone.svg"
+                 style="width: 35px;height: 35px;margin-left: 20px;">
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+

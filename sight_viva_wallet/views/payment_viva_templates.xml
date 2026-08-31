@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="post">
+            <input type="hidden" name="order_code" t-att-value="order_code"/>
+            <input type="hidden" name="Viva_return" t-att-value="Viva_return"/>
+            <input type="hidden" name="Viva_returncancel" t-att-value="Viva_returncancel"/>
+        </form>
+    </template>
+</odoo>

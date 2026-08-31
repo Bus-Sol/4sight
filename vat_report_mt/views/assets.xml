@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" inherit_id="web.assets_backend" name="MT VAT Report">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/vat_report_mt/static/src/js/vat_report.js"></script>
+        </xpath>
+    </template>
+</odoo>
