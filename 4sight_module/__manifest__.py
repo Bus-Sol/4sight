@@ -17,7 +17,8 @@
         'report_qweb_element_page_visibility',
         'helpdesk',
         'crm',
-        "mail"
+        "mail",
+        "hr_timesheet"
     ],
     'data': [
         'views/account_followups.xml',

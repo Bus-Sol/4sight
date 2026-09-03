@@ -8,3 +8,4 @@ from . import res_partner
 from . import mail_message
 from . import sale_template
 from . import account_move
+from . import account_analytic_line
