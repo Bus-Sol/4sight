@@ -672,7 +672,7 @@ class EventTypeController(http.Controller):
         # Subscribe contact to the mailing list
         if mailing_list:
 
-            subscription = request.env['mailing.contact.subscription'].sudo().search([
+            subscription = request.env['mailing.subscription'].sudo().search([
 
                 ('contact_id', '=', contact.id),
                 ('list_id', '=', mailing_list[0].id),
