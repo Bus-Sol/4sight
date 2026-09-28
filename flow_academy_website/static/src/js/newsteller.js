@@ -1,48 +1,58 @@
 /** @odoo-module **/
 
-import { rpc } from "@web/core/network/rpc";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
-document.addEventListener("DOMContentLoaded", () => {
-    const forms = document.querySelectorAll(".s_newsletter_subscribe_form");
+publicWidget.registry.flowNewsletterSubscribe = publicWidget.Widget.extend({
+    selector: ".s_newsletter_subscribe_form",
+    events: {
+        submit: "_onSubmit",
+    },
 
-    for (const form of forms) {
-        const input = form.querySelector(".js_subscribe_value");
-        const button = form.querySelector(".js_subscribe_btn");
-        const message = form.querySelector(".flow_newsletter_message");
+    init() {
+        this._super(...arguments);
+        this.rpc = this.bindService("rpc");
+    },
 
-        button.addEventListener("click", async () => {
-            const email = input.value.trim();
+    async _onSubmit(event) {
+        event.preventDefault();
 
-            if (!email) {
-                message.textContent = "Please enter your email address.";
-                return;
-            }
+        const input = this.el.querySelector(".js_subscribe_value");
+        const button = this.el.querySelector(".js_subscribe_btn");
+        const message = this.el.querySelector(".flow_newsletter_message");
+        const email = input?.value.trim();
 
+        if (!email) {
+            this._setMessage(message, "Please enter your email address.");
+            return;
+        }
+
+        if (button) {
             button.disabled = true;
-            message.textContent = "";
+        }
+        this._setMessage(message, "");
 
-            try {
-                const result = await rpc(
-                    "/flow/newsletter/subscribe",
-                    {
-                        email: email,
-                    }
-                );
+        try {
+            const result = await this.rpc("/flow/newsletter/subscribe", { email });
+            this._setMessage(message, result?.message || "Unable to subscribe.");
 
-                if (result.success) {
-                    message.textContent = result.message;
-                    input.value = "";
-                } else {
-                    message.textContent =
-                        result.message || "Unable to subscribe.";
-                }
-            } catch (error) {
-                console.error("Newsletter subscription failed:", error);
-                message.textContent =
-                    "Something went wrong. Please try again.";
-            } finally {
+            if (result?.success) {
+                input.value = "";
+            }
+        } catch (error) {
+            console.error("Newsletter subscription failed:", error);
+            this._setMessage(message, "Something went wrong. Please try again.");
+        } finally {
+            if (button) {
                 button.disabled = false;
             }
-        });
-    }
+        }
+    },
+
+    _setMessage(message, text) {
+        if (message) {
+            message.textContent = text;
+        }
+    },
 });
+
+export default publicWidget.registry.flowNewsletterSubscribe;
