@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<odoo>
+<data noupdate="1">
+    <record id="quotation_order" model="proposal.page">
+        <field name="name" >Quotation</field>
+        <!-- <field name="description">Quotation</field>
+        <field name="is_quotation">True</field>
+         <field name="quotation">False</field>
+        <field name="quotation"/> -->
+    </record>
+    </data>
+</odoo>

@@ -1,0 +1,736 @@
+<t t-name="website.courses-2026">
+    <t t-call="website.layout">
+        <div id="wrap" class="oe_structure oe_empty">
+            <section
+                    class="s_cover bg-black-50 pt96 pb96 o_colored_level s_parallax_no_overflow_hidden oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
+                    data-scroll-background-ratio="0" data-snippet="s_cover" data-name="Cover"
+                    style="background-image: url(&quot;/web/image/146922-61d061fe/AI%20AT%20WORK.webp&quot;);"
+                    data-mimetype="image/webp" data-original-id="123082"
+                    data-original-src="/web/image/123082-61d061fe/AI%20AT%20WORK.jpg"
+                    data-mimetype-before-conversion="image/jpeg" data-resize-width="1200" data-quality="100">
+
+                <div class="o_we_bg_filter bg-black-50"/>
+                <div class="container s_allow_columns">
+                    <h1 class="display-3" style="text-align: center; font-weight: bold;">AI for Work</h1>
+                    <p class="lead" style="text-align: center;"><strong>Learn how to iterate and refine prompts for
+                        better results!</strong>&amp;nbsp;
+                        <br/>
+                    </p>
+                </div>
+            </section>
+            <section class="s_text_block pt40 o_colored_level pb40" data-snippet="s_text_block" data-name="Text"
+                     style="background-image: none;">
+                <div class="s_allow_columns container">
+                    <div class="row">
+                        <div class="col-lg-6 o_colored_level">
+                            <p>
+                                <span style="font-size: 1.125rem;"><br/>The AI for Work programme provides hands-on
+                                    insights into AI-powered tools, automation, and data-driven decision-making. Wether
+                                    you're looking to improve productivity, optimise workflows or stay ahead in your
+                                    industry, you'll gain practical knowledge to implement AI effectively in your
+                                    professional environment.
+                                </span>
+                            </p>
+                        </div>
+                        <div class="o_colored_level o_cc o_cc5 rounded offset-lg-1 col-lg-4"
+                             style="border-radius: 20px !important;">
+                            <p style="text-align: center;">
+                                <span class="h3-fs"><br/>€250.00
+                                </span>
+                                <span style="font-size: 1.125rem;">
+                                    <br/>
+                                </span>
+                                <span class="o_small-fs">
+                                    <em>Excl. VAT</em>
+                                </span>
+                            </p>
+                            <p style="text-align: center;"><span class="h5-fs">​</span>​​​
+                                <a class="btn btn-fill-custom text-white rounded-circle" href="#"
+                                   data-bs-original-title="" title=""
+                                   style="border-width: 1px; border-style: solid; background-color: rgb(235, 104, 33);">
+                                    <span style="font-size: 1rem;">Buy&amp;nbsp;</span>
+                                    <span class="fa fa-cart-plus"/>
+                                </a>
+                                <br/>
+                                <br/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="s_tabs o_colored_level pb0 bg-100 pt32" data-vcss="001" data-snippet="s_tabs"
+                     data-name="Tabs" style="background-image: none;">
+                <div class="container">
+                    <div class="s_tabs_main">
+                        <div class="s_tabs_nav mb-3">
+                            <ul class="nav nav-pills" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="nav_tabs_link_1763028566686_33" data-bs-toggle="tab"
+                                       href="#nav_tabs_content_1763028566686_33" role="tab"
+                                       aria-controls="nav_tabs_content_1763028566686_33" aria-selected="true">Course
+                                        Overview
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="nav_tabs_link_1763028566686_34" data-bs-toggle="tab"
+                                       href="#nav_tabs_content_1763028566686_34" role="tab"
+                                       aria-controls="nav_tabs_content_1763028566686_34" aria-selected="false">Course
+                                        Details
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="nav_tabs_link_1763028566686_35" data-bs-toggle="tab"
+                                       href="#nav_tabs_content_1763028566686_35" role="tab"
+                                       aria-controls="nav_tabs_content_1763028566686_35" aria-selected="false">Learning
+                                        Structure
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="s_tabs_content tab-content">
+                            <div class="tab-pane fade active show" id="nav_tabs_content_1763028566686_33"
+                                 role="tabpanel" aria-labelledby="nav_tabs_link_1763028566686_33">
+                                <div class="oe_structure oe_empty" data-editor-message-default="true"
+                                     data-editor-message="DRAG BUILDING BLOCKS HERE">
+                                    <section class="s_text_block" style="background-image: none;" data-name="Text">
+                                        <div class="s_allow_columns container">
+                                            <p>
+                                                <span style="font-size: 1rem;">The&amp;nbsp;AI for Work&amp;nbsp;course
+                                                    is designed to help professionals <strong>harness the power of
+                                                        Artificial Intelligence to work smarter, faster, and more
+                                                        creatively</strong>. Through a combination of&amp;nbsp;hands-on
+                                                    exercises,&amp;nbsp;real-world examples, and&amp;nbsp;ready-to-use
+                                                    templates, participants will <strong>learn how to integrate AI into
+                                                        everyday workflows
+                                                    </strong> to enhance productivity and problem-solving.&amp;nbsp;
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span style="font-size: 1rem;">The course introduces tools such as&amp;nbsp;ChatGPT,&amp;nbsp;Gemini,
+                                                    and&amp;nbsp;Microsoft Copilot, offering <strong>practical guidance
+                                                        on how to craft effective prompts, automate repetitive tasks,
+                                                        and generate insightful, high-quality outputs</strong>. By the
+                                                    end, learners will be equipped with the confidence and competence to
+                                                    use AI responsibly and strategically across different professional
+                                                    functions.
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </section>
+                                    <section class="s_text_image pt0 pb24" data-snippet="s_text_image"
+                                             data-name="Text - Image" style="background-image: none;">
+                                        <div class="container">
+                                            <div class="row align-items-center">
+                                                <div class="pt16 pb16 o_colored_level col-lg-6">
+                                                    <h2>Who Should Attend?&amp;nbsp;</h2>
+                                                    <p>
+                                                        <span style="font-size: 1rem;">This course is ideal for:&amp;nbsp;</span>
+                                                    </p>
+                                                    <ul>
+                                                        <li>
+                                                            <span style="font-size: 1rem;">Business professionals
+                                                                looking to improve efficiency and productivity.&amp;nbsp;
+                                                            </span>
+                                                        </li>
+                                                        <li>
+                                                            <span style="font-size: 1rem;">Managers and team leaders
+                                                                seeking to streamline workflows and decision-making.&amp;nbsp;
+                                                            </span>
+                                                        </li>
+                                                        <li>
+                                                            <span style="font-size: 1rem;">Administrative, marketing,
+                                                                and operations staff who regularly handle communication,
+                                                                reports, or project data.&amp;nbsp;
+                                                            </span>
+                                                        </li>
+                                                        <li>
+                                                            <span style="font-size: 1rem;">Anyone interested in using AI
+                                                                to simplify everyday work tasks.&amp;nbsp;
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="pt16 pb16 o_colored_level col-lg-5 offset-lg-1">
+                                                    <img src="/web/image/146918-d295e40c/_MG_4938-1.webp" alt=""
+                                                         class="img img-fluid mx-auto o_we_custom_image"
+                                                         data-mimetype="image/webp" data-original-id="146911"
+                                                         data-original-src="/web/image/146911-753c0c7e/_MG_4938-1.jpg"
+                                                         data-mimetype-before-conversion="image/jpeg"
+                                                         data-resize-width="690" loading="lazy"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section class="s_text_block pb40 o_colored_level pt0" data-snippet="s_text_block"
+                                             data-name="Text" style="background-image: none;">
+                                        <div class="s_allow_columns container">
+                                            <div class="row">
+                                                <div class="col-lg-6 o_colored_level">
+                                                    <h2>Course Objectives&amp;nbsp;</h2>
+                                                    <p>&amp;nbsp;By leveraging AI prompting techniques, you will learn
+                                                        how to:&amp;nbsp;
+                                                    </p>
+                                                    <ul>
+                                                        <li>Save time&amp;nbsp;by automating routine tasks and
+                                                            communications.&amp;nbsp;
+                                                        </li>
+                                                        <li>Extract insights&amp;nbsp;from data and turn them into
+                                                            actionable strategies.&amp;nbsp;
+                                                        </li>
+                                                        <li>Simplify complex projects&amp;nbsp;by breaking them into
+                                                            manageable steps.&amp;nbsp;
+                                                        </li>
+                                                        <li>Enhance creativity&amp;nbsp;when drafting content,
+                                                            presentations, or business materials.&amp;nbsp;
+                                                        </li>
+                                                        <li>Use AI responsibly, maintaining accuracy, transparency, and
+                                                            ethical integrity.&amp;nbsp;
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-lg-6 o_colored_level">
+                                                    <h2>Learning Outcomes&amp;nbsp;</h2>
+                                                    <p>&amp;nbsp;By the end of this course, participants will be able
+                                                        to:&amp;nbsp;
+                                                    </p>
+                                                    <ul>
+                                                        <li>Draft professional&amp;nbsp;email campaigns&amp;nbsp;and
+                                                            communications using AI tools.&amp;nbsp;
+                                                        </li>
+                                                        <li>Create&amp;nbsp;trackers and reports&amp;nbsp;to monitor
+                                                            business or project progress.&amp;nbsp;
+                                                        </li>
+                                                        <li>Generate&amp;nbsp;presentations and summaries&amp;nbsp;from
+                                                            raw information or data.&amp;nbsp;
+                                                        </li>
+                                                        <li>Develop and refine&amp;nbsp;AI prompts&amp;nbsp;for
+                                                            consistent, high-quality results.&amp;nbsp;
+                                                        </li>
+                                                        <li>Integrate AI applications into daily workflows to improve
+                                                            efficiency and decision-making.&amp;nbsp;
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="nav_tabs_content_1763028566686_34" role="tabpanel"
+                                 aria-labelledby="nav_tabs_link_1763028566686_34">
+                                <div class="oe_structure oe_empty" data-editor-message-default="true"
+                                     data-editor-message="DRAG BUILDING BLOCKS HERE">
+                                    <section class="s_text_block" style="background-image: none;" data-name="Text">
+                                        <div class="container s_allow_columns">
+                                            <p>
+                                                <span style="font-size: 1rem;"><strong>Date of Next Course:</strong>&amp;nbsp;
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span style="font-size: 1rem;"><strong>Venue:</strong>&amp;nbsp;The FLOW&amp;nbsp;Academy,
+                                                    No. 22 Level 1, Triq Wenzu Dyer, Hamrun. Malta.&amp;nbsp;
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span style="font-size: 1rem;"><strong>Language:</strong>&amp;nbsp;English&amp;nbsp;
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span style="font-size: 1rem;"><strong>Duration:</strong>&amp;nbsp;&amp;nbsp;4
+                                                    Hours&amp;nbsp;
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span style="font-size: 1rem;"><strong>Funding Options:</strong>&amp;nbsp;Investing
+                                                    in Skills (IIS)&amp;nbsp;
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span style="font-size: 1rem;">Unlock your team’s potential with the&amp;nbsp;Investing
+                                                    in Skills Scheme, proudly co-financed by the&amp;nbsp;European
+                                                    Social Fund+. This initiative helps businesses invest in their
+                                                    people through funded training opportunities&amp;nbsp;—&amp;nbsp;covering
+                                                    up to&amp;nbsp;70% of total costs.&amp;nbsp;
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span style="font-size: 1rem;">Whether through&amp;nbsp;interactive
+                                                    classroom sessions&amp;nbsp;or&amp;nbsp;flexible online learning,
+                                                    the scheme makes professional development more accessible than ever.
+                                                    Employers can receive&amp;nbsp;€30.15 per trainer hour,&amp;nbsp;€10.00
+                                                    per trainee hour, plus an additional&amp;nbsp;7% contribution&amp;nbsp;to
+                                                    support administrative costs.&amp;nbsp;
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span style="font-size: 1rem;">It’s more than funding&amp;nbsp;—&amp;nbsp;it’s
+                                                    a partnership in progress. Help your organisation grow stronger,
+                                                    smarter, and ready for the future with FLOW Academy and the
+                                                    Investing in Skills Scheme.&amp;nbsp;
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <span style="font-size: 1rem;"><a
+                                                        href="https://jobsplus.gov.mt/funding-employer/investing-in-skills"
+                                                        target="_blank">
+                                                    https://jobsplus.gov.mt/funding-employer/investing-in-skills</a>&amp;nbsp;
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </section>
+                                    <section class="s_text_image pb32 pt4" data-snippet="s_text_image"
+                                             data-name="Text - Image" style="background-image: none;">
+                                        <div class="container">
+                                            <div class="row align-items-center">
+
+                                                <div class="pt16 o_colored_level col-lg-12 pb24">
+                                                    <img src="/web/image/132074-1b55618a/JOBS%20PLUS.png" alt=""
+                                                         class="img img-fluid mx-auto o_we_custom_image"
+                                                         data-mimetype="image/png" data-original-id="132062"
+                                                         data-original-src="/web/image/132062-1b55618a/JOBS%20PLUS.png"
+                                                         data-mimetype-before-conversion="image/png"
+                                                         data-resize-width="1904" loading="lazy"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="nav_tabs_content_1763028566686_35" role="tabpanel"
+                                 aria-labelledby="nav_tabs_link_1763028566686_35">
+                                <div class="oe_structure oe_empty" data-editor-message-default="true"
+                                     data-editor-message="DRAG BUILDING BLOCKS HERE">
+                                    <section class="s_timeline pt24 pb48" data-snippet="s_timeline" data-name="Timeline"
+                                             style="background-image: none;">
+                                        <div class="s_timeline_line container">
+                                            <div class="s_timeline_row d-block d-md-flex flex-row" data-name="Row">
+                                                <div class="s_timeline_date">
+                                                    <b>Chapter 1</b>
+                                                </div>
+                                                <div class="s_timeline_content d-flex">
+                                                    <div class="s_timeline_card s_card card bg-white w-100"
+                                                         data-name="Card" data-snippet="s_card">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">
+                                                                <strong>
+                                                                    <font style="color: rgb(235, 104, 33);">Mastering AI
+                                                                        Prompting for Business Success
+                                                                    </font>
+                                                                </strong>
+                                                                <font style="color: rgb(235, 104, 33);">&amp;nbsp;
+                                                                </font>
+                                                            </h5>
+                                                            <p>1.1 Introduction to AI Prompting&amp;nbsp;</p>
+                                                            <p>1.2 Understanding How AI Models Process
+                                                                Prompts&amp;nbsp;
+                                                            </p>
+                                                            <p>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; (The
+                                                                Science Behind AI Language Models)&amp;nbsp;
+                                                            </p>
+                                                            <p>1.3 The 5-Step Framework for Effective AI Prompting&amp;nbsp;</p>
+                                                            <p>1.4 Advanced Prompting Techniques for Business Owners&amp;nbsp;</p>
+                                                            <p>1.5 Role-Based Prompting: Making AI Think Like an Expert&amp;nbsp;</p>
+                                                            <p>1.6 Chain-of-Thought Prompting: Breaking Down Complex
+                                                                Tasks
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <i class="fa fa-1x fa-child bg-o-color-2 rounded-circle s_timeline_icon"/>
+                                                </div>
+                                                <div class="s_timeline_content"/>
+                                            </div>
+
+                                            <div class="s_timeline_row d-block d-md-flex flex-row-reverse"
+                                                 data-name="Row">
+                                                <div class="s_timeline_date">
+                                                    <b>Capter 2</b>
+                                                </div>
+                                                <div class="s_timeline_content d-flex">
+                                                    <div class="s_timeline_card s_card card bg-white w-100"
+                                                         data-name="Card" data-snippet="s_card">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">
+                                                                <strong>
+                                                                    <font style="color: rgb(235, 104, 33);">Streamlining
+                                                                        Everyday Business Tasks with AI
+                                                                    </font>
+                                                                </strong>
+                                                                <font style="color: rgb(235, 104, 33);">
+                                                                    &amp;nbsp;</font>&amp;nbsp;
+                                                            </h5>
+                                                            <p>2.1 Introduction to AI in Business Operations&amp;nbsp;
+                                                            </p>
+                                                            <p>2.2 AI-Powered Email Automation&amp;nbsp;</p>
+                                                            <p>2.3 AI for Business Writing:&amp;nbsp;</p>
+                                                            <p>Reports, Summaries, and Documentation&amp;nbsp;</p>
+                                                            <p>2.4 AI for Task and Project Management&amp;nbsp;</p>
+                                                            <p>2.5 AI-Powered Data Entry and Table Creation&amp;nbsp;
+                                                            </p>
+                                                            <p>2.6 AI for Content Brainstorming and Idea Generation&amp;nbsp;</p>
+                                                            <p>2.7 AI for Business Decision-Making and Data Analysis</p>
+                                                        </div>
+                                                    </div>
+                                                    <i class="fa fa-1x fa-bolt bg-o-color-2 rounded-circle s_timeline_icon"/>
+                                                </div>
+                                                <div class="s_timeline_content"/>
+                                            </div>
+                                            <div class="s_timeline_row d-block d-md-flex flex-row" data-name="Row">
+                                                <div class="s_timeline_date">
+                                                    <b>Chapter 3</b>
+                                                </div>
+                                                <div class="s_timeline_content d-flex">
+                                                    <div class="s_timeline_card s_card card bg-white w-100"
+                                                         data-name="Card" data-snippet="s_card">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title"><strong>Leveraging AI for Data
+                                                                Analysis and Business Intelligence</strong>&amp;nbsp;
+                                                            </h5>
+                                                            <p>3.1 Introduction to AI in Data Analysis and Business
+                                                                Intelligence&amp;nbsp;
+                                                            </p>
+                                                            <p>3.2 AI for Data Processing and Cleaning&amp;nbsp;</p>
+                                                            <p>3.3 AI for Trend Analysis and Market Insights&amp;nbsp;
+                                                            </p>
+                                                            <p>3.4 AI for Predictive Analytics and
+                                                                Forecasting&amp;nbsp;
+                                                            </p>
+                                                            <p>3.5 AI for Competitive Analysis and Market Research&amp;nbsp;</p>
+                                                            <p>3.6 AI for Data Visualization and Dashboards&amp;nbsp;
+                                                            </p>
+                                                            <p>3.7 AI for Automated Business Reports&amp;nbsp;</p>
+                                                            <p>3.8 AI-Powered Risk Analysis and Fraud Detection&amp;nbsp;</p>
+                                                        </div>
+                                                    </div>
+                                                    <i class="fa fa-1x fa-child bg-o-color-2 rounded-circle s_timeline_icon"/>
+                                                </div>
+                                                <div class="s_timeline_content"/>
+                                            </div>
+                                            <div class="s_timeline_row d-block d-md-flex flex-row-reverse"
+                                                 data-name="Row">
+                                                <div class="s_timeline_date">
+                                                    <b>Capter 2</b>
+                                                </div>
+                                                <div class="s_timeline_content d-flex">
+                                                    <div class="s_timeline_card s_card card bg-white w-100"
+                                                         data-name="Card" data-snippet="s_card">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title"><strong>AI for Content Creation and
+                                                                Digital Marketing</strong>&amp;nbsp;&amp;nbsp;
+                                                            </h5>
+                                                            <p>4.1 Introduction to AI in Content Creation and Digital
+                                                                Marketing&amp;nbsp;
+                                                            </p>
+                                                            <p>4.2 AI for Blog Writing and Long-Form Content&amp;nbsp;
+                                                            </p>
+                                                            <p>4.3 AI for SEO Optimization and Content
+                                                                Ranking&amp;nbsp;
+                                                            </p>
+                                                            <p>4.4 AI for Social Media Creation&amp;nbsp;</p>
+                                                            <p>4.5 AI for Paid Advertising and PPC Campaigns&amp;nbsp;
+                                                            </p>
+                                                            <p>4.6 AI for Email Marketing and Sales Funnels&amp;nbsp;
+                                                            </p>
+                                                            <p>4.7 AI for Video Script Writing and Content Repurposing&amp;nbsp;</p>
+                                                        </div>
+                                                    </div>
+                                                    <i class="fa fa-1x fa-bolt bg-o-color-2 rounded-circle s_timeline_icon"/>
+                                                </div>
+                                                <div class="s_timeline_content"/>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section class="s_text_block" style="background-image: none;" data-name="Text">
+                                        <div class="container s_allow_columns">
+                                            <p class="o_default_snippet_text">Start with the customer – find out what
+                                                they want and give it to them.
+                                            </p>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="s_features o_colored_level pb0 pt24" data-snippet="s_features" data-name="Features"
+                     style="background-image: none;">
+                <div class="container">
+                    <div class="row">
+                        <div class="pt32 pb32 text-center o_colored_level col-lg-3">
+                            <i class="fa fa-3x fa-gear rounded bg-o-color-1 m-3"/>
+                            <h3>4 hours</h3>
+                            <p>(In-person or live virtual session)</p>
+                        </div>
+                        <div class="pt32 pb32 text-center o_colored_level col-lg-3">
+                            <i class="fa fa-3x fa-photo rounded bg-o-color-5 m-3"/>
+                            <h3>Instructor-led, interactive workshop with group exercises&amp;nbsp;</h3>
+                        </div>
+                        <div class="pt32 pb32 text-center o_colored_level col-lg-3">
+                            <i class="fa fa-3x fa-leaf rounded bg-o-color-2 m-3"/>
+                            <h3>Templates, prompt library, and step-by-step AI usage guide&amp;nbsp;</h3>
+                        </div>
+                        <div class="pt32 pb32 text-center o_colored_level col-lg-3">
+                            <i class="fa fa-3x fa-leaf rounded bg-o-color-2 m-3"/>
+                            <h3>Official&amp;nbsp;Flow Academy Certificate of Completion</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="s_quotes_carousel_wrapper o_colored_level s_custom_snippet" data-vxml="001" data-vcss="001"
+                     data-snippet="s_quotes_carousel" style="background-image: none;" data-name="Custom Quotes (2)">
+                <div class="s_quotes_carousel s_carousel_default carousel slide o_cc o_cc2" data-bs-interval="10000"
+                     id="myCarousel1763031846900" style="background-image: none;">
+
+                    <ol class="carousel-indicators o_we_no_overlay">
+                        <li data-bs-target="#myCarousel1763031846900" class="active" data-bs-slide-to="0"
+                            aria-current="true"/>
+
+                        <li data-bs-target="#myCarousel1763031846900" data-bs-slide-to="1"/>
+                        <li data-bs-target="#myCarousel1763031846900" data-bs-slide-to="2"/>
+                        <li data-bs-target="#myCarousel1763031846900" data-bs-slide-to="3"/>
+                    </ol>
+
+                    <div class="carousel-inner">
+
+                        <div class="carousel-item o_colored_level oe_img_bg o_bg_img_center o_bg_img_origin_border_box active pb72 pt80"
+                             style="background-image: url(&quot;/web/image/142540-a0bab8bf/IMAGE%201.jpg&quot;); background-position: 50% 76.3381%;"
+                             data-name="Slide" data-mimetype="image/jpeg" data-original-id="142532"
+                             data-original-src="/web/image/142532-a0bab8bf/IMAGE%201.jpg"
+                             data-mimetype-before-conversion="image/jpeg" data-resize-width="1620" data-quality="100">
+                            <div class="container">
+                                <blockquote class="s_blockquote s_blockquote_classic blockquote w-50 mx-auto"
+                                            data-name="Blockquote">
+                                    <i class="fa fa-quote-left rounded float-start s_blockquote_icon text-white fa-1x"
+                                       style="background-color: rgb(235, 104, 33);"/>
+                                    <div class="s_blockquote_content o_cc1" style="background-image: none;">
+                                        <p>The "AI for Work" course exceeded expectations, offering practical, hands-on
+                                            ways to boost productivity. The content was clear, well-structures, and
+                                            immediately applicable in daily workflows. Perfect for both beginners and
+                                            looking to sharpen AI skills. Highly recommended...And yes, I even used AI
+                                            to write this.
+                                        </p>
+                                        <footer class="blockquote-footer">
+                                            <img src="/web/image/132860-d0affe9b/PANTA%20LOGO.webp" alt=""
+                                                 class="s_blockquote_avatar img rounded-circle me-2 img-fluid o_we_custom_image"
+                                                 data-mimetype="image/webp" data-original-id="132857"
+                                                 data-original-src="/web/image/132857-2ffe5367/PANTA%20LOGO.png"
+                                                 data-mimetype-before-conversion="image/png" data-resize-width="398"
+                                                 loading="lazy"/>
+                                            <span class="s_blockquote_author">
+                                                <b>Michel Le Brun</b>
+                                                •&amp;nbsp;Panta
+                                            </span>
+                                        </footer>
+                                    </div>
+                                </blockquote>
+                            </div>
+                        </div>
+
+                        <div class="carousel-item pt80 pb80 o_colored_level oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
+                             style="background-image: url(&quot;/web/image/142541-012fd358/IMAGE%202.jpg&quot;); background-position: 50% 59.2414%;"
+                             data-name="Slide" data-mimetype="image/jpeg" data-original-id="142533"
+                             data-original-src="/web/image/142533-012fd358/IMAGE%202.jpg"
+                             data-mimetype-before-conversion="image/jpeg" data-resize-width="1620" data-quality="100">
+                            <div class="container">
+                                <blockquote class="s_blockquote s_blockquote_classic blockquote w-50 mx-auto"
+                                            data-name="Blockquote">
+                                    <i class="fa fa-quote-left rounded float-start s_blockquote_icon fa-1x text-white"
+                                       style="background-color: rgb(235, 104, 33);"/>
+                                    <div class="s_blockquote_content o_cc1" style="background-image: none;">
+                                        <p>Attending FLOW Academy's AI and prompt engineering course exceeded all my
+                                            expectations. As a CEO, I gained clear, practical insights on using AI tools
+                                            to improve efficiency and decision making. Real-world examples made the
+                                            learning hands-on and immediately actionable. I now fell equipped to
+                                            leverage AI strategically and recommend for business leaders.
+                                        </p>
+                                        <footer class="blockquote-footer">
+                                            <img src="/web/image/138230-212f793c/ROLLING%20BUDDY%20LOGO.webp" alt=""
+                                                 class="s_blockquote_avatar img rounded-circle me-2 img-fluid o_we_custom_image"
+                                                 data-mimetype="image/webp" data-original-id="138228"
+                                                 data-original-src="/web/image/138228-e17ae803/ROLLING%20BUDDY%20LOGO.png"
+                                                 data-mimetype-before-conversion="image/png" data-resize-width="398"
+                                                 loading="lazy"/>
+                                            <span class="s_blockquote_author"><b>Darren Vassallo</b>&amp;nbsp;•&amp;nbsp;VD
+                                                Supplies
+                                            </span>
+                                        </footer>
+                                    </div>
+                                </blockquote>
+                            </div>
+                        </div>
+
+                        <div class="carousel-item pt80 pb80 o_colored_level oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
+                             style="background-image: url(&quot;/web/image/142543-e915ace3/IMAGE%204.jpg&quot;); background-position: 50% 22.1975%;"
+                             data-name="Slide" data-mimetype="image/jpeg" data-original-id="142535"
+                             data-original-src="/web/image/142535-e915ace3/IMAGE%204.jpg"
+                             data-mimetype-before-conversion="image/jpeg" data-resize-width="1620" data-quality="100">
+                            <div class="container">
+                                <blockquote class="s_blockquote s_blockquote_classic blockquote w-50 mx-auto"
+                                            data-name="Blockquote">
+                                    <i class="fa fa-1x fa-quote-left rounded float-start s_blockquote_icon text-white"
+                                       style="background-color: rgb(235, 104, 33);"/>
+                                    <div class="s_blockquote_content o_cc1" style="background-image: none;">
+                                        <p>The training was highly engaging, practical, and perfectly tailored to our
+                                            needs. Content was clear, well-structures, and easy to follow throughout.
+                                            Your hospitality created a welcoming and productive environment. We're very
+                                            satisfied and look forward to applying what we've learned.
+                                        </p>
+                                        <footer class="blockquote-footer">
+                                            <img src="/web/image/124097-4117f07c/EVOLVE%20LOGO.webp" alt=""
+                                                 class="s_blockquote_avatar img rounded-circle me-2 img-fluid o_we_custom_image"
+                                                 data-mimetype="image/webp" data-original-id="124095"
+                                                 data-original-src="/web/image/124095-de667570/EVOLVE%20LOGO.png"
+                                                 data-mimetype-before-conversion="image/png" data-resize-width="400"
+                                                 loading="lazy"/>
+                                            <span class="s_blockquote_author">
+                                                <b>Fiona Mallia</b>
+                                                •&amp;nbsp;Evolve
+                                            </span>
+                                        </footer>
+                                    </div>
+                                </blockquote>
+                            </div>
+                        </div>
+                        <div class="carousel-item pb80 o_colored_level pt96 oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
+                             style="background-image: url(&quot;/web/image/142544-c899a412/IMAGE%205.jpg&quot;); background-position: 50% 66.0504%;"
+                             data-name="Slide" data-mimetype="image/jpeg" data-original-id="142536"
+                             data-original-src="/web/image/142536-c899a412/IMAGE%205.jpg"
+                             data-mimetype-before-conversion="image/jpeg" data-resize-width="1620" data-quality="100">
+                            <div class="container">
+                                <blockquote class="s_blockquote s_blockquote_classic blockquote w-50 mx-auto"
+                                            data-name="Blockquote">
+                                    <i class="fa fa-quote-left rounded float-start s_blockquote_icon fa-1x text-white"
+                                       style="background-color: rgb(235, 104, 33);"/>
+                                    <div class="s_blockquote_content o_cc1" style="background-image: none;">
+                                        <p>A great initiative for upskilling with practical, real-world training and
+                                            immediate impact. It was a privilege to explore AI applications through
+                                            hands-on exercises and templates. The course blended powerful insights with
+                                            practical tools like ChatGPT, Gemini, and Copilot. The knowledge gained will
+                                            help me stay ahead in today's fast-evolving digital landscape.
+                                        </p>
+                                        <footer class="blockquote-footer">
+                                            <img src="/web/image/130556-d2a661e9/ELBEHI%20LOGO.webp" alt=""
+                                                 class="s_blockquote_avatar img rounded-circle me-2 img-fluid o_we_custom_image"
+                                                 data-mimetype="image/webp" data-original-id="130555"
+                                                 data-original-src="/web/image/130555-a9ea8c7e/ELBEHI%20LOGO.png"
+                                                 data-mimetype-before-conversion="image/png" data-resize-width="398"
+                                                 loading="lazy"/>
+                                            <span class="s_blockquote_author">
+                                                <b>Chafik Elbehi</b>
+                                                •&amp;nbsp;ELBEHI Future Concept
+                                            </span>
+                                        </footer>
+                                    </div>
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-control-prev o_not_editable o_we_no_overlay" role="img" aria-label="Previous"
+                         title="Previous" data-bs-target="#myCarousel1763031846900" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"/>
+                        <span class="visually-hidden o_default_snippet_text">Previous</span>
+                    </div>
+                    <div class="carousel-control-next o_not_editable o_we_no_overlay" role="img" aria-label="Next"
+                         title="Next" data-bs-target="#myCarousel1763031846900" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"/>
+                        <span class="visually-hidden o_default_snippet_text">Next</span>
+                    </div>
+                </div>
+            </section>
+            <section class="s_text_image pt32 o_colored_level pb0" data-snippet="s_image_text" data-name="Image - Text"
+                     style="background-image: none;">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="pt16 pb16 o_colored_level col-lg-2">
+                            <div class="s_hr text-start pt32 pb32" data-snippet="s_hr" data-name="Separator">
+                                <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid;"/>
+                            </div>
+                            <img src="/web/image/146921-a6a832bd/Mauro.webp" alt=""
+                                 class="img img-fluid mx-auto o_we_custom_image" data-mimetype="image/webp"
+                                 data-original-id="119286" data-original-src="/web/image/119286-f59cf011/Mauro.png"
+                                 data-mimetype-before-conversion="image/png" data-resize-width="690" loading="lazy"/>
+                        </div>
+                        <div class="col-lg-6 pb16 o_colored_level pt56">
+                            <h2>Maurizio Mamo</h2>
+                            <p><span class="fa fa-linkedin-square fa-2x" style="color: rgb(34, 59, 131);"/>&amp;nbsp;
+                                <br/>
+                                <font style="color: rgb(235, 104, 33);">Senior Lecturer</font>
+                                <br/>Founder &amp;amp; CEO 4Sight Group
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="s_text_block pb40 o_colored_level pt8" data-snippet="s_text_block" data-name="Text"
+                     style="background-image: none;">
+                <div class="s_allow_columns container">
+                    <p>Maurizio Mamo is an accomplished business leader and digital transformation expert with extensive
+                        experience in IT, business consulting, and strategic management. With a career spanning over two
+                        decades, he has held leadership roles in multiple sectors, including IT consultancy, digital
+                        marketing, branding, software development, and managed services.
+                    </p>
+                    <p>As the CEO and founder of a multidisciplinary IT and digital solutions group operating across
+                        different regions, Maurizio has successfully built and scaled businesses that provide end-to-end
+                        IT services, including infrastructure management, business solutions, digital marketing, and
+                        strategic consulting. His expertise lies in helping businesses optimise their technology
+                        investments, streamline operations, and implement innovative solutions.
+                    </p>
+                </div>
+            </section>
+            <section class="s_references pt48 pb32 o_colored_level s_custom_snippet" data-snippet="s_references"
+                     style="background-image: none;" data-name="Custom References">
+                <div class="container">
+                    <h2 style="text-align: center;">They Already Started Their Learning Journey with FLOW Academy</h2>
+                    <p style="text-align: center;">You&amp;nbsp;are in good company.</p>
+                    <div class="row">
+                        <div class="col-lg-2 pt16 pb16 o_colored_level">
+                            <img src="/web/image/142539-7765327b/NOUV%20LOGO.webp" alt=""
+                                 class="img img-fluid mx-auto o_we_custom_image" data-mimetype="image/webp"
+                                 data-original-id="142537"
+                                 data-original-src="/web/image/142537-07a4a3a8/NOUV%20LOGO.jpg"
+                                 data-mimetype-before-conversion="image/jpeg" data-resize-width="398" loading="lazy"/>
+                        </div>
+                        <div class="col-lg-2 pt16 pb16 o_colored_level">
+                            <img src="/web/image/138229-172fdb52/MARINE%20HOUND%20LOGO.webp" alt=""
+                                 class="img img-fluid mx-auto o_we_custom_image" data-mimetype="image/webp"
+                                 data-original-id="138227"
+                                 data-original-src="/web/image/138227-a0587c26/MARINE%20HOUND%20LOGO.png"
+                                 data-mimetype-before-conversion="image/png" data-resize-width="398" loading="lazy"/>
+                        </div>
+
+                        <div class="col-lg-2 pt16 pb16 o_colored_level">
+                            <img src="/web/image/132860-d0affe9b/PANTA%20LOGO.webp" alt=""
+                                 class="img img-fluid mx-auto o_we_custom_image" data-mimetype="image/webp"
+                                 data-original-id="132857"
+                                 data-original-src="/web/image/132857-2ffe5367/PANTA%20LOGO.png"
+                                 data-mimetype-before-conversion="image/png" data-resize-width="398" loading="lazy"/>
+                        </div>
+
+                        <div class="col-lg-2 pt16 pb16 o_colored_level">
+                            <img src="/web/image/142547-54a1eb5b/WORKING%20TOWN%20LOGO.webp" alt=""
+                                 class="img img-fluid mx-auto o_we_custom_image" data-mimetype="image/webp"
+                                 data-original-id="142545"
+                                 data-original-src="/web/image/142545-52a3cc0b/WORKING%20TOWN%20LOGO.jpg"
+                                 data-mimetype-before-conversion="image/jpeg" data-resize-width="398" loading="lazy"/>
+                        </div>
+                        <div class="col-lg-2 pt16 pb16 o_colored_level">
+                            <img src="/web/image/130556-d2a661e9/ELBEHI%20LOGO.webp" alt=""
+                                 class="img img-fluid mx-auto o_we_custom_image" data-mimetype="image/webp"
+                                 data-original-id="130555"
+                                 data-original-src="/web/image/130555-a9ea8c7e/ELBEHI%20LOGO.png"
+                                 data-mimetype-before-conversion="image/png" data-resize-width="398" loading="lazy"/>
+                        </div>
+                        <div class="col-lg-2 pt16 pb16 o_colored_level">
+                            <img src="/web/image/138230-212f793c/ROLLING%20BUDDY%20LOGO.webp" alt=""
+                                 class="img img-fluid mx-auto o_we_custom_image" data-mimetype="image/webp"
+                                 data-original-id="138228"
+                                 data-original-src="/web/image/138228-e17ae803/ROLLING%20BUDDY%20LOGO.png"
+                                 data-mimetype-before-conversion="image/png" data-resize-width="398" loading="lazy"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </t>
+</t>

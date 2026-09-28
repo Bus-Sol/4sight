@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_followup.action_report_followup" model="ir.actions.report">
+            <field name="name">Print Follow-up Letter</field>
+            <field name="model">res.partner</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account_followup.report_followup_print_all</field>
+            <field name="report_file">account_followup.report_followup_print_all</field>
+            <field name="print_report_name">'Statement '  + object.display_name</field>
+        </record>
+    </data>
+</odoo>
