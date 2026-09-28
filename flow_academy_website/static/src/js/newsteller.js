@@ -26,31 +26,47 @@ publicWidget.registry.flowNewsletterSubscribe = publicWidget.Widget.extend({
         const email = input?.value.trim();
 
         if (!email) {
-            this._setMessage(message, "Please enter your email address.");
+            input?.classList.add("is-invalid");
+            this._setMessage(message, "Please enter your email address.", "danger");
             return;
         }
 
+        input.classList.remove("is-invalid");
         this._setSubmitting(button, true);
         this._setMessage(message, "");
 
         try {
             const result = await this.rpc("/flow/newsletter/subscribe", { email });
-            this._setMessage(message, result?.message || "Unable to subscribe.");
+            const isSuccess = Boolean(result?.success);
+            this._setMessage(
+                message,
+                result?.message || "Unable to subscribe.",
+                isSuccess ? "success" : "danger"
+            );
 
-            if (result?.success) {
+            if (isSuccess) {
                 input.value = "";
+            } else {
+                input.classList.add("is-invalid");
             }
         } catch (error) {
             console.error("Newsletter subscription failed:", error);
-            this._setMessage(message, "Something went wrong. Please try again.");
+            input.classList.add("is-invalid");
+            this._setMessage(message, "Something went wrong. Please try again.", "danger");
         } finally {
             this._setSubmitting(button, false);
         }
     },
 
-    _setMessage(message, text) {
+    _setMessage(message, text, type) {
         if (message) {
             message.textContent = text;
+            message.classList.remove("alert", "alert-success", "alert-danger", "py-2", "px-3", "mb-0");
+            if (text) {
+                message.classList.add("alert", `alert-${type}`, "py-2", "px-3", "mb-0");
+                message.setAttribute("role", "status");
+                message.setAttribute("aria-live", "polite");
+            }
         }
     },
 
