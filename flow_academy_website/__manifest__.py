@@ -21,7 +21,8 @@
         'website_event',
         'website_sale',
         'account',
-        'website_event_sale'
+        'website_event_sale',
+        'mass_mailing'
     ],
     'data': [
         'security/security.xml',
@@ -36,12 +37,14 @@
         'views/address_template.xml',
         'views/email_templates.xml',
         'views/event_templates.xml',
+        'views/mailing_list.xml',
 
         'security/ir.model.access.csv'
     ],
     'assets': {
         'web.assets_frontend': [
             'flow_academy_website/static/src/js/website_sale.js',
+            'flow_academy_website/static/src/js/newsteller.js',
             'flow_academy_website/static/src/scss/styles.scss',
         ],
     },

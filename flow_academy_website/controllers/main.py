@@ -4,6 +4,8 @@ from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.sale.controllers.portal import CustomerPortal
 from datetime import datetime,date
+from odoo.tools import email_normalize
+
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -625,3 +627,71 @@ class EventTypeController(http.Controller):
         return request.render('website.ai-for-work-1_3efddc_c6cf19_29177f_f1504e', {
             'events': events,
         })
+
+
+
+class NewsletterController(http.Controller):
+
+    @http.route(
+        '/flow/newsletter/subscribe',
+        type='json',
+        auth='public',
+        website=True,
+        csrf=False,
+        methods=['POST'],
+    )
+    def newsletter_subscribe(self, email=None, **kwargs):
+        _logger.info(f" newsletter_subscribe triggered >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {email}")
+        if not email:
+            return {
+                'success': False,
+                'message': 'Email is required.',
+            }
+
+        email = email_normalize(email)
+
+        if not email:
+            return {
+                'success': False,
+                'message': 'Please enter a valid email address.',
+            }
+
+        # Use a fixed list ID if this endpoint is only for one newsletter.
+        mailing_list = request.env['mailing.list'].sudo().search(
+         [('is_flow','=',True)]
+        )
+
+        Contact = request.env['mailing.contact'].sudo()
+
+        contact = Contact.search([
+            ('email_normalized', '=', email),
+        ], limit=1)
+
+        if not contact:
+            contact = Contact.create({
+                'email': email,
+            })
+
+        # Subscribe contact to the mailing list
+        if mailing_list:
+
+            subscription = request.env['mailing.contact.subscription'].sudo().search([
+
+                ('contact_id', '=', contact.id),
+                ('list_id', '=', mailing_list[0].id),
+            ], limit=1)
+
+            if subscription:
+                if subscription.opt_out:
+                    subscription.opt_out = False
+            else:
+                request.env['mailing.contact.subscription'].sudo().create({
+                    'contact_id': contact.id,
+                    'list_id': mailing_list[0].id,
+                    'opt_out': False,
+                })
+
+        return {
+            'success': True,
+            'message': 'Thanks for subscribing!',
+        }
