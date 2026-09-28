@@ -3,9 +3,9 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.flowNewsletterSubscribe = publicWidget.Widget.extend({
-    selector: ".s_newsletter_subscribe_form",
+    selector: ".flow_newsletter_subscribe_form",
     events: {
-        submit: "_onSubmit",
+        "click .js_subscribe_btn": "_onSubscribeClick",
     },
 
     init() {
@@ -13,8 +13,12 @@ publicWidget.registry.flowNewsletterSubscribe = publicWidget.Widget.extend({
         this.rpc = this.bindService("rpc");
     },
 
-    async _onSubmit(event) {
+    async _onSubscribeClick(event) {
         event.preventDefault();
+
+        if (this._isSubmitting) {
+            return;
+        }
 
         const input = this.el.querySelector(".js_subscribe_value");
         const button = this.el.querySelector(".js_subscribe_btn");
@@ -26,9 +30,7 @@ publicWidget.registry.flowNewsletterSubscribe = publicWidget.Widget.extend({
             return;
         }
 
-        if (button) {
-            button.disabled = true;
-        }
+        this._setSubmitting(button, true);
         this._setMessage(message, "");
 
         try {
@@ -42,15 +44,21 @@ publicWidget.registry.flowNewsletterSubscribe = publicWidget.Widget.extend({
             console.error("Newsletter subscription failed:", error);
             this._setMessage(message, "Something went wrong. Please try again.");
         } finally {
-            if (button) {
-                button.disabled = false;
-            }
+            this._setSubmitting(button, false);
         }
     },
 
     _setMessage(message, text) {
         if (message) {
             message.textContent = text;
+        }
+    },
+
+    _setSubmitting(button, isSubmitting) {
+        this._isSubmitting = isSubmitting;
+        if (button) {
+            button.classList.toggle("disabled", isSubmitting);
+            button.setAttribute("aria-disabled", String(isSubmitting));
         }
     },
 });
