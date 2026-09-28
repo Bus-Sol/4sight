@@ -682,7 +682,7 @@ class EventTypeController(http.Controller):
                 if subscription.opt_out:
                     subscription.opt_out = False
             else:
-                request.env['mailing.contact.subscription'].sudo().create({
+                request.env['mailing.subscription'].sudo().create({
                     'contact_id': contact.id,
                     'list_id': mailing_list[0].id,
                     'opt_out': False,
