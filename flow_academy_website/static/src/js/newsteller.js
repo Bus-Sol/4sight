@@ -3,9 +3,9 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.flowNewsletterSubscribe = publicWidget.Widget.extend({
-    selector: ".flow_newsletter_subscribe_form",
+    selector: ".flow_newsletter_form",
     events: {
-        "click .js_subscribe_btn": "_onSubscribeClick",
+        "click .flow_newsletter_submit": "_onSubscribeClick",
     },
 
     init() {
@@ -20,8 +20,8 @@ publicWidget.registry.flowNewsletterSubscribe = publicWidget.Widget.extend({
             return;
         }
 
-        const input = this.el.querySelector(".js_subscribe_value");
-        const button = this.el.querySelector(".js_subscribe_btn");
+        const input = this.el.querySelector(".flow_newsletter_email");
+        const button = this.el.querySelector(".flow_newsletter_submit");
         const message = this.el.querySelector(".flow_newsletter_message");
         const email = input?.value.trim();
 

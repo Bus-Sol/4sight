@@ -629,9 +629,6 @@ class EventTypeController(http.Controller):
         })
 
 
-
-class NewsletterController(http.Controller):
-
     @http.route(
         '/flow/newsletter/subscribe',
         type='json',
