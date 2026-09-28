@@ -654,7 +654,7 @@ class EventTypeController(http.Controller):
             }
 
         # Use a fixed list ID if this endpoint is only for one newsletter.
-        mailing_list = request.env['mailing.list'].sudo().search(
+        mailing_lists = request.env['mailing.list'].sudo().search(
          [('is_flow','=',True)]
         )
 
@@ -670,23 +670,23 @@ class EventTypeController(http.Controller):
             })
 
         # Subscribe contact to the mailing list
-        if mailing_list:
+        if mailing_lists:
+            for mlist in mailing_lists:
+                subscription = request.env['mailing.subscription'].sudo().search([
 
-            subscription = request.env['mailing.subscription'].sudo().search([
+                    ('contact_id', '=', contact.id),
+                    ('list_id', '=', mlist.id),
+                ], limit=1)
 
-                ('contact_id', '=', contact.id),
-                ('list_id', '=', mailing_list[0].id),
-            ], limit=1)
-
-            if subscription:
-                if subscription.opt_out:
-                    subscription.opt_out = False
-            else:
-                request.env['mailing.subscription'].sudo().create({
-                    'contact_id': contact.id,
-                    'list_id': mailing_list[0].id,
-                    'opt_out': False,
-                })
+                if subscription:
+                    if subscription.opt_out:
+                        subscription.opt_out = False
+                else:
+                    request.env['mailing.subscription'].sudo().create({
+                        'contact_id': contact.id,
+                        'list_id': mlist.id,
+                        'opt_out': False,
+                    })
 
         return {
             'success': True,
