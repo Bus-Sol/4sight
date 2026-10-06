@@ -7,6 +7,7 @@
     """,
     'author': '4Sight Group',
     'website': '',
+    'license': 'OPL-1',
     'depends': [
         'sale',
         'account',
@@ -16,7 +17,8 @@
         'report_qweb_element_page_visibility',
         'helpdesk',
         'crm',
-        "mail"
+        "mail",
+        "hr_timesheet"
     ],
     'data': [
         'views/account_followups.xml',
@@ -27,6 +29,7 @@
         'views/view_crm_kanban.xml',
         'views/view_account_inv_send.xml',
         'views/view_partner_form.xml',
+        'views/sale_order_template.xml',
     ],
     'demo': [
     ],

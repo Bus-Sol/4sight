@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_website_event_sale_order_notification" model="res.groups">
+        <field name="name">Website Event Sale Order Notifications</field>
+        <field name="category_id" ref="base.module_category_sales_sales"/>
+        <field name="comment">Users in this group receive an email when a website event ticket sale order is confirmed.</field>
+    </record>
+</odoo>

@@ -43,18 +43,18 @@ class ResPartner(models.Model):
         res = super(ResPartner, self).write(vals)
         if 'child_ids' in vals:
             for child_id in self.child_ids:
-                job_ids = self.env['client.jobsheet'].search([('partner_id', '=', child_id.parent_id.id)])
+                job_ids = self.env['client.jobsheet'].sudo().search([('partner_id', '=', child_id.parent_id.id)])
                 for job in job_ids:
                     if child_id.receive_jobsheet:
                         job.sudo().message_subscribe(partner_ids=[child_id.id])
                     else:
                         job.sudo().message_unsubscribe(partner_ids=[child_id.id])
-                invoice_ids = self.env['account.move'].search([('partner_id', '=', child_id.parent_id.id)])
+                invoice_ids = self.env['account.move'].sudo().search([('partner_id', '=', child_id.parent_id.id)])
                 for inv in invoice_ids:
                     if child_id.receive_invoice:
-                        inv.message_subscribe(partner_ids=[child_id.id])
+                        inv.sudo().message_subscribe(partner_ids=[child_id.id])
                     else:
-                        inv.message_unsubscribe(partner_ids=[child_id.id])
+                        inv.sudo().message_unsubscribe(partner_ids=[child_id.id])
 
         return res
 
@@ -68,6 +68,11 @@ class Task(models.Model):
     related_service_id = fields.Many2one('product.template', related='sale_line_id.product_id.product_tmpl_id',
                                          store=True)
     planned_hours = fields.Float("Initially Planned Hours", help='Time planned to achieve this task (including its sub-tasks).', tracking=True)
+    next_pack_quotation_email_sent = fields.Boolean(
+        string="Next Pack Quotation Email Sent",
+        copy=False,
+        help="Prevents sending the next hours-pack quotation more than once for this task.",
+    )
 
     @api.depends('remaining_hours')
     def compute_balanced_task(self):

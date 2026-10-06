@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_project_profitability_report_account_user,project.profitability.report account user,model_project_profitability_report,account.group_account_user,1,0,0,0
+access_project_profitability_report_account_manager,project.profitability.report account manager,model_project_profitability_report,account.group_account_manager,1,0,0,0

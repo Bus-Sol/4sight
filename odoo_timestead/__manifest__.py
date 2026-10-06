@@ -6,9 +6,10 @@
     'summary': '',
     'description': """  """,
     'author': '4Sight Group',
+    'license': 'OPL-1',
     'depends': [
         'contacts', 'product', 'sale_timesheet', 'account', 'portal', 'timer', 'analytic', 'project',
-        'helpdesk', 'account_reports'
+        'helpdesk', 'account_reports', 'base_automation'
     ],
     'data': [
         'security/jobsheet_security.xml',

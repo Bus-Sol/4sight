@@ -8,6 +8,7 @@
     """,
     'author': '4Sight Group| Mohamed Daoud',
     'website': '',
+    'license': 'OPL-1',
     'depends': [
         'project',
         'web',
@@ -26,6 +27,8 @@
             '4sight_project_dashboard/static/src/components/**/*.js',
             '4sight_project_dashboard/static/src/components/**/*.xml',
             '4sight_project_dashboard/static/src/components/**/*.scss',
+            '4sight_project_dashboard/static/src/js/**/*.js',
+            '4sight_project_dashboard/static/src/css/style.scss',
         ],
     },
 }
