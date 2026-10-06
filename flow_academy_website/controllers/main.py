@@ -629,6 +629,25 @@ class EventTypeController(http.Controller):
             'events': events,
         })
 
+    @http.route('courses/ai-emerging-technologies/agentic-ai-fundamentals', type='http', auth="public",
+                website=True)
+    def get_upcoming_courses_23(self, **kw):
+        # Switch to company 1 context
+        company_1 = request.env['res.company'].sudo().browse(1)
+        now = datetime.now()
+
+        events = request.env['event.event'].sudo().with_company(company_1).search([
+            ('event_category_id', '=', 23),
+            ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
+        ])
+
+        _logger.info(f"categ 23 events >> {events}")
+
+        return request.render('website.practical-ai-for-the-workplace_592a33', {
+            'events': events,
+        })
+
 
     @http.route(
         '/flow/newsletter/subscribe',
@@ -658,6 +677,11 @@ class EventTypeController(http.Controller):
         database = config.get_param('flow_academy.remote_odoo_db')
         username = config.get_param('flow_academy.remote_odoo_username')
         password = config.get_param('flow_academy.remote_odoo_password')
+
+        _logger.info(f"Flow url >>>> {url}")
+        _logger.info(f"Flow database >>>> {database}")
+        _logger.info(f"Flow username >>>> {username}")
+        _logger.info(f"Flow password >>>> {password}")
 
         if not all((url, database, username, password)):
             _logger.error('Remote newsletter Odoo connection is not fully configured.')
