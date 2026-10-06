@@ -7,6 +7,7 @@ from datetime import datetime,date
 from odoo.tools import email_normalize
 
 import logging
+import xmlrpc.client
 _logger = logging.getLogger(__name__)
 
 
@@ -638,7 +639,6 @@ class EventTypeController(http.Controller):
         methods=['POST'],
     )
     def newsletter_subscribe(self, email=None, **kwargs):
-        _logger.info(f" newsletter_subscribe triggered >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {email}")
         if not email:
             return {
                 'success': False,
@@ -653,40 +653,64 @@ class EventTypeController(http.Controller):
                 'message': 'Please enter a valid email address.',
             }
 
-        # Use a fixed list ID if this endpoint is only for one newsletter.
-        mailing_lists = request.env['mailing.list'].sudo().search(
-         [('is_flow','=',True)]
-        )
+        config = request.env['ir.config_parameter'].sudo()
+        url = (config.get_param('flow_academy.remote_odoo_url') or '').rstrip('/')
+        database = config.get_param('flow_academy.remote_odoo_db')
+        username = config.get_param('flow_academy.remote_odoo_username')
+        password = config.get_param('flow_academy.remote_odoo_password')
 
-        Contact = request.env['mailing.contact'].sudo()
+        if not all((url, database, username, password)):
+            _logger.error('Remote newsletter Odoo connection is not fully configured.')
+            return {
+                'success': False,
+                'message': 'Newsletter subscription is temporarily unavailable.',
+            }
 
-        contact = Contact.search([
-            ('email_normalized', '=', email),
-        ], limit=1)
+        try:
+            common = xmlrpc.client.ServerProxy('%s/xmlrpc/2/common' % url, allow_none=True)
+            uid = common.authenticate(database, username, password, {})
+            if not uid:
+                _logger.error('Remote newsletter Odoo authentication failed.')
+                return {
+                    'success': False,
+                    'message': 'Newsletter subscription is temporarily unavailable.',
+                }
 
-        if not contact:
-            contact = Contact.create({
-                'email': email,
-            })
+            models = xmlrpc.client.ServerProxy('%s/xmlrpc/2/object' % url, allow_none=True)
+            mailing_lists = models.execute_kw(
+                database, uid, password, 'mailing.list', 'search',
+                [[('is_flow', '=', True)]],
+            )
+            contact_ids = models.execute_kw(
+                database, uid, password, 'mailing.contact', 'search',
+                [[('email_normalized', '=', email)]], {'limit': 1},
+            )
+            contact_id = contact_ids[0] if contact_ids else models.execute_kw(
+                database, uid, password, 'mailing.contact', 'create', [{'email': email}],
+            )
 
-        # Subscribe contact to the mailing list
-        if mailing_lists:
-            for mlist in mailing_lists:
-                subscription = request.env['mailing.subscription'].sudo().search([
-
-                    ('contact_id', '=', contact.id),
-                    ('list_id', '=', mlist.id),
-                ], limit=1)
-
-                if subscription:
-                    if subscription.opt_out:
-                        subscription.opt_out = False
+            for list_id in mailing_lists:
+                subscription_ids = models.execute_kw(
+                    database, uid, password, 'mailing.subscription', 'search',
+                    [[('contact_id', '=', contact_id), ('list_id', '=', list_id)]],
+                    {'limit': 1},
+                )
+                if subscription_ids:
+                    models.execute_kw(
+                        database, uid, password, 'mailing.subscription', 'write',
+                        [subscription_ids, {'opt_out': False}],
+                    )
                 else:
-                    request.env['mailing.subscription'].sudo().create({
-                        'contact_id': contact.id,
-                        'list_id': mlist.id,
-                        'opt_out': False,
-                    })
+                    models.execute_kw(
+                        database, uid, password, 'mailing.subscription', 'create',
+                        [{'contact_id': contact_id, 'list_id': list_id, 'opt_out': False}],
+                    )
+        except (OSError, xmlrpc.client.Error):
+            _logger.exception('Unable to subscribe newsletter contact on the remote Odoo instance.')
+            return {
+                'success': False,
+                'message': 'Newsletter subscription is temporarily unavailable.',
+            }
 
         return {
             'success': True,

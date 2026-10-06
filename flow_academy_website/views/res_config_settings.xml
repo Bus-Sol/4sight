@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_flow_academy" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.flow.academy</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <div class="app_settings_block" data-string="Flow Academy" string="Flow Academy"
+                     data-key="flow_academy_website" groups="base.group_system">
+                    <h2>Flow Academy newsletter</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="flow_remote_odoo_url"/>
+                                <div class="text-muted">The remote Odoo instance where newsletter contacts are created.</div>
+                                <div class="content-group mt16">
+                                    <div class="row mt16">
+                                        <label for="flow_remote_odoo_url" class="col-lg-4 o_light_label"/>
+                                        <field name="flow_remote_odoo_url" placeholder="https://your-instance.odoo.com"/>
+                                    </div>
+                                    <div class="row mt16">
+                                        <label for="flow_remote_odoo_db" class="col-lg-4 o_light_label"/>
+                                        <field name="flow_remote_odoo_db"/>
+                                    </div>
+                                    <div class="row mt16">
+                                        <label for="flow_remote_odoo_username" class="col-lg-4 o_light_label"/>
+                                        <field name="flow_remote_odoo_username"/>
+                                    </div>
+                                    <div class="row mt16">
+                                        <label for="flow_remote_odoo_password" class="col-lg-4 o_light_label"/>
+                                        <field name="flow_remote_odoo_password" password="True"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
