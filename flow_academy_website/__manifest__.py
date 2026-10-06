@@ -38,6 +38,7 @@
         'views/email_templates.xml',
         'views/event_templates.xml',
         'views/mailing_list.xml',
+        'views/res_config_settings.xml',
 
         'security/ir.model.access.csv'
     ],

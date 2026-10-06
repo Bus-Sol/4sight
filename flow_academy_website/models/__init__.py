@@ -8,3 +8,4 @@ from . import event_question
 from . import event_registration_answer
 from . import website
 from . import mailing_list
+from . import res_config_settings
