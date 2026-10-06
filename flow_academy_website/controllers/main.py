@@ -629,7 +629,7 @@ class EventTypeController(http.Controller):
             'events': events,
         })
 
-    @http.route('courses/ai-emerging-technologies/agentic-ai-fundamentals', type='http', auth="public",
+    @http.route('/courses/ai-emerging-technologies/agentic-ai-fundamentals', type='http', auth="public",
                 website=True)
     def get_upcoming_courses_23(self, **kw):
         # Switch to company 1 context
