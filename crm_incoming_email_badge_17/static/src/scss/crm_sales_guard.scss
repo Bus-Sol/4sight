@@ -1,0 +1,108 @@
+/* CRM Sales Communication Guard — Odoo 17 backend */
+
+.o_kanban_view .o_kanban_record {
+    .oe_kanban_bottom_left {
+        flex-wrap: wrap;
+        row-gap: 4px;
+    }
+
+    .o_crm_sales_guard_badges {
+        display: inline-flex;
+        flex: 1 1 100%;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px;
+        width: 100%;
+        min-width: 0;
+        margin-top: 4px;
+    }
+
+    .o_crm_sales_guard_badge {
+        display: inline-flex;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        max-width: 100%;
+        margin: 0 !important;
+        padding: 3px 7px;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 1.2;
+        vertical-align: middle;
+        white-space: nowrap;
+
+        i {
+            flex: 0 0 auto;
+            margin: 0;
+            font-size: 11px;
+        }
+    }
+
+    .o_crm_sales_guard_badge--waiting,
+    .o_crm_sales_guard_badge--overdue {
+        color: #842029;
+        background-color: #f8d7da;
+        border-color: #f1aeb5;
+    }
+
+    .o_crm_sales_guard_badge--unread-customer {
+        color: #664d03;
+        background-color: #fff3cd;
+        border-color: #ffe69c;
+    }
+
+    .o_crm_sales_guard_badge--notes {
+        color: #41464b;
+        background-color: #e2e3e5;
+        border-color: #c4c8cb;
+    }
+
+    .o_crm_sales_guard_badge--new-note {
+        color: #055160;
+        background-color: #cff4fc;
+        border-color: #9eeaf9;
+        font-weight: 600;
+    }
+
+    .o_crm_sales_guard_badge--replied {
+        color: #0f5132;
+        background-color: #d1e7dd;
+        border-color: #a3cfbb;
+    }
+
+    .o_crm_sales_guard_badge--no-action {
+        color: #664d03;
+        background-color: #fff3cd;
+        border-color: #ffe69c;
+    }
+}
+
+.o_crm_sales_guard_systray,
+.o_crm_sales_guard_systray_enabled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 100%;
+    padding: 0 8px;
+}
+
+.o_crm_sales_guard_systray_enabled {
+    opacity: 0.9;
+}
+
+@media (max-width: 1400px) {
+    .o_kanban_view .o_kanban_record {
+        .o_crm_sales_guard_badges {
+            gap: 3px;
+        }
+
+        .o_crm_sales_guard_badge {
+            padding: 2px 6px;
+            font-size: 10px;
+        }
+    }
+}

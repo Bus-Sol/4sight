@@ -1,0 +1,4 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+proposal_page_access_id,proposal_page_access,model_proposal_page,sales_team.group_sale_salesman,1,1,1,1
+proposal_proposal_access_id,proposal_proposal_access,model_proposal_proposal,sales_team.group_sale_salesman,1,1,1,1
+proposal_page_line_access_id,proposal_page_line_access,model_proposal_page_line,sales_team.group_sale_salesman,1,1,1,1

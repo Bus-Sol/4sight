@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_task_ts_document">
+        <t t-call="web.external_layout">
+            <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
+
+            <div class="page">
+                <div class="oe_structure"/>
+
+                <h2 class="mt16" style="color:#F11256;font-size: 32px;">
+                    <span t-field="doc.name"/>
+                </h2>
+                <br/>
+
+                <div class="row mt32 mb32" id="informations">
+                    <div class="col-auto col-6 mw-100 mb-2">
+                        <strong>Project:</strong>
+                        <p class="m-0" t-field="doc.project_id.name"/>
+                    </div>
+                    <div class="col-auto col-6 mw-100 mb-2">
+                        <strong>Customer:</strong>
+                        <p class="m-0" t-field="doc.partner_id.display_name"/>
+                    </div>
+                </div>
+                <br/>
+                <div class="row mt32 mb32" id="informations">
+                    <div class="col-auto col-6 mw-100 mb-2">
+                        <strong>Initially Planned Hours:</strong>
+                        <p class="m-0" t-field="doc.planned_hours" t-options="{'widget': 'float_time'}"/>
+                    </div>
+                    <div class="col-auto col-6 mw-100 mb-2">
+                        <strong>Progress:</strong>
+                        <p class="m-0"><t t-esc="doc.progress" t-options="{'widget': 'duration', 'digital': True}"/>%
+                        </p>
+                    </div>
+                </div>
+                <br/>
+
+                <t t-if="doc.timesheet_ids">
+                    <table class="table table-sm o_main_table">
+                        <thead style="display: table-row-group">
+                            <tr>
+                                <th t-if="doc.timesheet_ids.job_id" name="th_job" class="text-left">JobSheet</th>
+                                <th name="th_date" class="text-left">Date</th>
+                                <th name="th_employee" class="text-left">Employee</th>
+                                <th name="th_description" class="text-left">Description</th>
+                                <th name="th_duration" class="text-center">Duration (HOUR)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="sale_tbody">
+                            <t t-foreach="doc.timesheet_ids.sorted(key=lambda ts: ts.date)" t-as="line">
+                                <tr>
+                                    <t t-if="doc.timesheet_ids.job_id">
+                                        <t t-if="line.job_id">
+                                            <td name="td_job">
+                                                <span t-esc="line.job_id.name[8:]"/>
+                                            </td>
+                                        </t>
+                                        <t t-else="">
+                                            <td>
+                                            </td>
+                                        </t>
+                                    </t>
+
+                                    <td name="td_date">
+                                        <span t-field="line.date"/>
+                                    </td>
+                                    <td name="td_employee">
+                                        <span t-field="line.employee_id.name"/>
+                                    </td>
+                                    <td name="td_desc">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td name="td_duration" class="text-right">
+                                        <span t-field="line.unit_amount"
+                                              t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+
+                <t t-if="doc.effective_hours">
+                    <div class="clearfix" name="so_total_summary">
+                        <div id="total" class="row" name="total">
+                            <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
+                                <table class="table table-sm">
+
+                                    <tr class="border-black o_total">
+                                        <td name="td_amount_total_label">
+                                            <strong>Hours Spent:</strong>
+                                        </td>
+                                        <td name="td_amount_total" class="text-right">
+                                            <span t-field="doc.effective_hours" t-options="{'widget': 'float_time'}"/>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-black o_total">
+                                        <td name="td_amount_total_label">
+                                            <strong>Remaining Hours:</strong>
+                                        </td>
+                                        <td name="td_amount_total" class="text-right">
+                                            <span t-esc="doc.remaining_hours" t-options="{'widget': 'float_time'}"/>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-black o_total">
+                                        <td name="td_amount_total_label">
+                                            <strong>Remaining Hours on SO:</strong>
+                                        </td>
+                                        <td name="td_amount_total" class="text-right">
+                                            <span t-esc="doc.remaining_hours_so" t-options="{'widget': 'float_time'}"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_task_ts">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="odoo_timestead.report_task_ts_document" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>

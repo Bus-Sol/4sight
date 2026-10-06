@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_registration_answer_food_allergies_view_search" model="ir.ui.view">
+        <field name="name">event.registration.answer.food.allergies.search</field>
+        <field name="model">event.registration.answer</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="registration_id"/>
+                <field name="event_id"/>
+                <field name="question_id"/>
+                <filter string="Food Allergies" name="food_allergies" domain="[('question_id.food_allergies', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="event_registration_answer_food_allergies_view_tree" model="ir.ui.view">
+        <field name="name">event.registration.answer.food.allergies.tree</field>
+        <field name="model">event.registration.answer</field>
+        <field name="arch" type="xml">
+            <tree string="Food Allergies Answers" create="0" edit="0" delete="0">
+                <field name="attendee_name" string="Attendee"/>
+                <field name="event_id" string="Event"/>
+                <field name="event_date" string="Event Date"/>
+                <field name="question_id" string="Question"/>
+                <field name="answer_display" string="Answer"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_event_registration_food_allergies_report" model="ir.actions.act_window">
+        <field name="name">Food Allergies Answers</field>
+        <field name="res_model">event.registration.answer</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="event_registration_answer_food_allergies_view_tree"/>
+        <field name="search_view_id" ref="event_registration_answer_food_allergies_view_search"/>
+        <field name="domain">[('question_id.food_allergies', '=', True)]</field>
+        <field name="context">{'search_default_food_allergies': 1}</field>
+    </record>
+
+    <menuitem
+        id="menu_event_registration_food_allergies_report"
+        name="Food Allergies Answers"
+        parent="event.menu_reporting_events"
+        action="action_event_registration_food_allergies_report"
+        sequence="40"
+    />
+</odoo>

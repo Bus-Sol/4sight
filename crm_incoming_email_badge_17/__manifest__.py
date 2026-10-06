@@ -1,0 +1,42 @@
+{
+    'name': 'CRM Sales Communication Guard',
+    'version': '17.0.6.1.1',
+    'category': 'Sales/CRM',
+    'summary': 'CRM communication badges, per-user unread counters and live browser notifications',
+    'description': 'CRM Sales Communication Guard',
+    'author': 'GreenMethod',
+    'website': '',
+    'license': 'LGPL-3',
+    'price': 49,
+    'currency': 'EUR',
+    'depends': [
+        'crm',
+        'mail',
+        'bus',
+        'web',
+    ],
+    'data': [
+        'security/crm_sales_guard_security.xml',
+        'security/ir.model.access.csv',
+        'views/crm_lead_kanban_views.xml',
+        'views/crm_lead_sales_guard_views.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'crm_incoming_email_badge_17/static/src/js/crm_sales_guard_notification_service.js',
+            'crm_incoming_email_badge_17/static/src/js/crm_sales_guard_systray.js',
+            'crm_incoming_email_badge_17/static/src/xml/crm_sales_guard_systray.xml',
+            'crm_incoming_email_badge_17/static/src/scss/crm_sales_guard.scss',
+        ],
+    },
+    'post_init_hook': 'post_init_hook',
+    'installable': True,
+    'application': True,
+    'auto_install': False,
+    'images': [
+        'static/description/banner.png',
+        'static/description/screenshot1.png',
+        'static/description/screenshot2.png',
+        'static/description/screenshot3.png',
+    ],
+}

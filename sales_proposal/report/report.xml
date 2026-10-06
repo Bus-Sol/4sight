@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record id="action_report_proposal" model="ir.actions.report">
+            <field name="name">Sales Proposal</field>
+            <field name="model">proposal.proposal</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">sales_proposal.report_sale_proposal</field>
+            <field name="report_file">sales_proposal.report_sale_proposal</field>
+            <field name="print_report_name">('Sales Proposal - %s' % (object.name))</field>
+            <field name="binding_model_id" ref="model_proposal_proposal"/>
+            <field name="binding_type">report</field>
+    </record>
+
+
+</odoo>
