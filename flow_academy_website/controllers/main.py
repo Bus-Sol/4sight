@@ -6,9 +6,29 @@ from odoo.addons.sale.controllers.portal import CustomerPortal
 from datetime import datetime,date
 from odoo.tools import email_normalize
 
+import json
 import logging
-import xmlrpc.client
+from urllib import error, request as urlrequest
+
 _logger = logging.getLogger(__name__)
+
+
+def _json2_call(base_url, database, api_key, model, method, payload):
+    """Call an Odoo 19 JSON-2 model method."""
+    endpoint = '%s/json/2/%s/%s' % (base_url, model, method)
+    http_request = urlrequest.Request(
+        endpoint,
+        data=json.dumps(payload).encode('utf-8'),
+        headers={
+            'Authorization': 'Bearer %s' % api_key,
+            'Content-Type': 'application/json; charset=utf-8',
+            'X-Odoo-Database': database,
+            'User-Agent': 'flow-academy-newsletter/1.0',
+        },
+        method='POST',
+    )
+    with urlrequest.urlopen(http_request, timeout=10) as response:
+        return json.loads(response.read().decode('utf-8'))
 
 
 class CustomerPortalExternalTax(CustomerPortal):
@@ -675,15 +695,9 @@ class EventTypeController(http.Controller):
         config = request.env['ir.config_parameter'].sudo()
         url = (config.get_param('flow_academy.remote_odoo_url') or '').rstrip('/')
         database = config.get_param('flow_academy.remote_odoo_db')
-        username = config.get_param('flow_academy.remote_odoo_username')
-        password = config.get_param('flow_academy.remote_odoo_password')
+        api_key = config.get_param('flow_academy.remote_odoo_api_key')
 
-        _logger.info(f"Flow url >>>> {url}")
-        _logger.info(f"Flow database >>>> {database}")
-        _logger.info(f"Flow username >>>> {username}")
-        _logger.info(f"Flow password >>>> {password}")
-
-        if not all((url, database, username, password)):
+        if not all((url, database, api_key)):
             _logger.error('Remote newsletter Odoo connection is not fully configured.')
             return {
                 'success': False,
@@ -691,45 +705,66 @@ class EventTypeController(http.Controller):
             }
 
         try:
-            common = xmlrpc.client.ServerProxy('%s/xmlrpc/2/common' % url, allow_none=True)
-            uid = common.authenticate(database, username, password, {})
-            if not uid:
-                _logger.error('Remote newsletter Odoo authentication failed.')
-                return {
-                    'success': False,
-                    'message': 'Newsletter subscription is temporarily unavailable.',
-                }
-
-            models = xmlrpc.client.ServerProxy('%s/xmlrpc/2/object' % url, allow_none=True)
-            mailing_lists = models.execute_kw(
-                database, uid, password, 'mailing.list', 'search',
-                [[('is_flow', '=', True)]],
+            mailing_lists = _json2_call(
+                url, database, api_key, 'mailing.list', 'search',
+                {'domain': [['x_is_flow', '=', True]]},
             )
-            contact_ids = models.execute_kw(
-                database, uid, password, 'mailing.contact', 'search',
-                [[('email_normalized', '=', email)]], {'limit': 1},
+            contact_ids = _json2_call(
+                url, database, api_key, 'mailing.contact', 'search',
+                {'domain': [['email_normalized', '=', email]], 'limit': 1},
             )
-            contact_id = contact_ids[0] if contact_ids else models.execute_kw(
-                database, uid, password, 'mailing.contact', 'create', [{'email': email}],
-            )
+            if contact_ids:
+                contact_id = contact_ids[0]
+            else:
+                _json2_call(
+                    url, database, api_key, 'mailing.contact', 'create',
+                    {'vals_list': [{'email': email}]},
+                )
+                contact_ids = _json2_call(
+                    url, database, api_key, 'mailing.contact', 'search',
+                    {'domain': [['email_normalized', '=', email]], 'limit': 1},
+                )
+                if not contact_ids:
+                    raise ValueError('Remote Odoo did not return the created mailing contact.')
+                contact_id = contact_ids[0]
 
             for list_id in mailing_lists:
-                subscription_ids = models.execute_kw(
-                    database, uid, password, 'mailing.subscription', 'search',
-                    [[('contact_id', '=', contact_id), ('list_id', '=', list_id)]],
-                    {'limit': 1},
+                subscription_ids = _json2_call(
+                    url, database, api_key, 'mailing.subscription', 'search',
+                    {
+                        'domain': [
+                            ['contact_id', '=', contact_id],
+                            ['list_id', '=', list_id],
+                        ],
+                        'limit': 1,
+                    },
                 )
                 if subscription_ids:
-                    models.execute_kw(
-                        database, uid, password, 'mailing.subscription', 'write',
-                        [subscription_ids, {'opt_out': False}],
+                    _json2_call(
+                        url, database, api_key, 'mailing.subscription', 'write',
+                        {'ids': subscription_ids, 'vals': {'opt_out': False}},
                     )
                 else:
-                    models.execute_kw(
-                        database, uid, password, 'mailing.subscription', 'create',
-                        [{'contact_id': contact_id, 'list_id': list_id, 'opt_out': False}],
+                    _json2_call(
+                        url, database, api_key, 'mailing.subscription', 'create',
+                        {
+                            'vals_list': [{
+                                'contact_id': contact_id,
+                                'list_id': list_id,
+                                'opt_out': False,
+                            }],
+                        },
                     )
-        except (OSError, xmlrpc.client.Error):
+        except error.HTTPError as exc:
+            _logger.error(
+                'Remote newsletter Odoo JSON-2 request failed with HTTP status %s.',
+                exc.code,
+            )
+            return {
+                'success': False,
+                'message': 'Newsletter subscription is temporarily unavailable.',
+            }
+        except (OSError, ValueError, json.JSONDecodeError):
             _logger.exception('Unable to subscribe newsletter contact on the remote Odoo instance.')
             return {
                 'success': False,

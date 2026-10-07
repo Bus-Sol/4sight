@@ -13,11 +13,8 @@ class ResConfigSettings(models.TransientModel):
         string='Remote database',
         config_parameter='flow_academy.remote_odoo_db',
     )
-    flow_remote_odoo_username = fields.Char(
-        string='Remote username',
-        config_parameter='flow_academy.remote_odoo_username',
-    )
-    flow_remote_odoo_password = fields.Char(
-        string='Remote password',
-        config_parameter='flow_academy.remote_odoo_password',
+    flow_remote_odoo_api_key = fields.Char(
+        string='Remote API key',
+        config_parameter='flow_academy.remote_odoo_api_key',
+        help='API key of the remote Odoo 19 user used for JSON-2 requests.',
     )
