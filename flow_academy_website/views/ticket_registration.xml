@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <template id="modal_ticket_registration" inherit_id="website_event.modal_ticket_registration">
+
+            <xpath expr="//div[hasclass('modal-content')]" position="before">
+                <t t-set="event" t-value="event.sudo()"/>
+                <t t-set="website" t-value="website.sudo()"/>
+            </xpath>
+
+            <!--<xpath expr="//div[hasclass('o_wevent_registration_title')]" position="after">-->
+            <!--    <div class="o_wevent_registration_title modal-title fs-5" id="staticLabel">Seats</div>-->
+            <!--</xpath>-->
+
+            <!--<xpath expr="//div[@id='staticBackdropLabel']" position="replace">-->
+            <!--</xpath>-->
+            <xpath expr="//div[hasclass('fade')]" position="attributes">
+                <attribute name="t-att-id">'modal_ticket_registration_%s' % event.id</attribute>
+            </xpath>
+
+            <xpath expr="//div[hasclass('modal-dialog')]" position="attributes">
+                <attribute name="class">modal-dialog modal-dialog-centered</attribute>
+            </xpath>
+
+            <xpath expr="//div[hasclass('modal-content')]" position="replace">
+                <div class="modal-content p-0 overflow-hidden border-2 border-primary text-primary" style="border-radius: 10px;">
+                    <!--                <div class="modal-header">-->
+                    <!--                <div class="o_wevent_registration_title modal-title fs-5" id="staticBackdropLabel">Seats to take</div>-->
+                    <!--                <div t-if="len(event.event_ticket_ids) &gt; 2" class="o_wevent_price_range ms-2"/>-->
+                    <!--                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+                    <!--                </div>-->
+                    <div class="row g-0 m-0 p-0">
+                        <div class="col-12 col-md-6 d-none d-md-block m-0 p-0">
+                            <img t-attf-src="/flow_academy_website/static/src/image/image_popup.png" class="img-fluid h-100 w-100 object-fit-cover" style="line-height: 0; font-size: 0;" alt="Event Image"/>
+                        </div>
+
+                        <div class="col-12 col-md-6 m-0 p-0" style="background: linear-gradient(318deg,rgba(247, 240, 240, 1) 0%, rgba(233, 233, 247, 1) 33%, rgba(230, 240, 242, 1) 100%);">
+                            <div class="modal-header border-0 pb-0 mb-2">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                            </div>
+
+                            <form t-if="event.event_registrations_open and (not event.event_ticket_ids or any(not ticket.is_expired for ticket in event.event_ticket_ids))" id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post" itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <div id="o_wevent_tickets" class="o_wevent_js_ticket_details">
+                                    <div t-if="registration_error_code == 'insufficient_seats'" class="alert alert-danger" role="alert">
+                                        <p class="mb-0">
+                                            Registration failed! These tickets are not available anymore.
+                                        </p>
+                                    </div>
+                                    <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)"/>
+                                    <!--                     If some tickets expired and there is only one type left, we keep the same layout-->
+                                    <t t-if="len(event.event_ticket_ids) &gt; 1">
+                                        <span t-if="not event.event_registrations_open" class="text-danger">
+                                            <i class="fa fa-ban me-2"/>Sold Out
+                                        </span>
+                                        <div id="o_wevent_tickets_collapse" class="modal-body collapse show">
+                                            <div t-foreach="tickets" t-as="ticket" t-attf-class="d-flex justify-content-between o_wevent_ticket_selector mb-2 pb-2 {{not ticket_last and 'border-bottom' or ''}}" t-att-name="ticket.name">
+                                                <div itemscope="itemscope" itemtype="http://schema.org/Offer">
+                                                    <h5 itemprop="name" t-field="ticket.name" class="h6 my-0"/>
+                                                    <t t-if="ticket.description">
+                                                        <small t-field="ticket.description" class="text-muted py-2"/>
+                                                        <br/>
+                                                    </t>
+                                                    <small t-if="ticket.end_sale_datetime and ticket.sale_available and not ticket.is_expired" class="text-muted me-3" itemprop="availabilityEnds">Sales end
+                                                        on
+                                                        <span itemprop="priceValidUntil" t-out="ticket.end_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
+                                                        (<span t-out="ticket.event_id.date_tz"/>)
+                                                    </small>
+                                                    <small t-if="ticket.start_sale_datetime and not ticket.sale_available and not ticket.is_expired" class="text-muted me-3" itemprop="availabilityEnds">
+                                                        Sales start on
+                                                        <span itemprop="priceValidUntil" t-out="ticket.start_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
+                                                        (<span t-out="ticket.event_id.date_tz"/>)
+                                                    </small>
+                                                </div>
+                                                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+                                                    <div class="o_wevent_registration_multi_select flex-md-grow-1 text-end">
+                                                        <t t-if="ticket.price">
+                                                            <t t-if="(ticket.price - ticket.price_reduce) &gt; 0 and website.pricelist_id.discount_policy == 'without_discount'">
+                                                                <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" class="text-danger me-1" t-field="ticket.price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                                                                <del t-else="" class="text-danger me-1" t-field="ticket.price_incl" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                                                            </t>
+                                                            <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" class="fs-6" t-field="ticket.price_reduce" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                                                            <span t-else="" t-field="ticket.price_reduce_taxinc" class="fs-6" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                                                            <span itemprop="price" class="d-none" t-out="ticket.price"/>
+                                                            <span itemprop="priceCurrency" class="d-none" t-out="website.currency_id.name"/>
+                                                        </t>
+                                                        <span t-else="" class="badge text-bg-success rounded-pill p-2 px-3">Free
+                                                        </span>
+                                                    </div>
+                                                    <div class="ms-auto">
+                                                        <select t-if="not ticket.is_expired and ticket.sale_available" t-attf-name="nb_register-#{ticket.id}" class="w-auto form-select">
+                                                            <t t-set="seats_max_ticket" t-value="(not ticket.seats_limited or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
+                                                            <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
+                                                            <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
+                                                            <t t-foreach="range(0, seats_max)" t-as="nb">
+                                                                <option t-out="nb" t-att-selected="len(ticket) == 0 and nb == 0 and 'selected'"/>
+                                                            </t>
+                                                        </select>
+                                                        <div t-else="" class="text-danger">
+                                                            <span t-if="not ticket.sale_available and not ticket.is_expired and ticket.is_launched">
+                                                                Sold Out
+                                                            </span>
+                                                            <span t-if="ticket.is_expired">Expired</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-auto p-4">
+                                            <button type="button" class="btn btn-fill-custom bg-o-color-2" style="border-radius: 6px; font-size: 16px; font-weight: 500; border: none; width: 180px;" data-bs-dismiss="modal">
+                                                Close
+                                            </button>
+
+                                            <button type="submit" class="btn btn-primary o_wait_lazy_js a-submit" t-attf-id="#{event.id}" disabled="disabled" style="border-radius: 6px; font-size: 16px; font-weight: 500; border: none; width: 180px;">
+                                                Continue
+                                                <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
+                                                    (only
+                                                    <t t-out="event.seats_available"/>
+                                                    available)
+                                                </t>
+                                            </button>
+                                        </div>
+
+                                    </t>
+                                    <div t-else="" class="o_wevent_registration_single">
+                                        <div class="modal-body collapse show d-flex flex-column justify-content-cente">
+                                            <div class="flex-lg-row mb-3" itemscope="itemscope" itemtype="http://schema.org/Offer">
+                                                <h4 class="display-6 fw-bold mb-2">Places</h4>
+                                                <h5 itemprop="name" class="my-0 pe-3 o_wevent_single_ticket_name">
+                                                    <span t-if="tickets" t-field="tickets.name"/>
+                                                    <span t-else="">Registration</span>
+                                                </h5>
+                                                <t t-if="tickets.description">
+                                                    <small t-field="tickets.description" class="text-muted py-2"/>
+                                                    <br/>
+                                                </t>
+                                                <small t-if="tickets.end_sale_datetime and tickets.sale_available and not tickets.is_expired" class="text-muted" itemprop="availabilityEnds">
+                                                    Sales end on
+                                                    <span itemprop="priceValidUntil" t-out="tickets.end_sale_datetime" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
+                                                    (<span t-out="tickets.event_id.date_tz"/>)
+                                                </small>
+                                            </div>
+                                            <div class="mb-1 d- flex-lg-row align-items-center justify-content-between p-0">
+                                                <t t-if="event.event_registrations_open">
+                                                    <link itemprop="availability" content="http://schema.org/InStock"/>
+                                                    <div class="flex-md-grow-1 me-2">
+                                                        <t t-if="tickets.price">
+                                                            <t t-if="(tickets.price - tickets.price_reduce) &gt;0 and website.pricelist_id.discount_policy == 'without_discount'">
+                                                                <del t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" class="text-danger me-1" t-field="tickets.price" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                                                                <del t-else="" class="text-danger me-1" t-field="tickets.price_incl" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                                                            </t>
+                                                            <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'" class="badge fs-6" style="color: black; background-color: #d4d3d2;" t-field="tickets.price_reduce" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                                                            <span t-else="" class="badge fs-6" style="color: black; background-color: #d4d3d2;" t-field="tickets.price_reduce_taxinc" t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
+                                                            <span itemprop="price" class="d-none" t-out="tickets.price"/>
+                                                            <span itemprop="priceCurrency" class="d-none" t-out="website.currency_id.name"/>
+                                                        </t>
+                                                        <span t-else="" class="badge text-bg-success fs-6 text-uppercase">Free
+                                                        </span>
+                                                    </div>
+                                                    <div class="o_wevent_registration_single_select w-auto ms-auto">
+                                                        <select t-att-name="'nb_register-%s' % (tickets.id if tickets else 0)" class="d-inline w-auto form-select">
+                                                            <t t-set="seats_max_ticket" t-value="(not tickets or not tickets.seats_limited or tickets.seats_available &gt; 9) and 10 or tickets.seats_available + 1"/>
+                                                            <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
+                                                            <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event) if tickets else seats_max_event"/>
+                                                            <t t-foreach="range(0, seats_max)" t-as="nb">
+                                                                <option t-out="nb" t-att-selected="nb == 1 and 'selected'"/>
+                                                            </t>
+                                                        </select>
+                                                    </div>
+                                                </t>
+                                                <t t-else="">
+                                                    <span itemprop="availability" content="http://schema.org/SoldOut" class="text-danger">
+                                                        <i class="fa fa-ban me-2"/>Sold Out
+                                                    </span>
+                                                </t>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-auto p-4">
+                                            <button type="button" class="btn btn-fill-custom bg-o-color-2" style="border-radius: 6px; font-size: 16px; font-weight: 500; border: none; width: 180px;" data-bs-dismiss="modal">
+                                                Close
+                                            </button>
+
+                                            <button type="submit" class="btn btn-primary o_wait_lazy_js a-submit" t-attf-id="#{event.id}" disabled="disabled" style="border-radius: 6px; font-size: 16px; font-weight: 500; border: none; width: 180px;">
+                                                Continue
+                                                <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
+                                                    (only
+                                                    <t t-out="event.seats_available"/>
+                                                    available)
+                                                </t>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+
+                            <div t-else="" class="modal-body px-4">
+                                <h2 class="display-6 fw-bold mb-2">Seats</h2>
+                                <span class="text-danger">
+                                    <i class="fa fa-ban me-2"/>Registrations are closed or event is Sold Out.
+                                </span>
+                                <div class="modal-footer border-0 p-4 pt-4">
+                                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+
+
+        </template>
+
+    <template id="registration_attendee_details" inherit_id="website_event.registration_attendee_details">
+
+
+            <xpath expr="//div[hasclass('modal-body')]/h5" position="after">
+
+                    <h5 t-attf-class="mt-1 pb-2 #{'border-bottom' if event.question_ids else ''}">
+                        <span class="badge fs-6" style="color: black; background-color: #d4d3d2;">
+
+                                Place #<span t-out="counter"/>
+
+
+                        </span>
+
+
+                    <small>-
+                        <span t-out="ticket['name']"/>
+                    </small>
+                    </h5>
+
+
+
+            </xpath>
+
+            <xpath expr="//div[hasclass('modal-body')]/h5[1]" position="replace">
+            </xpath>
+
+            <xpath expr="//div[hasclass('modal-content')]" position="attributes">
+                <attribute name="class">modal-content border-3 border-primary text-primary</attribute>
+                <attribute name="style">background: linear-gradient(318deg,rgba(247, 240, 240, 1) 0%, rgba(233, 233, 247, 1) 33%, rgba(230, 240, 242, 1) 100%); border-radius: 10px;"</attribute>
+            </xpath>
+
+
+            <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-primary')]" position="attributes">
+                <attribute name="style">border-radius: 6px; font-size: 16px; font-weight: 500; border: none; width: 200px;</attribute>
+            </xpath>
+
+            <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-secondary')]" position="attributes">
+                <attribute name="style">border-radius: 6px; font-size: 16px; font-weight: 500; border: none; width: 150px;</attribute>
+            </xpath>
+
+
+
+        </template>
+
+
+    </data>
+</odoo>

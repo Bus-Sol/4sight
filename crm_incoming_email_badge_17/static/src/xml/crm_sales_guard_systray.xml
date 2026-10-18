@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="crm_incoming_email_badge_17.CrmSalesGuardSystray">
+        <div class="o_navbar_item">
+            <button t-if="state.permission !== 'granted'"
+                    type="button"
+                    class="btn btn-link o_crm_sales_guard_systray"
+                    title="Enable CRM browser notifications"
+                    t-on-click="onEnableBrowserNotifications">
+                <i class="fa fa-bell-o" role="img" aria-label="Enable CRM browser notifications"/>
+            </button>
+            <span t-else=""
+                  class="o_crm_sales_guard_systray_enabled"
+                  title="CRM browser notifications enabled">
+                <i class="fa fa-bell" role="img" aria-label="CRM browser notifications enabled"/>
+            </span>
+        </div>
+    </t>
+</templates>

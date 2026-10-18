@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- QWeb templates must be in separate file -->
+    <template id="oauth_success" name="OAuth Success" inherit_id="web.layout">
+        <xpath expr="//div[hasclass('o_main')]" position="replace">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h4 class="mb-0">Authorization Successful!</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="mb-4">
+                                    <i class="fa fa-check-circle fa-5x text-success"></i>
+                                </div>
+                                <h5 class="card-title">Connected to Provet Cloud</h5>
+                                <p class="card-text">
+                                    Your Odoo instance is now connected to Provet Cloud.
+                                    You can close this window and return to Odoo.
+                                </p>
+                                <a href="#" class="btn btn-primary" onclick="window.close(); return false;">
+                                    Close Window
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="oauth_error" name="OAuth Error" inherit_id="web.layout">
+        <xpath expr="//div[hasclass('o_main')]" position="replace">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-danger text-white">
+                                <h4 class="mb-0">Authorization Failed</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="mb-4">
+                                    <i class="fa fa-times-circle fa-5x text-danger"></i>
+                                </div>
+                                <h5 class="card-title">Connection Error</h5>
+                                <p class="card-text" t-esc="error_message"/>
+                                <a href="#" class="btn btn-primary" onclick="window.close(); return false;">
+                                    Close Window
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="event_category_form" model="ir.ui.view">
+            <field name="name">event.category.form</field>
+            <field name="model">event.category</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="cover" widget="image"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="event_category_list" model="ir.ui.view">
+            <field name="name">event.category.list</field>
+            <field name="model">event.category</field>
+            <field name="arch" type="xml">
+                <tree string="">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="event_category_action" model="ir.actions.act_window">
+            <field name="name">Event Categories</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">event.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="event_category_menu" name="Event Categories" parent="event.menu_event_configuration" action="event_category_action" sequence="3"/>
+
+
+
+    </data>
+</odoo>
