@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_event_form_inherit" model="ir.ui.view">
+            <field name="name">event.form.inherit</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="event_category_id"/>
+                </xpath>
+                 <xpath expr="//field[@name='date_end']" position="after">
+                       <label for="start_time" string="Time"/>
+                        <div class="o_row">
+                            <field name="start_time" class="oe_inline" widget="float_time"/>
+                            <strong class="oe_inline me-2"> ⟶ </strong>
+                            <field name="end_time" class="oe_inline" widget="float_time"/>
+                        </div>
+                     <field name="location_type"/>
+                     <field name="trainer"/>
+                 </xpath>
+
+
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

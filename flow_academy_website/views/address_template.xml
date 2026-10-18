@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="sale_address" inherit_id="website_sale.address">
+
+
+            <xpath expr="//t[@t-call='website_sale.wizard_checkout']" position="replace">
+            </xpath>
+
+            <xpath expr="//form/div[1]" position="attributes">
+                <attribute name="t-attf-class">row o_website_sale_address_form #{'o_state_company' if 'company_type' in checkout and checkout['company_type'] == 'company' else 'o_state_individual'}</attribute>
+            </xpath>
+
+            <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_name')]" position="before">
+                <div t-attf-class="#{error.get('company_type') and 'o_has_error'} div_company_type col-lg-6 mb-2">
+                    <label class="col-form-label" for="company_type">Contact Type</label>
+                    <select id="company_type" name="company_type" t-attf-class="form-select #{error.get('company_type') and 'is-invalid' or ''}" t-att-mode="mode[1]">
+
+
+                        <option value="person" t-att-selected="'company_type' in checkout and checkout['company_type'] == 'person'">Individual</option>
+                        <option value="company" t-att-selected="'company_type' in checkout and checkout['company_type'] == 'company'">Company</option>
+
+                    </select>
+                </div>
+            </xpath>
+
+            <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_name')]" position="replace">
+                <div t-attf-class="o_company_field div_name col-lg-12 mb-2 #{error.get('name') and 'o_has_error'}">
+                    <label class="col-form-label" for="name">
+                        <span t-if="company_type == 'company'">Company Name</span>
+                        <span t-else="">Full name</span>
+                    </label>
+                    <input type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="'name' in checkout and checkout['name']"/>
+                </div>
+
+                <div class="w-100"/>
+                <div t-attf-class="o_individual_field col-lg-6 mb-2 #{error.get('firstname') and 'o_has_error'}" t-att-style="company_type == 'company' and 'display: none;' or None">
+                    <label class="col-form-label" for="firstname">First Name</label>
+                    <input type="text" name="firstname" t-attf-class="form-control #{error.get('firstname') and 'is-invalid' or ''}" t-att-value="'firstname' in checkout and checkout['firstname']"/>
+                </div>
+                <div t-attf-class="o_individual_field col-lg-6 mb-2 #{error.get('lastname') and 'o_has_error'}" t-att-style="company_type == 'company' and 'display: none;' or None">
+                    <label class="col-form-label" for="lastname">Surname</label>
+                    <input type="text" name="lastname" t-attf-class="form-control #{error.get('lastname') and 'is-invalid' or ''}" t-att-value="'lastname' in checkout and checkout['lastname']"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//t[@t-if='website._display_partner_b2b_fields()']" position="replace">
+                <t t-if="website._display_partner_b2b_fields()">
+                <div class="w-100"/>
+                <t t-set="vat_warning" t-value="'vat' in checkout and checkout['vat'] and not can_edit_vat"/>
+                <t t-if="(mode == ('new', 'billing') and is_public_order                                                 or mode == ('edit', 'billing') and partner_id == website_sale_order.partner_id.id)                                                 and (can_edit_vat or 'vat' in checkout and checkout['vat'])">
+                    <div t-attf-class="#{error.get('vat') and 'o_has_error'} o_company_field div_vat col-lg-6 mb-2">
+                        <label class="col-form-label fw-normal label-optional" for="vat">VAT</label>
+                        <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if vat_warning else None"/>
+                        <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
+                    </div>
+                    <div t-if="vat_warning" class="col-12 d-none d-lg-block mb-1">
+                        <small class="form-text text-muted">Changing company name or VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
+                    </div>
+                </t>
+            </t>
+
+            </xpath>
+
+            <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_street')]" position="attributes">
+                <attribute name="t-attf-class">#{error.get('street') and 'o_has_error'} o_company_field div_street col-lg-12 mb-2</attribute>
+
+            </xpath>
+            <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_street2')]" position="attributes">
+                <attribute name="t-attf-class">#{error.get('div_street2') and 'o_has_error' or '' } o_company_field col-lg-12 div_street2
+
+                </attribute>
+            </xpath>
+
+
+            <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_city')]" position="attributes">
+                <attribute name="t-attf-class">#{error.get('city') and 'o_has_error' or ''} o_company_field div_city col-md-8 mb-2
+
+                </attribute>
+
+            </xpath>
+
+<!--            <xpath expr="//form/div[1]//t[@t=if=''zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')']/div" position="attributes">-->
+<!--                <attribute name="t-attf-class">#{error.get('zip') and 'o_has_error'} o_company_field div_zip col-md-4 mb-2-->
+
+<!--                </attribute>-->
+<!--            </xpath>-->
+
+            <xpath expr="//form/div[1]//t[@t-if=&quot;'zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')&quot;]/div" position="attributes">
+                <attribute name="t-attf-class">#{error.get('zip') and 'o_has_error'} o_company_field div_zip col-md-4 mb-2
+
+                </attribute>
+            </xpath>
+
+            <xpath expr="//form/div[1]//t[@t-if=&quot;'zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')&quot;]/div/label" position="replace">
+                <label class="col-form-label label-optional" for="zip">Post Code</label>
+            </xpath>
+
+
+            <xpath expr="//form/div[1]//t[@t-if=&quot;'zip' in zip_city and zip_city.index('zip') &gt; zip_city.index('city')&quot;]/div" position="attributes">
+                <attribute name="t-attf-class">#{error.get('zip') and 'o_has_error'} o_company_field div_zip col-md-4 mb-2
+
+                </attribute>
+            </xpath>
+
+            <xpath expr="//form/div[1]//t[@t-if=&quot;'zip' in zip_city and zip_city.index('zip') &gt; zip_city.index('city')&quot;]/div/label" position="replace">
+                <label class="col-form-label label-optional" for="zip">Post Code</label>
+            </xpath>
+
+
+
+
+            <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_country')]" position="attributes">
+                <attribute name="t-attf-class">#{error.get('country_id') and 'o_has_error'} o_company_field div_country col-md-6 mb-2
+
+                </attribute>
+            </xpath>
+
+            <xpath expr="//form/div[1]//div[contains(@t-attf-class, 'div_state')]" position="attributes">
+                <attribute name="t-attf-class">#{error.get('state_id') and 'o_has_error'} o_company_field div_state col-md-6 mb-2
+
+                </attribute>
+            </xpath>
+
+            <xpath expr="//form//a[hasclass('btn-outline-secondary')]" position="attributes">
+
+                <attribute name="t-att-href">mode == ('new', 'billing') and '/shop/clear_and_back' or '/shop/checkout'</attribute>
+                <attribute name="class">btn btn-outline-secondary w-100 w-md-auto order-md-1 order-3 rounded-circle</attribute>
+            </xpath>
+
+            <xpath expr="//form//a[hasclass('a-submit')]" position="attributes">
+                <attribute name="class">a-submit a-submit-disable a-submit-loading btn btn-primary w-100 w-md-auto order-1 order-md-3 rounded-circle</attribute>
+            </xpath>
+
+            <xpath expr="//form/div[1]" position="inside">
+                <div class="w-100"/>
+                <br/>
+                <br/>
+
+                 <div class="o_company_field col-lg-12" name="confirm_flow_fund">
+                    <div class="form-check  mt-2">
+                        <label>
+                            <input type="checkbox" id="confirm_flow_fund" class="form-check-input mr8" name="confirm_flow_fund"/>
+                            <strong>
+                                <span class="form-check-label">
+                                I confirm we will be applying for the
+                                <a href="https://www.flowacademy.mt/funding" target="_blank">
+                                Investing in Skills
+                                </a>
+                                 scheme from Jobsplus.
+                                </span>
+                            </strong>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div t-attf-class="#{error.get('privacy_terms') and 'o_has_error'} col-lg-12" name="privacy">
+                <div class="form-check  mt-2">
+                    <label>
+                        <input type="checkbox" id="privacy_terms" class="form-check-input mr8" name="privacy_terms"/>
+                        <span class="form-check-label">
+                            <strong>
+                            I confirm that I have read and understood the
+                            <a href="https://www.flowacademy.mt/privacy-policy" target="_blank">
+                                Privacy Policy
+                            </a>
+                            and
+
+                            <a href="https://www.flowacademy.mt/terms-conditions" target="_blank">
+                                Terms &amp; Conditions.
+                            </a>
+                            </strong>
+
+                            <span class="text-danger">
+                                *
+                            </span>
+
+
+                        </span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-lg-12" name="marketing_subscription">
+                <div class="form-check  mt-2 mb-2">
+                    <label>
+                        <input type="checkbox" id="marketing_subscription" class="form-check-input mr8" name="marketing_subscription"/>
+                        <strong>
+                        <span class="form-check-label">
+                            I would like to keep up to date with new courses, dates and latest news from Flow Academy.
+
+                        </span>
+                        </strong>
+                    </label>
+                </div>
+            </div>
+
+            </xpath>
+        </template>
+
+
+        <template id="checkout_layout" inherit_id="website_sale.checkout_layout">
+            <xpath expr="//t[@t-call='website_sale.wizard_checkout']" position="replace">
+            </xpath>
+            <xpath expr="//div[@id='o_wsale_total_accordion_item']" position="attributes">
+                <attribute name="class">accordion-item p-lg-4 border border-primary</attribute>
+            </xpath>
+
+        <xpath expr="//div[@id='wrap']" position="inside">
+        <style>
+            /* Redirect notification styling */
+            #redirect-countdown {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #25408F;
+                color: white;
+                padding: 20px 25px;
+                border-radius: 10px;
+                box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+                z-index: 9999;
+                font-family: Arial, sans-serif;
+                max-width: 320px;
+                animation: slideIn 0.5s ease-out;
+            }
+
+            @keyframes slideIn {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+
+            #redirect-countdown h4 {
+                margin: 0 0 10px 0;
+                font-size: 16px;
+                font-weight: bold;
+            }
+
+            #redirect-countdown p {
+                margin: 0 0 15px 0;
+                font-size: 14px;
+                line-height: 1.4;
+            }
+
+            #redirect-countdown .countdown-number {
+                font-size: 24px;
+                font-weight: bold;
+                color: #FFD700;
+            }
+
+            #redirect-countdown .btn-cancel {
+                background: white;
+                color: #25408F;
+                border: none;
+                padding: 8px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 13px;
+                transition: all 0.3s ease;
+                width: 100%;
+            }
+
+            #redirect-countdown .btn-cancel:hover {
+                background: #f0f0f0;
+                transform: scale(1.02);
+            }
+
+            /* Mobile responsive */
+            @media (max-width: 576px) {
+                #redirect-countdown {
+                    top: 10px;
+                    right: 10px;
+                    left: 10px;
+                    max-width: none;
+                    padding: 15px;
+                }
+
+                #redirect-countdown h4 {
+                    font-size: 14px;
+                }
+
+                #redirect-countdown p {
+                    font-size: 12px;
+                }
+
+                #redirect-countdown .countdown-number {
+                    font-size: 20px;
+                }
+            }
+        </style>
+
+        <script>
+            (function() {
+                // Function to get cookie value
+                function getCookie(name) {
+                    const value = `; ${document.cookie}`;
+                    const parts = value.split(`; ${name}=`);
+                    if (parts.length === 2) return parts.pop().split(';').shift();
+                }
+
+                // Check if we're on the confirmation page
+                const currentPath = window.location.pathname;
+                if (currentPath === '/shop/confirmation') {
+
+                    // Check logo preference cookie
+                    const logoPreference = getCookie('logo_preference');
+
+                    if (logoPreference === 'flow_logo') {
+                        console.log('Flow logo detected - redirecting in 15 seconds...');
+
+                        // Countdown timer variables
+                        let secondsLeft = 15;
+                        let redirectTimeout;
+                        let countdownInterval;
+                        let isCancelled = false;
+
+                        // Create countdown notification
+                        const redirectMessage = document.createElement('div');
+                        redirectMessage.id = 'redirect-countdown';
+
+                        // Function to update countdown display
+                        function updateCountdown() {
+                            const countdownElement = document.getElementById('countdown');
+                            if (countdownElement &amp;&amp; !isCancelled) {
+                                countdownElement.textContent = secondsLeft;
+                            }
+                        }
+
+                        // Initial HTML
+                        redirectMessage.innerHTML = `
+                            <h4>✓ Order Confirmed!</h4>
+                            <p>You will be redirected to Home Page in <span class="countdown-number"><span id="countdown">${secondsLeft}</span>s</span></p>
+                            <button class="btn-cancel" id="cancel-redirect">Stay on This Page</button>
+                        `;
+
+                        document.body.appendChild(redirectMessage);
+
+                        // Start countdown
+                        function startCountdown() {
+                            countdownInterval = setInterval(function() {
+                                if (!isCancelled) {
+                                    secondsLeft--;
+                                    updateCountdown();
+
+                                    if (secondsLeft &lt;= 0) {
+                                        clearInterval(countdownInterval);
+                                    }
+                                }
+                            }, 1000);
+                        }
+
+                        // Set redirect timeout
+                        function setRedirectTimeout() {
+                            redirectTimeout = setTimeout(function() {
+                                if (!isCancelled) {
+                                    window.location.href = 'https://www.flowacademy.mt/';
+                                }
+                            }, 15000); // 15000 milliseconds = 15 seconds
+                        }
+
+                        // Cancel redirect function
+                        function cancelRedirect() {
+                            isCancelled = true;
+                            clearTimeout(redirectTimeout);
+                            clearInterval(countdownInterval);
+
+                            // Update message
+                            const messageDiv = document.getElementById('redirect-countdown');
+                            if (messageDiv) {
+                                messageDiv.innerHTML = `
+                                    <h4>✓ Redirect Cancelled</h4>
+                                    <p style="margin-bottom: 0;">You can continue browsing this site.</p>
+                                `;
+
+                                // Remove notification after 3 seconds
+                                setTimeout(function() {
+                                    messageDiv.style.animation = 'slideOut 0.5s ease-in';
+                                    setTimeout(function() {
+                                        if (messageDiv &amp;&amp; messageDiv.parentNode) {
+                                            messageDiv.parentNode.removeChild(messageDiv);
+                                        }
+                                    }, 500);
+                                }, 3000);
+                            }
+                        }
+
+                        // Add slideOut animation
+                        const style = document.createElement('style');
+                        style.textContent = `
+                            @keyframes slideOut {
+                                from {
+                                    transform: translateX(0);
+                                    opacity: 1;
+                                }
+                                to {
+                                    transform: translateX(400px);
+                                    opacity: 0;
+                                }
+                            }
+                        `;
+                        document.head.appendChild(style);
+
+                        // Wait a moment for DOM to be ready, then attach event listener
+                        setTimeout(function() {
+                            const cancelBtn = document.getElementById('cancel-redirect');
+                            if (cancelBtn) {
+                                cancelBtn.addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    cancelRedirect();
+                                });
+                            }
+                        }, 100);
+
+                        // Start the countdown and redirect timer
+                        startCountdown();
+                        setRedirectTimeout();
+                    }
+                }
+            })();
+        </script>
+    </xpath>
+
+        </template>
+    </data>
+</odoo>

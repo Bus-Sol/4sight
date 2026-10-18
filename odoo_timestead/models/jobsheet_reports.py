@@ -37,7 +37,7 @@ class ReportJobsheetBalance(models.AbstractModel):
                 tks = [task for task in tks1 if round(task.remaining_hours, 2) > 0]
                 
                 for tsk in tks:
-                    planned += tsk.planned_hours
+                    planned += tsk.allocated_hours
                     effective += tsk.effective_hours
                     remaining += tsk.remaining_hours
 

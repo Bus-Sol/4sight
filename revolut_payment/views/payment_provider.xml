@@ -9,6 +9,11 @@
                 <group invisible="code != 'revolut'">
                     <field name="revolut_merchant_api_public" required="code == 'revolut' and state != 'disabled'"/>
                     <field name="revolut_merchant_api_secret" required="code == 'revolut' and state != 'disabled'" password="True"/>
+                    <button string="Enable Apple Pay"
+                            type="object"
+                            name="action_revolut_verify_apple_pay_domain"
+                            class="btn btn-primary"
+                            invisible="code != 'revolut'"/>
                 </group>
             </group>
         </field>

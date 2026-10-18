@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from . import res_partner
+from . import base_automation
 from . import jobsheet_type
 from . import client_designation
 from . import jobsheet

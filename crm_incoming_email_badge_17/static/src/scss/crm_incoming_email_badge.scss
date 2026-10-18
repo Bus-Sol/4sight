@@ -1,0 +1,20 @@
+.o_kanban_view .o_kanban_record .o_crm_email_status_row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    clear: both;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border-color, #dee2e6);
+}
+
+.o_kanban_view .o_kanban_record .o_crm_email_status_badge {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    padding: 5px 8px;
+    font-size: 12px;
+    line-height: 1.2;
+    white-space: nowrap;
+}

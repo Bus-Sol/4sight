@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_question_view_form_flow_food_allergies" model="ir.ui.view">
+        <field name="name">event.question.view.form.flow.food.allergies</field>
+        <field name="model">event.question</field>
+        <field name="inherit_id" ref="website_event.event_question_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='once_per_order']" position="after">
+                <field name="food_allergies"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_event_view_form_flow_food_allergies" model="ir.ui.view">
+        <field name="name">event.event.view.form.flow.food.allergies</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="website_event.event_event_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='questions']/field[@name='question_ids']/tree/field[@name='once_per_order']" position="after">
+                <field name="food_allergies"/>
+            </xpath>
+            <xpath expr="//page[@name='questions']/field[@name='question_ids']/form//field[@name='once_per_order']" position="after">
+                <field name="food_allergies"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
