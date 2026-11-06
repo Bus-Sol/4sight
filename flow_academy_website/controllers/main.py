@@ -668,6 +668,47 @@ class EventTypeController(http.Controller):
             'events': events,
         })
 
+    @http.route('/courses/digital-governance-compliance-courses/cybersecurity-for-notaries', type='http', auth="public",
+                website=True)
+    def get_upcoming_courses_24(self, **kw):
+        # Switch to company 1 context
+        company_1 = request.env['res.company'].sudo().browse(1)
+        now = datetime.now()
+
+        events = request.env['event.event'].sudo().with_company(company_1).search([
+            ('event_category_id', '=', 24),
+            ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
+        ])
+
+        _logger.info(f"categ 24 events >> {events}")
+
+        return request.render('website.practical-ai-for-the-workplace_98b110_5ed383_1c31c7_126fc7', {
+            'events': events,
+        })
+
+
+    @http.route('/courses/digital-governance-compliance-courses/generative-ai', type='http', auth="public",
+                website=True)
+    def get_upcoming_courses_25(self, **kw):
+        # Switch to company 1 context
+        company_1 = request.env['res.company'].sudo().browse(1)
+        now = datetime.now()
+
+        events = request.env['event.event'].sudo().with_company(company_1).search([
+            ('event_category_id', '=', 25),
+            ('date_begin', '>=', now),
+            ('stage_id.pipe_end', '=', False)
+        ])
+
+        _logger.info(f"categ 25 events >> {events}")
+
+        return request.render('website.practical-ai-for-the-workplace_98b110_5ed383_1c31c7_126fc7_566e18', {
+            'events': events,
+        })
+
+
+
 
     @http.route(
         '/flow/newsletter/subscribe',

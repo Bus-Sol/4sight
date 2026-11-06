@@ -11,6 +11,6 @@ class CrmLead(models.Model):
         res = super(CrmLead, self).create(vals)
         _logger.info('Res : %s', res)
         _logger.info('Vals : %s', vals)
-        if vals['company_id'] == False:
+        if 'company_id' in vals and vals.get('company_id') == False:
             res.company_id = 1
         return res
