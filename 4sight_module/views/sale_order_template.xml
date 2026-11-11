@@ -10,6 +10,7 @@
 
                     <group name="sale_info" position="after">
                         <group>
+                            <field name="send_by_email_template_id"/>
                             <field name="is_flow_template"/>
                             <field name="flow_image" widget="image" invisible="not is_flow_template"/>
                             <field name="flow_details" invisible="not is_flow_template"/>

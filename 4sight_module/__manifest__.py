@@ -10,6 +10,7 @@
     'license': 'OPL-1',
     'depends': [
         'sale',
+        'sale_management',
         'account',
         'account_reports',
         'account_followup',
@@ -21,6 +22,7 @@
         "hr_timesheet"
     ],
     'data': [
+        'data/mail_template.xml',
         'views/account_followups.xml',
         'views/sale_view.xml',
         'report/external_layout_background.xml',
